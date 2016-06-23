@@ -22,8 +22,8 @@
 		8520653B1D16E8E20073F05C /* SDRefreshView.m in Sources */ = {isa = PBXBuildFile; fileRef = 852065351D16E8E20073F05C /* SDRefreshView.m */; };
 		8520653C1D16E8E20073F05C /* UIView+SDExtension.m in Sources */ = {isa = PBXBuildFile; fileRef = 852065371D16E8E20073F05C /* UIView+SDExtension.m */; };
 		8520653F1D17E25A0073F05C /* UIViewController+DownloadNews.m in Sources */ = {isa = PBXBuildFile; fileRef = 8520653E1D17E25A0073F05C /* UIViewController+DownloadNews.m */; };
-		852065451D19A2490073F05C /* contentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 852065441D19A2490073F05C /* contentViewController.m */; };
 		852065481D1AB9AA0073F05C /* NSString+MD5.m in Sources */ = {isa = PBXBuildFile; fileRef = 852065471D1AB9AA0073F05C /* NSString+MD5.m */; };
+		85BA2A5C1D1BD46B001188DA /* contentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 85BA2A5B1D1BD46B001188DA /* contentViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -75,9 +75,9 @@
 		8520653D1D17E25A0073F05C /* UIViewController+DownloadNews.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIViewController+DownloadNews.h"; sourceTree = "<group>"; };
 		8520653E1D17E25A0073F05C /* UIViewController+DownloadNews.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIViewController+DownloadNews.m"; sourceTree = "<group>"; };
 		852065401D19395A0073F05C /* contentViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = contentViewController.h; sourceTree = "<group>"; };
-		852065441D19A2490073F05C /* contentViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = contentViewController.m; path = ../contentViewController.m; sourceTree = "<group>"; };
 		852065461D1AB9AA0073F05C /* NSString+MD5.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+MD5.h"; sourceTree = "<group>"; };
 		852065471D1AB9AA0073F05C /* NSString+MD5.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+MD5.m"; sourceTree = "<group>"; };
+		85BA2A5B1D1BD46B001188DA /* contentViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = contentViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -136,7 +136,7 @@
 				852065271D16DB410073F05C /* NewsTableViewController.h */,
 				852065281D16DB410073F05C /* NewsTableViewController.m */,
 				852065401D19395A0073F05C /* contentViewController.h */,
-				852065441D19A2490073F05C /* contentViewController.m */,
+				85BA2A5B1D1BD46B001188DA /* contentViewController.m */,
 				8520653D1D17E25A0073F05C /* UIViewController+DownloadNews.h */,
 				8520653E1D17E25A0073F05C /* UIViewController+DownloadNews.m */,
 				852065461D1AB9AA0073F05C /* NSString+MD5.h */,
@@ -329,8 +329,8 @@
 				852065291D16DB410073F05C /* NewsTableViewController.m in Sources */,
 				852064FC1D16D7D70073F05C /* ViewController.m in Sources */,
 				8520653B1D16E8E20073F05C /* SDRefreshView.m in Sources */,
+				85BA2A5C1D1BD46B001188DA /* contentViewController.m in Sources */,
 				852065481D1AB9AA0073F05C /* NSString+MD5.m in Sources */,
-				852065451D19A2490073F05C /* contentViewController.m in Sources */,
 				852064F91D16D7D70073F05C /* AppDelegate.m in Sources */,
 				852064F61D16D7D70073F05C /* main.m in Sources */,
 				852065391D16E8E20073F05C /* SDRefreshFooterView.m in Sources */,
