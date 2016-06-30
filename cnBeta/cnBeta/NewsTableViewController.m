@@ -10,11 +10,10 @@
 #import "SDRefresh.h"
 #import "UIViewController+DownloadNews.h"
 #import "contentViewController.h"
-#import "NSString+MD5.h"
 
 static NSString *const newsListURLString = @"http://cnbeta.techoke.com/api/list?version=1.8.6&init=1";
 static NSString *const loadNewsListBaseURLString = @"http://cnbeta.techoke.com/api/list?version=1.8.6&last=";
-static NSString *const contentBaseURLString = @"http://api.cnbeta.com/capi?app_key=10000&format=json&method=Article.NewsContent&sid=";
+
 
 @interface NewsTableViewController ()
 @property (nonatomic, assign) NSUInteger RowCount;
@@ -31,7 +30,8 @@ static NSString *const contentBaseURLString = @"http://api.cnbeta.com/capi?app_k
     UIBarButtonItem *backItem = [[UIBarButtonItem alloc] init];
     backItem.title = @"返回";
     self.navigationItem.backBarButtonItem = backItem;
-    self.title = @"cnBeta";
+    self.navigationItem.title = @"cnBeta新闻";
+    self.tabBarItem.title = [NSString stringWithFormat:@"新闻列表"];
     self.tableView.rowHeight = 90.0f;
     self.tableView.separatorColor = [UIColor grayColor];
     //_RowCount = 20;
@@ -54,7 +54,7 @@ static NSString *const contentBaseURLString = @"http://api.cnbeta.com/capi?app_k
     __weak typeof(self) weakSelf = self;
     refreshHeader.beginRefreshingOperation = ^{
         [weakSelf freshData:newsListURLString];
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
             //[weakSelf loadData:newsListURLString];
             [weakSelf.tableView reloadData];
             [weakRefreshHeader endRefreshing];
@@ -86,7 +86,7 @@ static NSString *const contentBaseURLString = @"http://api.cnbeta.com/capi?app_k
         [self requestWithURL:URLString completion:^(NSData *data, NSError *error) {
             if (!error) {
                 NSDictionary *dataDic = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:nil][@"data"];
-                NSLog(@"%@",dataDic);
+                //NSLog(@"%@",dataDic);
                 [self.newsList addObjectsFromArray:dataDic[@"lists"]];
                 self.RowCount = [self.newsList count];
             }
@@ -112,7 +112,7 @@ static NSString *const contentBaseURLString = @"http://api.cnbeta.com/capi?app_k
 {
     NSString *URLString = [loadNewsListBaseURLString stringByAppendingString:[NSString stringWithFormat:@"%@", [_newsList lastObject][@"id"]]];
     [self loadData:URLString];
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         //[self loadData:URLString];
         [self.tableView reloadData];
         [self.refreshFooter endRefreshing];
@@ -133,6 +133,7 @@ static NSString *const contentBaseURLString = @"http://api.cnbeta.com/capi?app_k
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     static NSString *cellID = @"NewsCell";
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellID forIndexPath:indexPath];
+
     //UILabel *label = (UILabel *)[cell viewWithTag:0];
     //label.numberOfLines = 3;
     //label.text = self.newsList[indexPath.row][@"title"];
@@ -173,34 +174,20 @@ static NSString *const contentBaseURLString = @"http://api.cnbeta.com/capi?app_k
     if ([segue.destinationViewController isKindOfClass:[contentViewController class]]) {
         contentViewController *contentvc = (contentViewController *)segue.destinationViewController;
         NSIndexPath *indexPath = [self.tableView indexPathForSelectedRow];
-        NSString *sid = self.newsList[indexPath.row][@"id"];
-        //NSString *sid = @"512827";
-        
-        //Unix时间戳
-        UInt64 timestamp = (UInt64)[[NSDate date]timeIntervalSince1970];
-        //UInt64 timestamp = 1466565768;
-        
-        //md5加密
-        NSString *md5String = [NSString stringWithFormat:@"app_key=10000&format=json&method=Article.NewsContent&sid=%@&timestamp=%llu&v=1.0&mpuffgvbvbttn3Rc", sid, timestamp ];
-        NSString *sign = [md5String MD5];
-        
-        contentvc.contentURL = [contentBaseURLString stringByAppendingString:[NSString stringWithFormat:@"%@&timestamp=%llu&v=1.0&mpuffgvbvbttn3Rc&sign=%@", sid, timestamp, sign]];
+        contentvc.newsId =self.newsList[indexPath.row][@"id"];
+//        NSString *sid = self.newsList[indexPath.row][@"id"];
+//        //NSString *sid = @"512827";
+//        
+//        //Unix时间戳
+//        UInt64 timestamp = (UInt64)[[NSDate date]timeIntervalSince1970];
+//        //UInt64 timestamp = 1466565768;
+//        
+//        //md5加密
+//        NSString *md5String = [NSString stringWithFormat:@"app_key=10000&format=json&method=Article.NewsContent&sid=%@&timestamp=%llu&v=1.0&mpuffgvbvbttn3Rc", sid, timestamp ];
+//        NSString *sign = [md5String MD5];
+//        
+//        contentvc.contentURL = [contentBaseURLString stringByAppendingString:[NSString stringWithFormat:@"%@&timestamp=%llu&v=1.0&mpuffgvbvbttn3Rc&sign=%@", sid, timestamp, sign]];
         //NSLog(@"%@",contentURLString);
-        
-//        dispatch_group_t group = dispatch_group_create();
-//        dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
-//        dispatch_group_async(group, queue, ^{
-//            [self loadContent:contentURLString];
-//        });
-//        dispatch_group_notify(group, queue, ^{
-//            [contentvc setupWebViewByData:self.content];
-//        });
-//        [self loadContent:contentURLString];
-//        while (self.content == nil) {
-//            sleep(1);
-//        }
-//        [contentvc setupWebViewByData:self.content];
-        
         
         
     }

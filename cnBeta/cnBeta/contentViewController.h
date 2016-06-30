@@ -19,8 +19,7 @@
 @property (nonatomic, strong) NSString *source;
 @property (nonatomic, strong) NSString *time;
 
-@property (nonatomic, strong) NSString *contentURL;
+@property (nonatomic, strong) NSString *newsId;
 
-- (void)setupWebViewByData:(id)data;
 
 @end

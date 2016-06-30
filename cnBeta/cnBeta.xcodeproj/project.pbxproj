@@ -24,6 +24,8 @@
 		8520653F1D17E25A0073F05C /* UIViewController+DownloadNews.m in Sources */ = {isa = PBXBuildFile; fileRef = 8520653E1D17E25A0073F05C /* UIViewController+DownloadNews.m */; };
 		852065481D1AB9AA0073F05C /* NSString+MD5.m in Sources */ = {isa = PBXBuildFile; fileRef = 852065471D1AB9AA0073F05C /* NSString+MD5.m */; };
 		85BA2A5C1D1BD46B001188DA /* contentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 85BA2A5B1D1BD46B001188DA /* contentViewController.m */; };
+		85FB7BA31D239E9C00192D5C /* SettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 85FB7BA21D239E9C00192D5C /* SettingsViewController.m */; };
+		85FB7BA61D23BBB900192D5C /* HTMLCache.m in Sources */ = {isa = PBXBuildFile; fileRef = 85FB7BA51D23BBB900192D5C /* HTMLCache.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -78,6 +80,10 @@
 		852065461D1AB9AA0073F05C /* NSString+MD5.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+MD5.h"; sourceTree = "<group>"; };
 		852065471D1AB9AA0073F05C /* NSString+MD5.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+MD5.m"; sourceTree = "<group>"; };
 		85BA2A5B1D1BD46B001188DA /* contentViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = contentViewController.m; sourceTree = "<group>"; };
+		85FB7BA11D239E9C00192D5C /* SettingsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SettingsViewController.h; sourceTree = "<group>"; };
+		85FB7BA21D239E9C00192D5C /* SettingsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SettingsViewController.m; sourceTree = "<group>"; };
+		85FB7BA41D23BBB900192D5C /* HTMLCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HTMLCache.h; sourceTree = "<group>"; };
+		85FB7BA51D23BBB900192D5C /* HTMLCache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HTMLCache.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -133,12 +139,16 @@
 				852064FA1D16D7D70073F05C /* ViewController.h */,
 				852064FB1D16D7D70073F05C /* ViewController.m */,
 				852064FD1D16D7D70073F05C /* Main.storyboard */,
+				85FB7BA11D239E9C00192D5C /* SettingsViewController.h */,
+				85FB7BA21D239E9C00192D5C /* SettingsViewController.m */,
 				852065271D16DB410073F05C /* NewsTableViewController.h */,
 				852065281D16DB410073F05C /* NewsTableViewController.m */,
 				852065401D19395A0073F05C /* contentViewController.h */,
 				85BA2A5B1D1BD46B001188DA /* contentViewController.m */,
 				8520653D1D17E25A0073F05C /* UIViewController+DownloadNews.h */,
 				8520653E1D17E25A0073F05C /* UIViewController+DownloadNews.m */,
+				85FB7BA41D23BBB900192D5C /* HTMLCache.h */,
+				85FB7BA51D23BBB900192D5C /* HTMLCache.m */,
 				852065461D1AB9AA0073F05C /* NSString+MD5.h */,
 				852065471D1AB9AA0073F05C /* NSString+MD5.m */,
 				852065001D16D7D70073F05C /* Assets.xcassets */,
@@ -326,6 +336,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				8520653A1D16E8E20073F05C /* SDRefreshHeaderView.m in Sources */,
+				85FB7BA61D23BBB900192D5C /* HTMLCache.m in Sources */,
 				852065291D16DB410073F05C /* NewsTableViewController.m in Sources */,
 				852064FC1D16D7D70073F05C /* ViewController.m in Sources */,
 				8520653B1D16E8E20073F05C /* SDRefreshView.m in Sources */,
@@ -336,6 +347,7 @@
 				852065391D16E8E20073F05C /* SDRefreshFooterView.m in Sources */,
 				8520653F1D17E25A0073F05C /* UIViewController+DownloadNews.m in Sources */,
 				8520653C1D16E8E20073F05C /* UIView+SDExtension.m in Sources */,
+				85FB7BA31D239E9C00192D5C /* SettingsViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

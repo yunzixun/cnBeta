@@ -8,8 +8,14 @@
 
 #import "contentViewController.h"
 #import "UIViewController+DownloadNews.h"
+#import "NSString+MD5.h"
+#import "HTMLCache.h"
+
+static NSString *const contentBaseURLString = @"http://api.cnbeta.com/capi?app_key=10000&format=json&method=Article.NewsContent&sid=";
 
 @interface contentViewController ()
+@property (nonatomic, strong)NSString *contentHTMLString;
+@property (nonatomic, strong)NSString *contentURL;
 @end
 
 @implementation contentViewController
@@ -18,14 +24,40 @@
     [super viewDidLoad];
     //[self.spinner setHidesWhenStopped:YES];
     [_spinner startAnimating];
-
+    [self setupWebView];
     // Do any additional setup after loading the view.
+    
+    
 }
 
-- (void)setContentURL:(NSString *)contentURL
+- (void)setupWebView
 {
-    _contentURL = contentURL;
-    [self startDownloadContent];
+    
+        HTMLCache *htmlCache = [HTMLCache sharedCache];
+        _contentHTMLString = [htmlCache getHTMLFromFileForKey:self.newsId];
+        if (!_contentHTMLString) {
+            //Unix时间戳
+            UInt64 timestamp = (UInt64)[[NSDate date]timeIntervalSince1970];
+            
+            //md5加密
+            NSString *md5String = [NSString stringWithFormat:@"app_key=10000&format=json&method=Article.NewsContent&sid=%@&timestamp=%llu&v=1.0&mpuffgvbvbttn3Rc", self.newsId, timestamp ];
+            NSString *sign = [md5String MD5];
+            
+            self.contentURL = [contentBaseURLString stringByAppendingString:[NSString stringWithFormat:@"%@&timestamp=%llu&v=1.0&mpuffgvbvbttn3Rc&sign=%@", self.newsId, timestamp, sign]];
+            
+            [self startDownloadContent];
+            
+        } else{
+            [_contentWebView loadHTMLString:_contentHTMLString baseURL:nil];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [_spinner stopAnimating];
+                //[_spinner removeFromSuperview];
+                //_spinner.hidden = YES;
+            });
+        }
+    
+
+    
 }
 
 - (void)startDownloadContent
@@ -36,15 +68,17 @@
             if (!error) {
                 NSDictionary *dataDic = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:nil][@"result"];
                 
-                [self setupWebViewByData:dataDic];
+                [self getHTMLByData:dataDic];
+                //缓存到文件系统
+                HTMLCache *htmlCache = [HTMLCache sharedCache];
+                [htmlCache cacheHTMLToFile:_contentHTMLString forKey:_newsId];
             }
             //NSLog(@"%@",dic);
         }];
-        
     }
 }
 
-- (void)setupWebViewByData:(id)data
+- (void)getHTMLByData:(id)data
 {
     
     NSDictionary *dataDic = (NSDictionary *)data;
@@ -54,25 +88,22 @@
     self.source = dataDic[@"source"];
     self.time = dataDic[@"time"];
     
-    NSMutableString *allTitleStr =[NSMutableString stringWithString:@"<style type='text/css'> p.thicker{font-weight: 500}p.light{font-weight: 0}p{font-size: 108%}h2 {font-size: 120%}h3 {font-size: 80%}</style> <h2 class = 'thicker'>xukun</h2><h3>hehe    lala</h3>"];
+    NSMutableString *allTitleStr =[NSMutableString stringWithString:@"<style type='text/css'> p.thicker{font-weight: 500}p.light{font-weight: 0}p{font-size: 108%}h2 {font-size: 120%}h3 {font-size: 80%}</style> <h2 class = 'thicker'>title</h2><h3>hehe    lala</h3>"];
     
-    [allTitleStr replaceOccurrencesOfString:@"xukun" withString:_newsTitle options:NSCaseInsensitiveSearch range:[allTitleStr rangeOfString:@"xukun"]];
+    [allTitleStr replaceOccurrencesOfString:@"title" withString:_newsTitle options:NSCaseInsensitiveSearch range:[allTitleStr rangeOfString:@"title"]];
     [allTitleStr replaceOccurrencesOfString:@"hehe" withString:_source options:NSCaseInsensitiveSearch range:[allTitleStr rangeOfString:@"hehe"]];
     [allTitleStr replaceOccurrencesOfString:@"lala" withString:_time options:NSCaseInsensitiveSearch range:[allTitleStr rangeOfString:@"lala"]];
     
     NSMutableString *head = (NSMutableString *)@"<head><style>img{width:360px !important;}</style></head>";
-    NSString *allStr = [[[head stringByAppendingString:allTitleStr] stringByAppendingString:_homeText] stringByAppendingString:_bodyText];
+    _contentHTMLString = [[[head stringByAppendingString:allTitleStr] stringByAppendingString:_homeText] stringByAppendingString:_bodyText];
+    [_contentWebView loadHTMLString:_contentHTMLString baseURL:nil];
     dispatch_async(dispatch_get_main_queue(), ^{
         [_spinner stopAnimating];
         //[_spinner removeFromSuperview];
         //_spinner.hidden = YES;
     });
     
-    //_spinner.hidden = YES;
-
-    [_contentWebView loadHTMLString:allStr baseURL:nil];
-    
-}
+    }
 
 
 /*
