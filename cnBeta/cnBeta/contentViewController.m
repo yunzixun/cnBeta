@@ -20,14 +20,13 @@ static NSString *const contentBaseURLString = @"http://api.cnbeta.com/capi?app_k
 
 @implementation contentViewController
 
-- (void)viewDidLoad {
-    [super viewDidLoad];
-    //[self.spinner setHidesWhenStopped:YES];
+
+-(void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    self.automaticallyAdjustsScrollViewInsets = NO;
     [_spinner startAnimating];
     [self setupWebView];
-    // Do any additional setup after loading the view.
-    
-    
 }
 
 - (void)setupWebView

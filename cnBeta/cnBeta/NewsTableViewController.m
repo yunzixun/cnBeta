@@ -174,6 +174,7 @@ static NSString *const loadNewsListBaseURLString = @"http://cnbeta.techoke.com/a
     if ([segue.destinationViewController isKindOfClass:[contentViewController class]]) {
         contentViewController *contentvc = (contentViewController *)segue.destinationViewController;
         NSIndexPath *indexPath = [self.tableView indexPathForSelectedRow];
+        contentvc.hidesBottomBarWhenPushed = YES;
         contentvc.newsId =self.newsList[indexPath.row][@"id"];
 //        NSString *sid = self.newsList[indexPath.row][@"id"];
 //        //NSString *sid = @"512827";
