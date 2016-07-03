@@ -10,6 +10,9 @@
 #import "SDRefresh.h"
 #import "UIViewController+DownloadNews.h"
 #import "contentViewController.h"
+#import "NewsListCell.h"
+#import "DataModel.h"
+#import "MJExtension.h"
 
 static NSString *const newsListURLString = @"http://cnbeta.techoke.com/api/list?version=1.8.6&init=1";
 static NSString *const loadNewsListBaseURLString = @"http://cnbeta.techoke.com/api/list?version=1.8.6&last=";
@@ -71,8 +74,10 @@ static NSString *const loadNewsListBaseURLString = @"http://cnbeta.techoke.com/a
     [self requestWithURL:URLString completion:^(NSData *data, NSError *error) {
         if (!error) {
             NSDictionary *dataDic = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:nil][@"data"];
+            //NSLog(@"%@",dataDic[@"lists"]);
+            NSArray *dataList = [DataModel mj_objectArrayWithKeyValuesArray:dataDic[@"lists"]];
             [self.newsList removeAllObjects];
-            [self.newsList addObjectsFromArray:dataDic[@"lists"]];
+            [self.newsList addObjectsFromArray:dataList];
             self.RowCount = [self.newsList count];
         }
         
@@ -87,7 +92,8 @@ static NSString *const loadNewsListBaseURLString = @"http://cnbeta.techoke.com/a
             if (!error) {
                 NSDictionary *dataDic = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:nil][@"data"];
                 //NSLog(@"%@",dataDic);
-                [self.newsList addObjectsFromArray:dataDic[@"lists"]];
+                NSArray *dataList = [DataModel mj_objectArrayWithKeyValuesArray:dataDic[@"list"]];
+                [self.newsList addObjectsFromArray:dataList];
                 self.RowCount = [self.newsList count];
             }
             //[self.tableView reloadData];
@@ -132,31 +138,9 @@ static NSString *const loadNewsListBaseURLString = @"http://cnbeta.techoke.com/a
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     static NSString *cellID = @"NewsCell";
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellID forIndexPath:indexPath];
-
-    //UILabel *label = (UILabel *)[cell viewWithTag:0];
-    //label.numberOfLines = 3;
-    //label.text = self.newsList[indexPath.row][@"title"];
-    //label.attributedText = [[NSAttributedString alloc] initWithData:[self.newsList[indexPath.row][@"title"] dataUsingEncoding:NSUnicodeStringEncoding] options:@{ NSDocumentTypeDocumentAttribute: NSHTMLTextDocumentType } documentAttributes:nil error:nil];
-    for (UILabel *label in cell.contentView.subviews) {
-        [label removeFromSuperview];
-    }
-    UILabel *newstitle = [[UILabel alloc]initWithFrame:CGRectMake(20, 10, 340, 50)];
-    newstitle.autoresizingMask = UIViewAutoresizingFlexibleWidth;
-    newstitle.numberOfLines = 3;
-    [newstitle setText:self.newsList[indexPath.row][@"title"]];
-    newstitle.font = [UIFont systemFontOfSize:16];
-    newstitle.textAlignment = NSTextAlignmentLeft;
-    [cell.contentView addSubview:newstitle];
-    
-    UILabel *time = [[UILabel alloc]initWithFrame:CGRectMake(20, 70, 300, 10)];
-    time.autoresizingMask = UIViewAutoresizingFlexibleWidth;
-    [time setText:self.newsList[indexPath.row][@"parsedTime"]];
-    time.font = [UIFont systemFontOfSize:11];
-    time.textColor = [UIColor grayColor];
-    time.textAlignment = NSTextAlignmentLeft;
-    [cell.contentView addSubview:time];
-     
+    NewsListCell *cell = [tableView dequeueReusableCellWithIdentifier:cellID forIndexPath:indexPath];
+    DataModel *dataModel = _newsList[indexPath.row];
+    cell.newsModel = dataModel;
     
     //cell.textLabel.numberOfLines = 3;
     //cell.textLabel.attributedText = [[NSAttributedString alloc] initWithData:[self.newsList[indexPath.row][@"title"] dataUsingEncoding:NSUnicodeStringEncoding] options:@{ NSDocumentTypeDocumentAttribute: NSHTMLTextDocumentType } documentAttributes:nil error:nil];
@@ -175,7 +159,8 @@ static NSString *const loadNewsListBaseURLString = @"http://cnbeta.techoke.com/a
         contentViewController *contentvc = (contentViewController *)segue.destinationViewController;
         NSIndexPath *indexPath = [self.tableView indexPathForSelectedRow];
         contentvc.hidesBottomBarWhenPushed = YES;
-        contentvc.newsId =self.newsList[indexPath.row][@"id"];
+        DataModel *currentNews = self.newsList[indexPath.row];
+        contentvc.newsId = currentNews.id;
 //        NSString *sid = self.newsList[indexPath.row][@"id"];
 //        //NSString *sid = @"512827";
 //        

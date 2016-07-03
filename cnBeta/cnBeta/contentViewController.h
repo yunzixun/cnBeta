@@ -13,13 +13,7 @@
 //@property (weak, nonatomic) UIActivityIndicatorView *spinner;
 @property (weak, nonatomic) IBOutlet UIActivityIndicatorView *spinner;
 @property (weak, nonatomic) IBOutlet UIWebView *contentWebView;
-@property (nonatomic, strong) NSString *newsTitle;
-@property (nonatomic, strong) NSString *bodyText;
-@property (nonatomic, strong) NSString *homeText;
-@property (nonatomic, strong) NSString *source;
-@property (nonatomic, strong) NSString *time;
 
 @property (nonatomic, strong) NSString *newsId;
-
 
 @end

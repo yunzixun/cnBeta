@@ -10,12 +10,15 @@
 #import "UIViewController+DownloadNews.h"
 #import "NSString+MD5.h"
 #import "HTMLCache.h"
+#import "NewsContentModel.h"
+#import "MJExtension.h"
 
 static NSString *const contentBaseURLString = @"http://api.cnbeta.com/capi?app_key=10000&format=json&method=Article.NewsContent&sid=";
 
 @interface contentViewController ()
 @property (nonatomic, strong)NSString *contentHTMLString;
 @property (nonatomic, strong)NSString *contentURL;
+@property (nonatomic, strong)NewsContentModel *newsContent;
 @end
 
 @implementation contentViewController
@@ -80,21 +83,18 @@ static NSString *const contentBaseURLString = @"http://api.cnbeta.com/capi?app_k
 - (void)getHTMLByData:(id)data
 {
     
-    NSDictionary *dataDic = (NSDictionary *)data;
-    self.newsTitle = dataDic[@"title"];
-    self.homeText = dataDic[@"hometext"];
-    self.bodyText = dataDic[@"bodytext"];
-    self.source = dataDic[@"source"];
-    self.time = dataDic[@"time"];
+    NSArray *dataDic = @[(NSDictionary *)data];
+    
+    _newsContent = [NewsContentModel mj_objectArrayWithKeyValuesArray:dataDic][0];
     
     NSMutableString *allTitleStr =[NSMutableString stringWithString:@"<style type='text/css'> p.thicker{font-weight: 500}p.light{font-weight: 0}p{font-size: 108%}h2 {font-size: 120%}h3 {font-size: 80%}</style> <h2 class = 'thicker'>title</h2><h3>hehe    lala</h3>"];
     
-    [allTitleStr replaceOccurrencesOfString:@"title" withString:_newsTitle options:NSCaseInsensitiveSearch range:[allTitleStr rangeOfString:@"title"]];
-    [allTitleStr replaceOccurrencesOfString:@"hehe" withString:_source options:NSCaseInsensitiveSearch range:[allTitleStr rangeOfString:@"hehe"]];
-    [allTitleStr replaceOccurrencesOfString:@"lala" withString:_time options:NSCaseInsensitiveSearch range:[allTitleStr rangeOfString:@"lala"]];
+    [allTitleStr replaceOccurrencesOfString:@"title" withString:_newsContent.title options:NSCaseInsensitiveSearch range:[allTitleStr rangeOfString:@"title"]];
+    [allTitleStr replaceOccurrencesOfString:@"hehe" withString:_newsContent.source options:NSCaseInsensitiveSearch range:[allTitleStr rangeOfString:@"hehe"]];
+    [allTitleStr replaceOccurrencesOfString:@"lala" withString:_newsContent.time options:NSCaseInsensitiveSearch range:[allTitleStr rangeOfString:@"lala"]];
     
     NSMutableString *head = (NSMutableString *)@"<head><style>img{width:360px !important;}</style></head>";
-    _contentHTMLString = [[[head stringByAppendingString:allTitleStr] stringByAppendingString:_homeText] stringByAppendingString:_bodyText];
+    _contentHTMLString = [[[head stringByAppendingString:allTitleStr] stringByAppendingString:_newsContent.hometext] stringByAppendingString:_newsContent.bodytext];
     [_contentWebView loadHTMLString:_contentHTMLString baseURL:nil];
     dispatch_async(dispatch_get_main_queue(), ^{
         [_spinner stopAnimating];
