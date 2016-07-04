@@ -116,7 +116,7 @@ static NSString *const loadNewsListBaseURLString = @"http://cnbeta.techoke.com/a
 
 - (void)footerRefresh
 {
-    NSString *URLString = [loadNewsListBaseURLString stringByAppendingString:[NSString stringWithFormat:@"%@", [_newsList lastObject][@"id"]]];
+    NSString *URLString = [loadNewsListBaseURLString stringByAppendingString:[NSString stringWithFormat:@"%@", [[_newsList lastObject]id]]];
     [self loadData:URLString];
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         //[self loadData:URLString];
