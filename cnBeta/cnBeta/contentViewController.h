@@ -14,6 +14,8 @@
 @property (weak, nonatomic) IBOutlet UIActivityIndicatorView *spinner;
 @property (weak, nonatomic) IBOutlet UIWebView *contentWebView;
 
-@property (nonatomic, strong) NSString *newsId;
-
+@property (nonatomic, copy) NSString *newsId;
+@property (nonatomic, copy) NSString *comments;
+//@property (nonatomic, copy) NSString *thumb;
+@property (nonatomic, copy) NSString *newsTitle;
 @end

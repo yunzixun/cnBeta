@@ -6,74 +6,114 @@
 //  Copyright © 2016年 hudy. All rights reserved.
 //
 
+#define SCREEN_WIDTH                    ([UIScreen mainScreen].bounds.size.width)
+#define SCREEN_HEIGHT                   ([UIScreen mainScreen].bounds.size.height)
+
 #import "contentViewController.h"
+#import "commentViewController.h"
 #import "UIViewController+DownloadNews.h"
-#import "NSString+MD5.h"
-#import "HTMLCache.h"
+#import "NSDate+gyh.h"
+#import "FileCache.h"
 #import "NewsContentModel.h"
 #import "MJExtension.h"
+#import "ObjectiveGumbo.h"
+#import "DataBase.h"
+#import "collectionModel.h"
 
-static NSString *const contentBaseURLString = @"http://api.cnbeta.com/capi?app_key=10000&format=json&method=Article.NewsContent&sid=";
+//#import <ShareSDK/ShareSDK.h>
+//#import <ShareSDKUI/ShareSDK+SSUI.h>
 
 @interface contentViewController ()
-@property (nonatomic, strong)NSString *contentHTMLString;
-@property (nonatomic, strong)NSString *contentURL;
+
+@property (nonatomic, copy)NSString *contentHTMLString;
+@property (nonatomic, copy)NSString *contentURL;
+@property (nonatomic, copy) NSString *sn;
 @property (nonatomic, strong)NewsContentModel *newsContent;
+@property (nonatomic,strong)DataBase *collection;
+@property (nonatomic,strong)collectionModel *news;
+
+@property (weak, nonatomic) IBOutlet UIButton *collect;
+
 @end
 
 @implementation contentViewController
+
+
+
+- (void)viewDidLoad
+{
+    [super viewDidLoad];
+    UIBarButtonItem *backItem = [[UIBarButtonItem alloc] init];
+    backItem.title = @"返回";
+    self.navigationItem.backBarButtonItem = backItem;
+    _collection = [DataBase sharedDataBase];
+    _news = [[collectionModel alloc]init];
+    self.news.sid = _newsId;
+    _news.title = _newsTitle;
+    
+    
+}
 
 
 -(void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
     self.automaticallyAdjustsScrollViewInsets = NO;
+    _spinner.center = CGPointMake(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 );
     [_spinner startAnimating];
+    
     [self setupWebView];
+    
+    
 }
 
 - (void)setupWebView
 {
+    if ([_collection queryWithSid:self.newsId tableType:@"collection"]) {
+        _collect.selected = YES;
+        [_collect setTitle:@"已收藏" forState:UIControlStateNormal];
+        [_collect setTitleColor:[UIColor redColor] forState:UIControlStateSelected];
+    }
     
-        HTMLCache *htmlCache = [HTMLCache sharedCache];
-        _contentHTMLString = [htmlCache getHTMLFromFileForKey:self.newsId];
-        if (!_contentHTMLString) {
-            //Unix时间戳
-            UInt64 timestamp = (UInt64)[[NSDate date]timeIntervalSince1970];
-            
-            //md5加密
-            NSString *md5String = [NSString stringWithFormat:@"app_key=10000&format=json&method=Article.NewsContent&sid=%@&timestamp=%llu&v=1.0&mpuffgvbvbttn3Rc", self.newsId, timestamp ];
-            NSString *sign = [md5String MD5];
-            
-            self.contentURL = [contentBaseURLString stringByAppendingString:[NSString stringWithFormat:@"%@&timestamp=%llu&v=1.0&mpuffgvbvbttn3Rc&sign=%@", self.newsId, timestamp, sign]];
-            
-            [self startDownloadContent];
-            
-        } else{
-            [_contentWebView loadHTMLString:_contentHTMLString baseURL:nil];
-            dispatch_async(dispatch_get_main_queue(), ^{
-                [_spinner stopAnimating];
-                //[_spinner removeFromSuperview];
-                //_spinner.hidden = YES;
-            });
-        }
-    
+    FileCache *fileCache = [FileCache sharedCache];
+    _contentHTMLString = [fileCache getHTMLFromFileForKey:self.newsId];
+    if (!_contentHTMLString) {
+        
+        [self startDownloadContent:self.newsId];
+        
+    } else{
+        [_contentWebView loadHTMLString:_contentHTMLString baseURL:nil];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [_spinner stopAnimating];
+            //[_spinner removeFromSuperview];
+            //_spinner.hidden = YES;
+        });
+    }
 
+    [self requestWithURLType:@"SN" andId:_newsId completion:^(id data, NSError *error) {
+        if (!error) {
+            OGNode *node = [ObjectiveGumbo parseNodeWithData:data];
+            NSRange range = [node.text rangeOfString:@"\",SN:\""];
+            if (range.location != NSNotFound) {
+                _sn = [node.text substringWithRange:NSMakeRange(range.location + range.length, 5)];
+                //NSLog(@"%@", _sn);
+            }
+        }
+    }];
     
 }
 
-- (void)startDownloadContent
+- (void)startDownloadContent:(NSString *)sid
 {
-    if (self.contentURL) {
+    if (sid) {
         
-        [self requestWithURL:self.contentURL completion:^(NSData *data, NSError *error) {
+        [self requestWithURLType:@"content" andId:sid completion:^(id data, NSError *error) {
             if (!error) {
-                NSDictionary *dataDic = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:nil][@"result"];
                 
-                [self getHTMLByData:dataDic];
+                [self getHTMLByData:data[@"result"]];
                 //缓存到文件系统
-                HTMLCache *htmlCache = [HTMLCache sharedCache];
-                [htmlCache cacheHTMLToFile:_contentHTMLString forKey:_newsId];
+                FileCache *fileCache = [FileCache sharedCache];
+                [fileCache cacheHTMLToFile:_contentHTMLString forKey:_newsId];
             }
             //NSLog(@"%@",dic);
         }];
@@ -87,11 +127,12 @@ static NSString *const contentBaseURLString = @"http://api.cnbeta.com/capi?app_k
     
     _newsContent = [NewsContentModel mj_objectArrayWithKeyValuesArray:dataDic][0];
     
-    NSMutableString *allTitleStr =[NSMutableString stringWithString:@"<style type='text/css'> p.thicker{font-weight: 500}p.light{font-weight: 0}p{font-size: 108%}h2 {font-size: 120%}h3 {font-size: 80%}</style> <h2 class = 'thicker'>title</h2><h3>hehe    lala</h3>"];
+    NSMutableString *allTitleStr =[NSMutableString stringWithString:@"<style type='text/css'> p.thicker{font-weight: 500}p.light{font-weight: 0}p{font-size: 108%}h2 {font-size: 120%}h3 {font-size: 80%}</style> <h2 class = 'thicker'>title</h2><h3>hehe      lala      gaga</h3>"];
     
     [allTitleStr replaceOccurrencesOfString:@"title" withString:_newsContent.title options:NSCaseInsensitiveSearch range:[allTitleStr rangeOfString:@"title"]];
     [allTitleStr replaceOccurrencesOfString:@"hehe" withString:_newsContent.source options:NSCaseInsensitiveSearch range:[allTitleStr rangeOfString:@"hehe"]];
     [allTitleStr replaceOccurrencesOfString:@"lala" withString:_newsContent.time options:NSCaseInsensitiveSearch range:[allTitleStr rangeOfString:@"lala"]];
+    [allTitleStr replaceOccurrencesOfString:@"gaga" withString:[NSString stringWithFormat:@"%@条评论", self.comments] options:NSCaseInsensitiveSearch range:[allTitleStr rangeOfString:@"gaga"]];
     
     NSMutableString *head = (NSMutableString *)@"<head><style>img{width:360px !important;}</style></head>";
     _contentHTMLString = [[[head stringByAppendingString:allTitleStr] stringByAppendingString:_newsContent.hometext] stringByAppendingString:_newsContent.bodytext];
@@ -102,8 +143,82 @@ static NSString *const contentBaseURLString = @"http://api.cnbeta.com/capi?app_k
         //_spinner.hidden = YES;
     });
     
-    }
+    
+}
 
+
+
+
+
+#pragma mark - Actions
+
+- (IBAction)showComments:(id)sender
+{
+    [self.navigationController pushViewController:[[commentViewController alloc]initWithSid:_newsId andSN:_sn] animated:YES];
+}
+
+- (IBAction)collectNews:(id)sender
+{
+    _collect.selected = !_collect.selected;
+    
+    if (self.collect.selected) {
+        [_collect setTitle:@"已收藏" forState:UIControlStateNormal];
+        [_collect setTitleColor:[UIColor redColor] forState:UIControlStateSelected];
+        _news.time = [NSDate currentTime];
+        [_collection addNews:_news];
+    }else {
+        [_collect setTitle:@"收藏" forState:UIControlStateNormal];
+        [_collect setTitleColor:[UIColor blackColor] forState:UIControlStateSelected];
+        [_collection deleteCellOfSid:_newsId];
+    }
+}
+
+//- (IBAction)shareNews:(id)sender
+//{
+//    //1、创建分享参数
+//    NSArray* imageArray = @[[UIImage imageNamed:@"placeholder"]];
+//    //（注意：图片必须要在Xcode左边目录里面，名称必须要传正确，如果要分享网络图片，可以这样传iamge参数 images:@[@"http://mob.com/Assets/images/logo.png?v=20150320"]）
+//    if (imageArray) {
+//        
+//        NSMutableDictionary *shareParams = [NSMutableDictionary dictionary];
+//        [shareParams SSDKSetupShareParamsByText:nil
+//                                         images:imageArray
+//                                            url:[NSURL URLWithString:[NSString stringWithFormat:@"http://www.cnbeta.com/articles/%@.htm",_newsId]]
+//                                          title:_newsContent.title
+//                                           type:SSDKContentTypeAuto];
+//        //2、分享（可以弹出我们的分享菜单和编辑界面）
+//        [ShareSDK showShareActionSheet:nil //要显示菜单的视图, iPad版中此参数作为弹出菜单的参照视图，只有传这个才可以弹出我们的分享菜单，可以传分享的按钮对象或者自己创建小的view 对象，iPhone可以传nil不会影响
+//                                 items:nil
+//                           shareParams:shareParams
+//                   onShareStateChanged:^(SSDKResponseState state, SSDKPlatformType platformType, NSDictionary *userData, SSDKContentEntity *contentEntity, NSError *error, BOOL end) {
+//                       
+//                       switch (state) {
+//                           case SSDKResponseStateSuccess:
+//                           {
+//                               UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"分享成功"
+//                                                                                   message:nil
+//                                                                                  delegate:nil
+//                                                                         cancelButtonTitle:@"确定"
+//                                                                         otherButtonTitles:nil];
+//                               [alertView show];
+//                               break;
+//                           }
+//                           case SSDKResponseStateFail:
+//                           {
+//                               UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"分享失败"
+//                                                                               message:[NSString stringWithFormat:@"%@",error]
+//                                                                              delegate:nil
+//                                                                     cancelButtonTitle:@"OK"
+//                                                                     otherButtonTitles:nil, nil];
+//                               [alert show];
+//                               break;
+//                           }
+//                           default:
+//                               break;
+//                       }
+//                   }];
+//    }
+//}
 
 /*
 #pragma mark - Navigation

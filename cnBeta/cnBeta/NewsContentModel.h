@@ -10,10 +10,10 @@
 
 @interface NewsContentModel : NSObject
 
-@property (nonatomic, strong) NSString *title;
-@property (nonatomic, strong) NSString *bodytext;
-@property (nonatomic, strong) NSString *hometext;
-@property (nonatomic, strong) NSString *source;
-@property (nonatomic, strong) NSString *time;
+@property (nonatomic, copy) NSString *title;
+@property (nonatomic, copy) NSString *bodytext;
+@property (nonatomic, copy) NSString *hometext;
+@property (nonatomic, copy) NSString *source;
+@property (nonatomic, copy) NSString *time;
 
 @end

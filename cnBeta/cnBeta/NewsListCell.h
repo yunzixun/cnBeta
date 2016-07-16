@@ -11,5 +11,8 @@
 @interface NewsListCell : UITableViewCell
 
 @property (nonatomic, strong)DataModel *newsModel;
+@property (nonatomic,strong)UILabel *newstitle;
+
 - (void)setNewsModel:(DataModel *)newsModel;
+
 @end

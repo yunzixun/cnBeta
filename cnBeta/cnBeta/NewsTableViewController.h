@@ -7,7 +7,11 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "sqlite3.h"
 
 @interface NewsTableViewController : UITableViewController
+{
+    sqlite3 *dataBase;
+}
 
 @end

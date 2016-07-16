@@ -1,3 +1,13 @@
 target “cnBeta” do
 pod 'MJExtension', '~> 3.0.10'
+pod 'AFNetworking', '~>3.0.4'
+pod 'SDWebImage', '~>3.7.3'
+pod 'ObjectiveGumbo', '~> 0.1'
+pod 'UITableView+FDTemplateLayoutCell', '~> 1.4'
+#pod 'ShareSDK3'
+#pod 'MOBFoundation'
+#pod 'ShareSDK3/ShareSDKPlatforms/QQ'
+#pod 'ShareSDK3/ShareSDKPlatforms/SinaWeibo'
+#pod 'ShareSDK3/ShareSDKPlatforms/WeChat'
+#pod 'ShareSDK3/ShareSDKUI'
 end

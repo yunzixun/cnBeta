@@ -8,10 +8,13 @@
 
 #import <UIKit/UIKit.h>
 
-typedef void (^CompletionBlock)(NSData *data, NSError *error);
+typedef void (^CompletionBlock)(id data, NSError *error);
 
 @interface UIViewController (DownloadNews)
 
 - (void)requestWithURL:(NSString *)url completion:(CompletionBlock)completionBlock;
+- (void)requestWithURLType:(NSString *)type completion:(CompletionBlock)completionBlock;
+- (void)requestWithURLType:(NSString *)type andId:(NSString *)sid completion:(CompletionBlock)completionBlock;
+- (void)requestWithURL:(NSString *)url andHeaders:(NSDictionary *)headers completion:(CompletionBlock)completionBlock;
 
 @end
