@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		850A080B1D3E22C000DA0FDE /* HTTPRequester.m in Sources */ = {isa = PBXBuildFile; fileRef = 850A080A1D3E22C000DA0FDE /* HTTPRequester.m */; };
 		852064F61D16D7D70073F05C /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 852064F51D16D7D70073F05C /* main.m */; };
 		852064F91D16D7D70073F05C /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 852064F81D16D7D70073F05C /* AppDelegate.m */; };
 		852064FF1D16D7D70073F05C /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 852064FD1D16D7D70073F05C /* Main.storyboard */; };
@@ -28,6 +29,13 @@
 		8562041F1D2CD16F002156D2 /* commentModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 8562041E1D2CD16F002156D2 /* commentModel.m */; };
 		856204221D2CDDC4002156D2 /* commentCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 856204211D2CDDC4002156D2 /* commentCell.m */; };
 		856204241D2D01A2002156D2 /* commentCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 856204231D2D01A2002156D2 /* commentCell.xib */; };
+		859063F11D378952004D1BCB /* NSArray+transform.m in Sources */ = {isa = PBXBuildFile; fileRef = 859063F01D378952004D1BCB /* NSArray+transform.m */; };
+		859063F41D3791E1004D1BCB /* flooredCommentModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 859063F31D3791E1004D1BCB /* flooredCommentModel.m */; };
+		859063F71D38CE29004D1BCB /* LayoutCommentView.m in Sources */ = {isa = PBXBuildFile; fileRef = 859063F61D38CE29004D1BCB /* LayoutCommentView.m */; };
+		859063FC1D3904BF004D1BCB /* gridLayoutView.m in Sources */ = {isa = PBXBuildFile; fileRef = 859063FB1D3904BF004D1BCB /* gridLayoutView.m */; };
+		859063FF1D3A87DF004D1BCB /* nestedLayoutView.m in Sources */ = {isa = PBXBuildFile; fileRef = 859063FE1D3A87DF004D1BCB /* nestedLayoutView.m */; };
+		859064061D3DFB96004D1BCB /* commentPostViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 859064051D3DFB96004D1BCB /* commentPostViewController.m */; };
+		8590640A1D3E04C5004D1BCB /* commentPostViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 859064091D3E04C5004D1BCB /* commentPostViewController.xib */; };
 		85BA2A5C1D1BD46B001188DA /* contentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 85BA2A5B1D1BD46B001188DA /* contentViewController.m */; };
 		85EE4CDE1D2E6859003D2DB4 /* commentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 85EE4CDD1D2E6859003D2DB4 /* commentViewController.m */; };
 		85EE4CE31D2F8BE8003D2DB4 /* collectionTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 85EE4CE21D2F8BE8003D2DB4 /* collectionTableViewController.m */; };
@@ -72,6 +80,8 @@
 
 /* Begin PBXFileReference section */
 		46E668121CA0CAE10B882A45 /* libPods-cnBeta.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-cnBeta.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		850A08091D3E22C000DA0FDE /* HTTPRequester.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HTTPRequester.h; sourceTree = "<group>"; };
+		850A080A1D3E22C000DA0FDE /* HTTPRequester.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HTTPRequester.m; sourceTree = "<group>"; };
 		852064F11D16D7D70073F05C /* cnBeta.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = cnBeta.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		852064F51D16D7D70073F05C /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		852064F71D16D7D70073F05C /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -113,6 +123,20 @@
 		856204201D2CDDC4002156D2 /* commentCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = commentCell.h; sourceTree = "<group>"; };
 		856204211D2CDDC4002156D2 /* commentCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = commentCell.m; sourceTree = "<group>"; };
 		856204231D2D01A2002156D2 /* commentCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = commentCell.xib; sourceTree = "<group>"; };
+		859063EF1D378952004D1BCB /* NSArray+transform.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSArray+transform.h"; sourceTree = "<group>"; };
+		859063F01D378952004D1BCB /* NSArray+transform.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSArray+transform.m"; sourceTree = "<group>"; };
+		859063F21D3791E1004D1BCB /* flooredCommentModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = flooredCommentModel.h; sourceTree = "<group>"; };
+		859063F31D3791E1004D1BCB /* flooredCommentModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = flooredCommentModel.m; sourceTree = "<group>"; };
+		859063F51D38CE29004D1BCB /* LayoutCommentView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LayoutCommentView.h; sourceTree = "<group>"; };
+		859063F61D38CE29004D1BCB /* LayoutCommentView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LayoutCommentView.m; sourceTree = "<group>"; };
+		859063F91D38E49A004D1BCB /* Constant.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Constant.h; sourceTree = "<group>"; };
+		859063FA1D3904BF004D1BCB /* gridLayoutView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = gridLayoutView.h; sourceTree = "<group>"; };
+		859063FB1D3904BF004D1BCB /* gridLayoutView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = gridLayoutView.m; sourceTree = "<group>"; };
+		859063FD1D3A87DF004D1BCB /* nestedLayoutView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nestedLayoutView.h; sourceTree = "<group>"; };
+		859063FE1D3A87DF004D1BCB /* nestedLayoutView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = nestedLayoutView.m; sourceTree = "<group>"; };
+		859064041D3DFB95004D1BCB /* commentPostViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = commentPostViewController.h; sourceTree = "<group>"; };
+		859064051D3DFB96004D1BCB /* commentPostViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = commentPostViewController.m; sourceTree = "<group>"; };
+		859064091D3E04C5004D1BCB /* commentPostViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = commentPostViewController.xib; sourceTree = "<group>"; };
 		85BA2A5B1D1BD46B001188DA /* contentViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = contentViewController.m; sourceTree = "<group>"; };
 		85EE4CDC1D2E6859003D2DB4 /* commentViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = commentViewController.h; sourceTree = "<group>"; };
 		85EE4CDD1D2E6859003D2DB4 /* commentViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = commentViewController.m; sourceTree = "<group>"; };
@@ -222,12 +246,12 @@
 		852064F31D16D7D70073F05C /* cnBeta */ = {
 			isa = PBXGroup;
 			children = (
-				85EE4CE41D2F9A48003D2DB4 /* Collection */,
-				85FB7C0A1D2972B700192D5C /* Controller */,
-				85FB7C081D29722A00192D5C /* View */,
-				85FB7C071D29720800192D5C /* Model */,
-				85FB7C091D29725B00192D5C /* Other */,
+				85977ADF1D40B08A00D5CD6F /* Home */,
+				85977AE21D40B10E00D5CD6F /* Content */,
+				859063EB1D378023004D1BCB /* Comment */,
 				85FB7BF11D29410000192D5C /* Categary */,
+				85EE4CE41D2F9A48003D2DB4 /* Collection */,
+				85FB7C091D29725B00192D5C /* Cache */,
 				8520652D1D16E8E20073F05C /* Lib */,
 				852064F41D16D7D70073F05C /* Supporting Files */,
 			);
@@ -273,6 +297,117 @@
 				85FB7C0E1D2A4AD800192D5C /* SDRefresh */,
 			);
 			path = Lib;
+			sourceTree = "<group>";
+		};
+		859063EB1D378023004D1BCB /* Comment */ = {
+			isa = PBXGroup;
+			children = (
+				859064001D3CD7BA004D1BCB /* Categary */,
+				859063EE1D3780DA004D1BCB /* Model */,
+				859063ED1D3780CA004D1BCB /* View */,
+				859063EC1D3780BD004D1BCB /* Controller */,
+				85977ADE1D3F6E5D00D5CD6F /* HTTPRequest */,
+			);
+			name = Comment;
+			sourceTree = "<group>";
+		};
+		859063EC1D3780BD004D1BCB /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+				85EE4CDC1D2E6859003D2DB4 /* commentViewController.h */,
+				85EE4CDD1D2E6859003D2DB4 /* commentViewController.m */,
+				859064041D3DFB95004D1BCB /* commentPostViewController.h */,
+				859064051D3DFB96004D1BCB /* commentPostViewController.m */,
+				859064091D3E04C5004D1BCB /* commentPostViewController.xib */,
+			);
+			name = Controller;
+			sourceTree = "<group>";
+		};
+		859063ED1D3780CA004D1BCB /* View */ = {
+			isa = PBXGroup;
+			children = (
+				859063F91D38E49A004D1BCB /* Constant.h */,
+				856204201D2CDDC4002156D2 /* commentCell.h */,
+				856204211D2CDDC4002156D2 /* commentCell.m */,
+				856204231D2D01A2002156D2 /* commentCell.xib */,
+				859063FA1D3904BF004D1BCB /* gridLayoutView.h */,
+				859063FB1D3904BF004D1BCB /* gridLayoutView.m */,
+				859063FD1D3A87DF004D1BCB /* nestedLayoutView.h */,
+				859063FE1D3A87DF004D1BCB /* nestedLayoutView.m */,
+				859063F51D38CE29004D1BCB /* LayoutCommentView.h */,
+				859063F61D38CE29004D1BCB /* LayoutCommentView.m */,
+			);
+			name = View;
+			sourceTree = "<group>";
+		};
+		859063EE1D3780DA004D1BCB /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				8562041A1D2CD07B002156D2 /* commentList.h */,
+				8562041B1D2CD07B002156D2 /* commentList.m */,
+				8562041D1D2CD16F002156D2 /* commentModel.h */,
+				8562041E1D2CD16F002156D2 /* commentModel.m */,
+				859063F21D3791E1004D1BCB /* flooredCommentModel.h */,
+				859063F31D3791E1004D1BCB /* flooredCommentModel.m */,
+			);
+			name = Model;
+			sourceTree = "<group>";
+		};
+		859064001D3CD7BA004D1BCB /* Categary */ = {
+			isa = PBXGroup;
+			children = (
+				859063EF1D378952004D1BCB /* NSArray+transform.h */,
+				859063F01D378952004D1BCB /* NSArray+transform.m */,
+			);
+			name = Categary;
+			sourceTree = "<group>";
+		};
+		85977ADE1D3F6E5D00D5CD6F /* HTTPRequest */ = {
+			isa = PBXGroup;
+			children = (
+				850A08091D3E22C000DA0FDE /* HTTPRequester.h */,
+				850A080A1D3E22C000DA0FDE /* HTTPRequester.m */,
+			);
+			name = HTTPRequest;
+			sourceTree = "<group>";
+		};
+		85977ADF1D40B08A00D5CD6F /* Home */ = {
+			isa = PBXGroup;
+			children = (
+				85977AE11D40B0ED00D5CD6F /* Controller */,
+				85FB7C081D29722A00192D5C /* View */,
+				85977AE01D40B0B100D5CD6F /* Model */,
+			);
+			name = Home;
+			sourceTree = "<group>";
+		};
+		85977AE01D40B0B100D5CD6F /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				85FB7C261D2A509400192D5C /* CycleNewsModel.h */,
+				85FB7C271D2A509400192D5C /* CycleNewsModel.m */,
+				85FB7BFB1D29485B00192D5C /* DataModel.h */,
+				85FB7BFC1D29485B00192D5C /* DataModel.m */,
+			);
+			name = Model;
+			sourceTree = "<group>";
+		};
+		85977AE11D40B0ED00D5CD6F /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+				852065271D16DB410073F05C /* NewsTableViewController.h */,
+				852065281D16DB410073F05C /* NewsTableViewController.m */,
+			);
+			name = Controller;
+			sourceTree = "<group>";
+		};
+		85977AE21D40B10E00D5CD6F /* Content */ = {
+			isa = PBXGroup;
+			children = (
+				85FB7C071D29720800192D5C /* Model */,
+				85FB7C0A1D2972B700192D5C /* Controller */,
+			);
+			name = Content;
 			sourceTree = "<group>";
 		};
 		85EE4CE41D2F9A48003D2DB4 /* Collection */ = {
@@ -340,16 +475,8 @@
 		85FB7C071D29720800192D5C /* Model */ = {
 			isa = PBXGroup;
 			children = (
-				85FB7C261D2A509400192D5C /* CycleNewsModel.h */,
-				85FB7C271D2A509400192D5C /* CycleNewsModel.m */,
-				85FB7BFB1D29485B00192D5C /* DataModel.h */,
-				85FB7BFC1D29485B00192D5C /* DataModel.m */,
 				85FB7C0B1D29739500192D5C /* NewsContentModel.h */,
 				85FB7C0C1D29739500192D5C /* NewsContentModel.m */,
-				8562041A1D2CD07B002156D2 /* commentList.h */,
-				8562041B1D2CD07B002156D2 /* commentList.m */,
-				8562041D1D2CD16F002156D2 /* commentModel.h */,
-				8562041E1D2CD16F002156D2 /* commentModel.m */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -359,33 +486,26 @@
 			children = (
 				85FB7C041D294A3E00192D5C /* NewsListCell.h */,
 				85FB7C051D294A3E00192D5C /* NewsListCell.m */,
-				856204201D2CDDC4002156D2 /* commentCell.h */,
-				856204211D2CDDC4002156D2 /* commentCell.m */,
-				856204231D2D01A2002156D2 /* commentCell.xib */,
 			);
 			name = View;
 			sourceTree = "<group>";
 		};
-		85FB7C091D29725B00192D5C /* Other */ = {
+		85FB7C091D29725B00192D5C /* Cache */ = {
 			isa = PBXGroup;
 			children = (
 				85598FFD1D3134E600CD17EA /* FileCache.h */,
 				85598FFE1D3134E600CD17EA /* FileCache.m */,
 			);
-			name = Other;
+			name = Cache;
 			sourceTree = "<group>";
 		};
 		85FB7C0A1D2972B700192D5C /* Controller */ = {
 			isa = PBXGroup;
 			children = (
-				852065271D16DB410073F05C /* NewsTableViewController.h */,
-				852065281D16DB410073F05C /* NewsTableViewController.m */,
 				852065401D19395A0073F05C /* contentViewController.h */,
 				85BA2A5B1D1BD46B001188DA /* contentViewController.m */,
 				85FB7BA11D239E9C00192D5C /* SettingsViewController.h */,
 				85FB7BA21D239E9C00192D5C /* SettingsViewController.m */,
-				85EE4CDC1D2E6859003D2DB4 /* commentViewController.h */,
-				85EE4CDD1D2E6859003D2DB4 /* commentViewController.m */,
 			);
 			name = Controller;
 			sourceTree = "<group>";
@@ -554,6 +674,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8590640A1D3E04C5004D1BCB /* commentPostViewController.xib in Resources */,
 				852065041D16D7D70073F05C /* LaunchScreen.storyboard in Resources */,
 				852065011D16D7D70073F05C /* Assets.xcassets in Resources */,
 				852064FF1D16D7D70073F05C /* Main.storyboard in Resources */,
@@ -633,6 +754,7 @@
 			files = (
 				8520653A1D16E8E20073F05C /* SDRefreshHeaderView.m in Sources */,
 				85FB7C3D1D2A83FC00192D5C /* TAAnimatedDotView.m in Sources */,
+				859063F71D38CE29004D1BCB /* LayoutCommentView.m in Sources */,
 				85F9A8101D35244A004DBB1B /* NSString+iphoneType.m in Sources */,
 				8562041F1D2CD16F002156D2 /* commentModel.m in Sources */,
 				85EE4CE31D2F8BE8003D2DB4 /* collectionTableViewController.m in Sources */,
@@ -640,22 +762,28 @@
 				8520653B1D16E8E20073F05C /* SDRefreshView.m in Sources */,
 				85BA2A5C1D1BD46B001188DA /* contentViewController.m in Sources */,
 				852065481D1AB9AA0073F05C /* NSString+MD5.m in Sources */,
+				859063FC1D3904BF004D1BCB /* gridLayoutView.m in Sources */,
 				853DD42F1D30D7EE0039273C /* NSDate+gyh.m in Sources */,
 				85FB7C421D2A83FC00192D5C /* UIView+SDExtension.m in Sources */,
+				859063F41D3791E1004D1BCB /* flooredCommentModel.m in Sources */,
 				85FB7C281D2A509400192D5C /* CycleNewsModel.m in Sources */,
 				852064F91D16D7D70073F05C /* AppDelegate.m in Sources */,
 				85EE4CED1D2F9AEA003D2DB4 /* collectionTableViewCell.m in Sources */,
 				85FB7C3E1D2A83FC00192D5C /* TADotView.m in Sources */,
 				852064F61D16D7D70073F05C /* main.m in Sources */,
 				85FB7C401D2A83FC00192D5C /* SDCollectionViewCell.m in Sources */,
+				859063FF1D3A87DF004D1BCB /* nestedLayoutView.m in Sources */,
 				852065391D16E8E20073F05C /* SDRefreshFooterView.m in Sources */,
 				856204221D2CDDC4002156D2 /* commentCell.m in Sources */,
 				85EE4CEA1D2F9ACC003D2DB4 /* collectionModel.m in Sources */,
 				8520653F1D17E25A0073F05C /* UIViewController+DownloadNews.m in Sources */,
+				850A080B1D3E22C000DA0FDE /* HTTPRequester.m in Sources */,
 				85FB7C0D1D29739500192D5C /* NewsContentModel.m in Sources */,
+				859063F11D378952004D1BCB /* NSArray+transform.m in Sources */,
 				85FB7C3F1D2A83FC00192D5C /* TAPageControl.m in Sources */,
 				85FB7BFD1D29485B00192D5C /* DataModel.m in Sources */,
 				85FB7C3C1D2A83FC00192D5C /* TAAbstractDotView.m in Sources */,
+				859064061D3DFB96004D1BCB /* commentPostViewController.m in Sources */,
 				8562041C1D2CD07B002156D2 /* commentList.m in Sources */,
 				85FB7C411D2A83FC00192D5C /* SDCycleScrollView.m in Sources */,
 				85EE4CF11D2F9D11003D2DB4 /* DataBase.m in Sources */,
@@ -816,8 +944,9 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				INFOPLIST_FILE = cnBeta/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.hudy.cnBeta;
+				PRODUCT_BUNDLE_IDENTIFIER = com.hudyseu.cnBeta;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				TARGETED_DEVICE_FAMILY = 1;
@@ -833,8 +962,9 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				INFOPLIST_FILE = cnBeta/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.hudy.cnBeta;
+				PRODUCT_BUNDLE_IDENTIFIER = com.hudyseu.cnBeta;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				TARGETED_DEVICE_FAMILY = 1;

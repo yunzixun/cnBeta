@@ -9,6 +9,11 @@
 			<key>isShown</key>
 			<false/>
 		</dict>
+		<key>JDStatusBarNotification.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
 		<key>MJExtension.xcscheme</key>
 		<dict>
 			<key>isShown</key>
@@ -37,12 +42,22 @@
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
+		<key>1E7180EA665767157BB33076C16FE58E</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>540E000107A181252322217EE04C18F6</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
 		<key>6817A568CA43DCFE74D5C5F81D595458</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>758A8A95A925B0791EEE8E3983F750D3</key>
+		<key>6B4BBDDD1F7D1E14F480985F873C91D4</key>
 		<dict>
 			<key>primary</key>
 			<true/>
@@ -52,17 +67,12 @@
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>94107C7FC723C4327ACB58E07176F87D</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
 		<key>9EAB3E42EF957541E6C3C76D35FD008E</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>A4F767B3274FA663C84F68368E7531FD</key>
+		<key>FF5CFD6F2B044B2583AE363E38A9D0EF</key>
 		<dict>
 			<key>primary</key>
 			<true/>

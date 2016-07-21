@@ -15,5 +15,6 @@
 @property (nonatomic, copy) NSString *hometext;
 @property (nonatomic, copy) NSString *source;
 @property (nonatomic, copy) NSString *time;
+@property (nonatomic, copy) NSString *comments;
 
 @end

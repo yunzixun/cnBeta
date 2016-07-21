@@ -11,39 +11,50 @@
 
 #import "commentViewController.h"
 #import "SDRefresh.h"
-#import "UIViewController+DownloadNews.h"
+#import "commentPostViewController.h"
+
 #import "commentList.h"
 #import "commentModel.h"
+#import "flooredCommentModel.h"
 #import "commentCell.h"
-#import "MJExtension.h"
-#import "UITableView+FDTemplateLayoutCell.h"
+#import "LayoutCommentView.h"
 
-@interface commentViewController ()<UITableViewDelegate,UITableViewDataSource>
+#import "MJExtension.h"
+#import "UIViewController+DownloadNews.h"
+#import "UITableView+FDTemplateLayoutCell.h"
+#import "NSArray+transform.h"
+#import "HTTPRequester.h"
+#import "JDStatusBarNotification.h"
+
+@interface commentViewController ()<UITableViewDelegate,UITableViewDataSource,UIActionSheetDelegate,replyActionDelegate>
 @property (nonatomic, strong)UITableView *commentTableView;
 @property (nonatomic, weak) SDRefreshHeaderView *refreshHeader;
 @property (nonatomic, copy)NSString *sid;
 @property (nonatomic, copy)NSString *sn;
-@property (nonatomic, strong)NSMutableArray *commentArray;
-@property (nonatomic, strong)NSMutableArray *hotNews;
+@property (nonatomic,copy)NSString *cellTid;
+
+@property (nonatomic, strong)NSMutableArray *flooredCommentArray;
+//@property (nonatomic, strong)NSMutableArray *hotList;
+@property (nonatomic, strong)NSMutableArray *hotFlooredCommentArray;
 
 @end
 
 @implementation commentViewController
 
-- (NSMutableArray *)commentArray
+- (NSMutableArray *)flooredCommentArray
 {
-    if (!_commentArray) {
-        _commentArray = [NSMutableArray array];
+    if (!_flooredCommentArray) {
+        _flooredCommentArray = [NSMutableArray array];
     }
-    return _commentArray;
+    return _flooredCommentArray;
 }
 
-- (NSMutableArray *)hotNews
+- (NSMutableArray *)hotFlooredCommentArray
 {
-    if (!_hotNews) {
-        _hotNews = [NSMutableArray array];
+    if (!_hotFlooredCommentArray) {
+        _hotFlooredCommentArray = [NSMutableArray array];
     }
-    return _hotNews;
+    return _hotFlooredCommentArray;
 }
 
 - (id)initWithSid:(NSString *)sid andSN:(NSString *)sn
@@ -58,9 +69,22 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.navigationItem.title = @"暂不支持评论";
+    //self.navigationItem.title = @"暂不支持评论";
+    UIBarButtonItem *backItem = [[UIBarButtonItem alloc] init];
+    backItem.title = @"取消";
+    self.navigationItem.backBarButtonItem = backItem;
+    UIBarButtonItem *commentItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"ic_edit"] style:UIBarButtonItemStyleDone target:self action:@selector(postComment)];
+    self.navigationItem.rightBarButtonItem = commentItem;
+    
+    
     _commentTableView = [[UITableView alloc] initWithFrame:self.view.frame];
     //_commentTableView = [[UITableView alloc] initWithFrame:self.view.frame style:UITableViewStyleGrouped];
+    if ([_commentTableView respondsToSelector:@selector(setSeparatorInset:)]) {
+        [_commentTableView setSeparatorInset:UIEdgeInsetsMake(0,0,0,0)];
+    }
+    if ([_commentTableView respondsToSelector:@selector(setLayoutMargins:)]) {
+        [_commentTableView setLayoutMargins:UIEdgeInsetsMake(0,0,0,0)];
+    }
     [self.view addSubview:_commentTableView];
     _commentTableView.delegate = self;
     _commentTableView.dataSource = self;
@@ -89,12 +113,13 @@
     _refreshHeader = refreshHeader;
     __weak typeof(self) weakSelf = self;
     refreshHeader.beginRefreshingOperation = ^{
-        [weakSelf loadCommentListWithSid:_sid SN:_sn success:^(NSArray *commentArray, NSArray *hotNews) {
-            [weakSelf.commentArray removeAllObjects];
-            [weakSelf.commentArray addObjectsFromArray:commentArray];
-            [weakSelf.hotNews removeAllObjects];
-            [weakSelf.hotNews addObjectsFromArray:hotNews];
-            //[spinner stopAnimating];
+        [weakSelf loadCommentListWithSid:_sid SN:_sn success:^(NSArray *commentArray, NSArray *hotList) {
+            [weakSelf.flooredCommentArray removeAllObjects];
+            weakSelf.flooredCommentArray = [commentArray convertToFlooredCommentArray];
+            
+            [weakSelf.hotFlooredCommentArray removeAllObjects];
+            weakSelf.hotFlooredCommentArray = [_flooredCommentArray selectHotFlooredCommentArrayWithHotList:hotList];
+            
             [weakSelf.commentTableView reloadData];
             [_refreshHeader endRefreshing];
         } failure:^(NSError *error) {
@@ -118,21 +143,25 @@
         if (!error) {
             //NSLog(@"%@", data[@"result"]);
             NSArray *cmList = [commentList mj_objectArrayWithKeyValuesArray:data[@"result"][@"cmntlist"]];
-            NSArray * hotlist = [commentList mj_objectArrayWithKeyValuesArray:data[@"result"][@"hotlist"]];
+            NSArray *hotList = [commentList mj_objectArrayWithKeyValuesArray:data[@"result"][@"hotlist"]];
             
             NSMutableArray *commentArray = [NSMutableArray array];
-            NSMutableArray *hotNews = [NSMutableArray array];
+            //NSMutableArray *hotNews = [NSMutableArray array];
             
+            int index = 0;
+            int total = (int)[data[@"result"][@"cmntlist"] count];
             for (commentList *temp in cmList) {
                 commentModel* comment = [commentModel mj_objectWithKeyValues:data[@"result"][@"cmntstore"][temp.tid]];
+                comment.floor = [NSString stringWithFormat:@"%d楼",total-index];
+                index++;
                 [commentArray addObject:comment];
             }
-            for (commentList *temp in hotlist) {
-                commentModel* comment = [commentModel mj_objectWithKeyValues:data[@"result"][@"cmntstore"][temp.tid]];
-                [hotNews addObject:comment];
-            }
+//            for (commentList *temp in hotlist) {
+//                commentModel* comment = [commentModel mj_objectWithKeyValues:data[@"result"][@"cmntstore"][temp.tid]];
+//                [hotNews addObject:comment];
+//            }
             if (success) {
-                success(commentArray, hotNews);
+                success(commentArray, hotList);
             }
         } else {
             if (failure) {
@@ -144,6 +173,61 @@
     
 }
 
+- (void)postComment
+{
+    commentPostViewController *vc = [[commentPostViewController alloc]initWithNibName:@"commentPostViewController" bundle:nil];
+    vc.sid = self.sid;
+    [self.navigationController pushViewController:vc animated:YES];
+}
+
+#pragma mark - replyActionDelegate
+
+- (void)showReplyActionsWithTid:(NSString *)tid
+{
+    self.cellTid = tid;
+    UIActionSheet *actionSheet = [[UIActionSheet alloc]initWithTitle:nil delegate:self cancelButtonTitle:@"取消" destructiveButtonTitle:nil otherButtonTitles:@"回复", @"支持", @"反对", nil];
+    [actionSheet showInView:self.commentTableView];
+}
+
+- (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    if (buttonIndex == [actionSheet cancelButtonIndex]) {
+        return;
+    }
+    if (buttonIndex == 0) {
+        commentPostViewController *vc = [[commentPostViewController alloc]initWithNibName:@"commentPostViewController" bundle:nil];
+        vc.sid = self.sid;
+        vc.tid = self.cellTid;
+        [self.navigationController pushViewController:vc animated:YES];
+        
+    } else if (buttonIndex == 1){
+        [[HTTPRequester sharedHTTPRequester]voteCommentWithSid:self.sid andTid:self.cellTid actionType:@"support" completion:^(id responseObject, NSError *error) {
+            if (error) {
+                [JDStatusBarNotification showWithStatus:@"操作失败" dismissAfter:2];
+            } else {
+                NSDictionary *result = responseObject;
+                if ([result[@"state"] isEqualToString:@"success"]) {
+                    [JDStatusBarNotification showWithStatus:@"操作成功,请稍后刷新" dismissAfter:2];
+                } else {
+                    [JDStatusBarNotification showWithStatus:@"操作失败" dismissAfter:2];
+                }
+            }
+        }];
+    } else {
+        [[HTTPRequester sharedHTTPRequester]voteCommentWithSid:self.sid andTid:self.cellTid actionType:@"against" completion:^(id responseObject, NSError *error) {
+            if (error) {
+                [JDStatusBarNotification showWithStatus:@"操作失败" dismissAfter:2];
+            } else {
+                NSDictionary *result = responseObject;
+                if ([result[@"state"] isEqualToString:@"success"]) {
+                    [JDStatusBarNotification showWithStatus:@"操作成功,请稍后刷新" dismissAfter:2];
+                } else {
+                    [JDStatusBarNotification showWithStatus:@"操作失败" dismissAfter:2];
+                }
+            }
+        }];
+    }
+}
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
@@ -153,7 +237,7 @@
 #pragma mark - Table view data source
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    if ([self.hotNews count]) {
+    if ([self.hotFlooredCommentArray count]) {
         return 2;
     }else {
         return 1;
@@ -162,14 +246,14 @@
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    if ([self.hotNews count]) {
+    if ([self.hotFlooredCommentArray count]) {
         if (section == 0) {
-            return [self.hotNews count];
+            return [self.hotFlooredCommentArray count];
         } else {
-            return [self.commentArray count];
+            return [self.flooredCommentArray count];
         }
     } else {
-        return [self.commentArray count];
+        return [self.flooredCommentArray count];
     }
     
 }
@@ -178,17 +262,16 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     commentCell *cell = [tableView dequeueReusableCellWithIdentifier:@"newCell" forIndexPath:indexPath];
-    if ([self.hotNews count]) {
+    cell.delegate = self;
+    if ([self.hotFlooredCommentArray count]) {
         if (indexPath.section ==0) {
-            cell.commentInfo = _hotNews[indexPath.row];
-            cell.floor.text = nil;
+            cell.flooredCommentItem = _hotFlooredCommentArray[indexPath.row];
+            
         } else {
-            cell.commentInfo = _commentArray[indexPath.row];
-            cell.floor.text = [NSString stringWithFormat:@"%lu楼", [self.commentArray count]-indexPath.row];
+            cell.flooredCommentItem = _flooredCommentArray[_flooredCommentArray.count - indexPath.row -1];
         }
     }else {
-        cell.commentInfo = _commentArray[indexPath.row];
-        cell.floor.text = [NSString stringWithFormat:@"%lu楼", [self.commentArray count]-indexPath.row];
+        cell.flooredCommentItem = _flooredCommentArray[_flooredCommentArray.count - indexPath.row -1];
     }
     
     //NSLog(@"%ld", (long)indexPath.row);
@@ -199,23 +282,26 @@
 
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    commentModel *comment;
-    if ([self.hotNews count]) {
+    flooredCommentModel *flooredCommentItem;
+    if ([self.hotFlooredCommentArray count]) {
         if (indexPath.section ==0) {
-            comment = _hotNews[indexPath.row];
+            flooredCommentItem = _hotFlooredCommentArray[indexPath.row];
         } else {
-            comment = _commentArray[indexPath.row];
+            flooredCommentItem = _flooredCommentArray[_flooredCommentArray.count - indexPath.row -1];
         }
     } else {
-        comment = _commentArray[indexPath.row];
+        flooredCommentItem = _flooredCommentArray[_flooredCommentArray.count - indexPath.row -1];
     }
 
     
-    //commentModel *comment = _commentArray[indexPath.row];
+    LayoutCommentView *commentView = [[LayoutCommentView alloc]initWithModel:flooredCommentItem];
     
-    return [_commentTableView fd_heightForCellWithIdentifier:@"newCell" cacheByIndexPath:indexPath configuration:^(id cell) {
-        [cell setCommentInfo:comment];
-    }];
+  
+//    CGFloat h = [_commentTableView fd_heightForCellWithIdentifier:@"newCell" cacheByIndexPath:indexPath configuration:^(id cell) {
+//        [cell setFlooredCommentItem:flooredCommentItem];
+//    }];
+    
+    return commentView.frame.size.height + 80;
     
 }
 
@@ -239,7 +325,7 @@
     headerLabel.font = [UIFont systemFontOfSize:14];
     headerLabel.frame = CGRectMake(10.0, 0.0, 300.0, 25.0);
     
-    if ([self.hotNews count]) {
+    if ([self.hotFlooredCommentArray count]) {
         if (section == 0) {
             headerLabel.text =  @"热门评论";
             headerLabel.textColor = [UIColor redColor];

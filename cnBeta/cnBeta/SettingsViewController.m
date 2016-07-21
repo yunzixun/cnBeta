@@ -6,8 +6,8 @@
 //  Copyright © 2016年 hudy. All rights reserved.
 //
 #define cnBeta_APP_ID               @"1133433243"
-#define cnBeta_APP_STORE_URL        @"https://itunes.apple.com/cn/app/id"cnBeta_APP_ID@"?mt=8"
-#define cnBeta_APP_STORE_REVIEW_URL @"itms-apps://itunes.apple.com/WebObjects/MZStore.woa/wa/viewContentsUserReviews?id="cnBeta_APP_ID"&onlyLatestVersion=true&pageNumber=0&sortOrdering=1&type=Purple+Software"
+#define cnBeta_APP_STORE_URL        @"https://itunes.apple.com/cn/app/id"cnBeta_APP_ID"?mt=8"
+#define cnBeta_APP_STORE_REVIEW_URL @"itms-apps://itunes.apple.com/WebObjects/MZStore.woa/wa/viewContentsUserReviews?id="cnBeta_APP_ID@"&onlyLatestVersion=true&pageNumber=0&sortOrdering=1&type=Purple+Software"
 
 
 #import "SettingsViewController.h"
@@ -106,10 +106,12 @@
         if (indexPath.row == 0) {
             [self sendMailInApp];
         } else if(indexPath.row == 2){
-            [self alertView:@"西贝news For cnBeta"message:@"Version: 1.0" cancel:@"OK"];
+            NSDictionary *infoDictionary = [[NSBundle mainBundle]infoDictionary];
+            NSString *version = [NSString stringWithFormat:@"Version: %@", [infoDictionary objectForKey:@"CFBundleShortVersionString"]];
+            [self alertView:@"西贝news For cnBeta"message:version cancel:@"OK"];
         } else {
-            [[UIApplication sharedApplication] openURL:[NSURL URLWithString:cnBeta_APP_STORE_REVIEW_URL]];
-            //[[UIApplication sharedApplication] openURL:[NSURL URLWithString:cnBeta_APP_STORE_URL]];
+            //[[UIApplication sharedApplication] openURL:[NSURL URLWithString:cnBeta_APP_STORE_REVIEW_URL]];
+            [[UIApplication sharedApplication] openURL:[NSURL URLWithString:cnBeta_APP_STORE_URL]];
         }
     }
     

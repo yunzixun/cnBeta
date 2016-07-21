@@ -10,8 +10,8 @@
 
 @interface CycleNewsModel : NSObject
 
-@property (nonatomic, copy)NSString *id;
-@property (nonatomic, copy)NSString *title;
+@property (nonatomic, copy)NSString  *id;
+@property (nonatomic, copy)NSString  *title;
 @property (nonatomic, strong)NSArray *images;
 
 @end

@@ -111,11 +111,12 @@
             if (!error) {
                 
                 [self getHTMLByData:data[@"result"]];
+                //NSLog(@"%@",data[@"result"]);
                 //缓存到文件系统
                 FileCache *fileCache = [FileCache sharedCache];
                 [fileCache cacheHTMLToFile:_contentHTMLString forKey:_newsId];
             }
-            //NSLog(@"%@",dic);
+            
         }];
     }
 }
@@ -132,7 +133,7 @@
     [allTitleStr replaceOccurrencesOfString:@"title" withString:_newsContent.title options:NSCaseInsensitiveSearch range:[allTitleStr rangeOfString:@"title"]];
     [allTitleStr replaceOccurrencesOfString:@"hehe" withString:_newsContent.source options:NSCaseInsensitiveSearch range:[allTitleStr rangeOfString:@"hehe"]];
     [allTitleStr replaceOccurrencesOfString:@"lala" withString:_newsContent.time options:NSCaseInsensitiveSearch range:[allTitleStr rangeOfString:@"lala"]];
-    [allTitleStr replaceOccurrencesOfString:@"gaga" withString:[NSString stringWithFormat:@"%@条评论", self.comments] options:NSCaseInsensitiveSearch range:[allTitleStr rangeOfString:@"gaga"]];
+    [allTitleStr replaceOccurrencesOfString:@"gaga" withString:[NSString stringWithFormat:@"%@条评论", _newsContent.comments] options:NSCaseInsensitiveSearch range:[allTitleStr rangeOfString:@"gaga"]];
     
     NSMutableString *head = (NSMutableString *)@"<head><style>img{width:360px !important;}</style></head>";
     _contentHTMLString = [[[head stringByAppendingString:allTitleStr] stringByAppendingString:_newsContent.hometext] stringByAppendingString:_newsContent.bodytext];

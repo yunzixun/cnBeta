@@ -56,7 +56,7 @@ static NSString *const newsListURLString = @"http://cnbeta.techoke.com/api/list?
     _collection = [DataBase sharedDataBase];
     [self loadCache];
     
-    [self initTableView];
+    [self initCycleView];
     [self setupHeader];
     [self setupFooter];
     [self setupDataBase];
@@ -108,13 +108,14 @@ static NSString *const newsListURLString = @"http://cnbeta.techoke.com/api/list?
 
 }
 
-- (void)initTableView
+- (void)initCycleView
 {
     
     AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
     [manager GET:newsListURLString parameters:nil progress:^(NSProgress * _Nonnull downloadProgress) {
         
     } success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+        //NSLog(@"%@", responseObject);
         NSArray *dataList = [CycleNewsModel mj_objectArrayWithKeyValuesArray:responseObject[@"data"][@"hot"]];
         self.cycleNews = dataList;
         NSMutableArray *imagesArray = [NSMutableArray array];
@@ -269,7 +270,6 @@ static NSString *const newsListURLString = @"http://cnbeta.techoke.com/api/list?
         contentvc.hidesBottomBarWhenPushed = YES;
         DataModel *currentNews = self.newsList[indexPath.row];
         contentvc.newsId = currentNews.sid;
-        contentvc.comments = currentNews.comments;
         contentvc.newsTitle = currentNews.title;
 
         [_collection addNewsID:currentNews.sid];

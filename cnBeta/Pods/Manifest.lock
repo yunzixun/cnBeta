@@ -14,6 +14,7 @@ PODS:
   - AFNetworking/Serialization (3.0.4)
   - AFNetworking/UIKit (3.0.4):
     - AFNetworking/NSURLSession
+  - JDStatusBarNotification (1.5.3)
   - MJExtension (3.0.11)
   - ObjectiveGumbo (0.1)
   - SDWebImage (3.7.6):
@@ -23,6 +24,7 @@ PODS:
 
 DEPENDENCIES:
   - AFNetworking (~> 3.0.4)
+  - JDStatusBarNotification (~> 1.5)
   - MJExtension (~> 3.0.10)
   - ObjectiveGumbo (~> 0.1)
   - SDWebImage (~> 3.7.3)
@@ -30,11 +32,12 @@ DEPENDENCIES:
 
 SPEC CHECKSUMS:
   AFNetworking: a0075feb321559dc78d9d85b55d11caa19eabb93
+  JDStatusBarNotification: 29413865af11c862c17180610b0f46a21118b412
   MJExtension: f9ae6ddc0f1c482c3c9af750280ccebd14381958
   ObjectiveGumbo: 0704c4930688132abb3d5df2000334f30504856f
   SDWebImage: c325cf02c30337336b95beff20a13df489ec0ec9
   UITableView+FDTemplateLayoutCell: 234e1582bcc4e18461af91155123bb96538ed030
 
-PODFILE CHECKSUM: 551b1617223554ada1c191cde197bf237441e1ad
+PODFILE CHECKSUM: 5e6c6ac5d2bc8e37c5becac3903aafe221fb54f0
 
 COCOAPODS: 1.0.0

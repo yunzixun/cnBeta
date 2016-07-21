@@ -93,12 +93,7 @@ static NSString *const contentBaseURLString = @"http://api.cnbeta.com/capi?app_k
     for (NSString *key in allKey) {
         [manager.requestSerializer setValue:headers[key] forHTTPHeaderField:key];
     }
-//    AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
-//    [manager.requestSerializer setTimeoutInterval:10.0];
-//    NSArray *allKey = [headers allKeys];
-//    for (NSString *key in allKey) {
-//        [manager.requestSerializer setValue:headers[key] forHTTPHeaderField:key];
-//    }
+
     [manager GET:url parameters:nil progress:^(NSProgress * _Nonnull downloadProgress) {
         
     } success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {

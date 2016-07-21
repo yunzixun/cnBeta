@@ -7,32 +7,54 @@
 //
 
 #import "commentCell.h"
+#import "commentModel.h"
+#import "LayoutCommentView.h"
 
 @interface commentCell ()
 
 @property (weak, nonatomic) IBOutlet UILabel *name;
 @property (weak, nonatomic) IBOutlet UILabel *host;
-@property (weak, nonatomic) IBOutlet UILabel *comment;
+@property (weak, nonatomic) IBOutlet UIView  *commentView;
 @property (weak, nonatomic) IBOutlet UILabel *upFinger;
 @property (weak, nonatomic) IBOutlet UILabel *downFinger;
 @property (weak, nonatomic) IBOutlet UIImageView *support;
 @property (weak, nonatomic) IBOutlet UIImageView *opposition;
+@property (weak, nonatomic) IBOutlet UIButton *replyButton;
 
 @end
 
 @implementation commentCell
 
-- (void)setCommentInfo:(commentModel *)commentInfo
+- (void)setFlooredCommentItem:(flooredCommentModel *)flooredCommentItem
 {
-    _commentInfo = commentInfo;
+    _flooredCommentItem = flooredCommentItem;
+    commentModel *commentInfo = [flooredCommentItem.flooredComment lastObject];
+    _floor.text = commentInfo.floor;
     _name.text = commentInfo.name;
     _host.text = commentInfo.host_name;
-    _comment.text = commentInfo.comment;
     _upFinger.text = commentInfo.score;
     _downFinger.text = commentInfo.reason;
-    _support.image = [UIImage imageNamed:@"like_btn"];
-    _opposition.image = [UIImage imageNamed:@"like_btn"];
-    _opposition.transform = CGAffineTransformMakeRotation(M_PI);
+    _support.image = [UIImage imageNamed:@"score"];
+    _opposition.image = [UIImage imageNamed:@"reason"];
+    //[_replyButton setBackgroundImage:[UIImage imageNamed:@"reply"] forState:UIControlStateNormal];
+    //[_replyButton setTitle:nil forState:UIControlStateNormal];
+    //_opposition.transform = CGAffineTransformMakeRotation(M_PI);
+    
+    for (UIView *view in _commentView.subviews) {
+        [view removeFromSuperview];
+    }
+    LayoutCommentView *commentView = [[LayoutCommentView alloc]initWithModel:flooredCommentItem];
+    CGRect frame = _commentView.frame;
+    frame.size.height = commentView.frame.size.height;
+    //frame.size.width = commentView.frame.size.width;
+    _commentView.frame = frame;
+    [_commentView addSubview:commentView];
+}
+- (IBAction)replyAction:(UIButton *)sender {
+    commentModel *commentItem = _flooredCommentItem.flooredComment.lastObject;
+    if ([self.delegate respondsToSelector:@selector(showReplyActionsWithTid:)]) {
+        [self.delegate showReplyActionsWithTid:commentItem.tid];
+    }
 }
 
 - (void)awakeFromNib {

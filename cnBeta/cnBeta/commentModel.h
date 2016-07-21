@@ -7,8 +7,10 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <UIKit/UIKit.h>
 
 @interface commentModel : NSObject
+
 @property (nonatomic, copy)NSString *comment;
 @property (nonatomic, copy)NSString *date;
 @property (nonatomic, copy)NSString *name;
@@ -18,4 +20,8 @@
 @property (nonatomic, copy)NSString *tid;//评论id
 @property (nonatomic, copy)NSString *reason;
 @property (nonatomic, copy)NSString *score;
+@property (nonatomic, copy)NSString *floor;
+
+- (CGSize)sizeWithConstrainedSize:(CGSize)size;
+
 @end

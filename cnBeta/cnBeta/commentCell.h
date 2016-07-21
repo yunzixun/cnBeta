@@ -7,9 +7,18 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "commentModel.h"
+#import "flooredCommentModel.h"
+@protocol replyActionDelegate;
 
 @interface commentCell : UITableViewCell
-@property  (nonatomic, strong)commentModel *commentInfo;
+@property (nonatomic, weak) id<replyActionDelegate>delegate;
+@property (nonatomic, strong)flooredCommentModel *flooredCommentItem;
 @property (weak, nonatomic) IBOutlet UILabel *floor;
+@end
+
+
+@protocol replyActionDelegate <NSObject>
+
+- (void)showReplyActionsWithTid:(NSString *)tid;
+
 @end
