@@ -1,5 +1,5 @@
 # cnBeta
-一款cnBeta新闻第三方客户端。   
+一款cnBeta新闻第三方客户端。AppStore地址：https://itunes.apple.com/cn/app/id1133433243?mt=8   
 主要功能包括：   
 ＊流畅的新闻阅读：最新资讯、热点资讯；   
 ＊新闻列表显示缩略图；   
