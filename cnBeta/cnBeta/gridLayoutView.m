@@ -23,7 +23,7 @@
         for (commentModel *commentItem in modelArray) {
             CGSize size = [commentItem sizeWithConstrainedSize:CGSizeMake(self.frame.size.width - 10, 0)];
             
-            UILabel *nameLabel = [[UILabel alloc]initWithFrame:CGRectMake(5, 5 + lastHeight, frame.size.width - 10, 25)];
+            UILabel *nameLabel = [[UILabel alloc]initWithFrame:CGRectMake(5, lastHeight, frame.size.width - 10, 25)];
             nameLabel.font = NameFont;
             nameLabel.textColor = NameColor;
             

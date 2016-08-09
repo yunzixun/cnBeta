@@ -19,11 +19,12 @@
 #import "ObjectiveGumbo.h"
 #import "DataBase.h"
 #import "collectionModel.h"
+#import "UMSocial.h"
 
 //#import <ShareSDK/ShareSDK.h>
 //#import <ShareSDKUI/ShareSDK+SSUI.h>
 
-@interface contentViewController ()
+@interface contentViewController ()<UMSocialUIDelegate, UIWebViewDelegate>
 
 @property (nonatomic, copy)NSString *contentHTMLString;
 @property (nonatomic, copy)NSString *contentURL;
@@ -50,7 +51,7 @@
     _news = [[collectionModel alloc]init];
     self.news.sid = _newsId;
     _news.title = _newsTitle;
-    
+    _contentWebView.delegate = self;
     
 }
 
@@ -58,6 +59,8 @@
 -(void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
+    self.navigationController.navigationBarHidden = NO;
+    self.navigationController.hidesBarsOnSwipe = NO;
     self.automaticallyAdjustsScrollViewInsets = NO;
     _spinner.center = CGPointMake(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 );
     [_spinner startAnimating];
@@ -127,6 +130,7 @@
     NSArray *dataDic = @[(NSDictionary *)data];
     
     _newsContent = [NewsContentModel mj_objectArrayWithKeyValuesArray:dataDic][0];
+    _newsContent.source = @"";
     
     NSMutableString *allTitleStr =[NSMutableString stringWithString:@"<style type='text/css'> p.thicker{font-weight: 500}p.light{font-weight: 0}p{font-size: 108%}h2 {font-size: 120%}h3 {font-size: 80%}</style> <h2 class = 'thicker'>title</h2><h3>hehe      lala      gaga</h3>"];
     
@@ -137,6 +141,10 @@
     
     NSMutableString *head = (NSMutableString *)@"<head><style>img{width:360px !important;}</style></head>";
     _contentHTMLString = [[[head stringByAppendingString:allTitleStr] stringByAppendingString:_newsContent.hometext] stringByAppendingString:_newsContent.bodytext];
+    
+    NSString *origin = [NSString stringWithFormat:@"<div style=\"text-align:center;\"><a href=\"http://www.cnbeta.com/articles/%@.htm\" target=\"_blank\">查看原文</a></div>", self.newsId];
+    _contentHTMLString = [_contentHTMLString stringByAppendingString:origin];
+    
     [_contentWebView loadHTMLString:_contentHTMLString baseURL:nil];
     dispatch_async(dispatch_get_main_queue(), ^{
         [_spinner stopAnimating];
@@ -147,7 +155,15 @@
     
 }
 
-
+- (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType
+{
+    if (navigationType==UIWebViewNavigationTypeLinkClicked) {
+        NSURL *currentUrl=request.URL;
+        [[UIApplication sharedApplication] openURL:currentUrl];
+        return NO;
+    }
+    return YES;
+}
 
 
 
@@ -171,6 +187,33 @@
         [_collect setTitle:@"收藏" forState:UIControlStateNormal];
         [_collect setTitleColor:[UIColor blackColor] forState:UIControlStateSelected];
         [_collection deleteCellOfSid:_newsId];
+    }
+}
+
+- (IBAction)shareNews:(UIButton *)sender {
+    //[[UMSocialData defaultData].urlResource setResourceType:UMSocialUrlResourceTypeImage url:_thumb];
+    [UMSocialData defaultData].extConfig.title = _newsTitle;
+    [UMSocialData defaultData].extConfig.qqData.url = [NSString stringWithFormat:@"http://www.cnbeta.com/articles/%@.htm",_newsId];
+    [UMSocialData defaultData].extConfig.qzoneData.url = [NSString stringWithFormat:@"http://www.cnbeta.com/articles/%@.htm",_newsId];
+    [UMSocialData defaultData].extConfig.wechatSessionData.url = [NSString stringWithFormat:@"http://www.cnbeta.com/articles/%@.htm",_newsId];
+    //[UMSocialData defaultData].extConfig.wechatSessionData.title = _newsTitle;
+    [UMSocialData defaultData].extConfig.wechatTimelineData.url = [NSString stringWithFormat:@"http://www.cnbeta.com/articles/%@.htm",_newsId];
+    //[UMSocialData defaultData].extConfig.wechatTimelineData.title = _newsTitle;
+    [UMSocialSnsService presentSnsIconSheetView:self
+                                         appKey:@"579b1ed4e0f55ab08c000e90"
+                                      shareText:[NSString stringWithFormat:@"http://www.cnbeta.com/articles/%@.htm",_newsId]
+                                     shareImage:[UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:_thumb]]]
+                                shareToSnsNames:@[UMShareToWechatSession,UMShareToWechatTimeline,UMShareToQQ,UMShareToQzone]
+                                       delegate:self];
+}
+
+-(void)didFinishGetUMSocialDataInViewController:(UMSocialResponseEntity *)response
+{
+    //根据`responseCode`得到发送结果,如果分享成功
+    if(response.responseCode == UMSResponseCodeSuccess)
+    {
+        //得到分享到的平台名
+        NSLog(@"share to sns name is %@",[[response.data allKeys] objectAtIndex:0]);
     }
 }
 

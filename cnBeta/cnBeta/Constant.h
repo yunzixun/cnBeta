@@ -6,7 +6,7 @@
 //  Copyright © 2016年 hudy. All rights reserved.
 //
 
-#define  NameColor              [UIColor cyanColor]
+#define  NameColor              [UIColor colorWithRed:100./255. green:100./255 blue:220./255 alpha:1]
 #define  HostColor              [UIColor lightGrayColor]
 #define  FloorColor             [UIColor lightGrayColor]
 #define  CommentColor           [UIColor blackColor]
@@ -17,10 +17,11 @@
 #define  LayoutBordWidth        .6
 
 #define  NameFont     [UIFont systemFontOfSize:14]
-#define  HostFont  [UIFont systemFontOfSize:12]
+#define  HostFont  [UIFont systemFontOfSize:11]
 #define  FloorFont  [UIFont systemFontOfSize:10]
 #define  CommentFont  [UIFont systemFontOfSize:15]
 
 #define ScreenWidth [UIScreen mainScreen].bounds.size.width
+#define ScreenHeight [UIScreen mainScreen].bounds.size.height
 #define MaxOverlapNumber 6
 #define OverlapSpace 3

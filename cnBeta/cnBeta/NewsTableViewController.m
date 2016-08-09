@@ -45,10 +45,18 @@ static NSString *const newsListURLString = @"http://cnbeta.techoke.com/api/list?
     UIBarButtonItem *backItem = [[UIBarButtonItem alloc] init];
     backItem.title = @"返回";
     self.navigationItem.backBarButtonItem = backItem;
-    self.navigationItem.title = @"cnBeta新闻";
-    self.tabBarItem.title = [NSString stringWithFormat:@"资讯"];
-    self.tableView.rowHeight = 90.0f;
+    //self.navigationItem.title = @"cnBeta新闻";
+    //self.tabBarItem.title = [NSString stringWithFormat:@"资讯"];
+    self.tableView.rowHeight = 80.0f;
     self.tableView.separatorColor = [UIColor grayColor];
+    if ([self.tableView respondsToSelector:@selector(setSeparatorInset:)]) {
+        [self.tableView setSeparatorInset:UIEdgeInsetsZero];
+        
+    }
+    if ([self.tableView respondsToSelector:@selector(setLayoutMargins:)])  {
+        [self.tableView setLayoutMargins:UIEdgeInsetsZero];
+    }
+    
     //_RowCount = 20;
     self.newsList = [[NSMutableArray alloc]init];
     
@@ -70,6 +78,7 @@ static NSString *const newsListURLString = @"http://cnbeta.techoke.com/api/list?
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
+    //self.navigationController.hidesBarsOnSwipe = YES;
     [self.tableView reloadData];
 }
 
@@ -112,6 +121,7 @@ static NSString *const newsListURLString = @"http://cnbeta.techoke.com/api/list?
 {
     
     AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
+    [manager.requestSerializer setTimeoutInterval:10.0];
     [manager GET:newsListURLString parameters:nil progress:^(NSProgress * _Nonnull downloadProgress) {
         
     } success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
@@ -186,6 +196,8 @@ static NSString *const newsListURLString = @"http://cnbeta.techoke.com/api/list?
                 [_refreshHeader endRefreshing];
                 //FileCache *fileCache = [FileCache sharedCache];
                 [_fileCache cacheNewsListToFile:weakSelf.newsList forKey:@"newsList"];
+            }else {
+                [_refreshHeader endRefreshing];
             }
         }];
         
@@ -216,6 +228,8 @@ static NSString *const newsListURLString = @"http://cnbeta.techoke.com/api/list?
             self.RowCount = [self.newsList count];
             [self.tableView reloadData];
             [self.refreshFooter endRefreshing];
+        }else {
+            [self.refreshFooter endRefreshing];
         }
         
     }];
@@ -241,9 +255,10 @@ static NSString *const newsListURLString = @"http://cnbeta.techoke.com/api/list?
 }
 
 
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    static NSString *cellID = @"NewsCell";
-    NewsListCell *cell = [tableView dequeueReusableCellWithIdentifier:cellID forIndexPath:indexPath];
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    NewsListCell *cell = [NewsListCell cellWithTableView:tableView];
+    
     DataModel *dataModel = _newsList[indexPath.row];
     cell.newsModel = dataModel;
     if ([_collection queryWithSid:dataModel.sid tableType:@"newsID"]) {
@@ -254,7 +269,6 @@ static NSString *const newsListURLString = @"http://cnbeta.techoke.com/api/list?
     //cell.textLabel.numberOfLines = 3;
     //cell.textLabel.attributedText = [[NSAttributedString alloc] initWithData:[self.newsList[indexPath.row][@"title"] dataUsingEncoding:NSUnicodeStringEncoding] options:@{ NSDocumentTypeDocumentAttribute: NSHTMLTextDocumentType } documentAttributes:nil error:nil];
     // Configure the cell...
-    
     return cell;
 }
 
@@ -262,23 +276,37 @@ static NSString *const newsListURLString = @"http://cnbeta.techoke.com/api/list?
 #pragma mark - Navigation
 
 // In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
-{
-    if ([segue.destinationViewController isKindOfClass:[contentViewController class]]) {
-        contentViewController *contentvc = (contentViewController *)segue.destinationViewController;
-        NSIndexPath *indexPath = [self.tableView indexPathForSelectedRow];
-        contentvc.hidesBottomBarWhenPushed = YES;
-        DataModel *currentNews = self.newsList[indexPath.row];
-        contentvc.newsId = currentNews.sid;
-        contentvc.newsTitle = currentNews.title;
+//- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
+//{
+//    if ([segue.destinationViewController isKindOfClass:[contentViewController class]]) {
+//        contentViewController *contentvc = (contentViewController *)segue.destinationViewController;
+//        NSIndexPath *indexPath = [self.tableView indexPathForSelectedRow];
+//        contentvc.hidesBottomBarWhenPushed = YES;
+//        DataModel *currentNews = self.newsList[indexPath.row];
+//        contentvc.newsId = currentNews.sid;
+//        contentvc.newsTitle = currentNews.title;
+//        contentvc.thumb = currentNews.thumb;
+//        [_collection addNewsID:currentNews.sid];
+//        
+//    }
+//}
 
-        [_collection addNewsID:currentNews.sid];
-        
-//        contentvc.contentURL = [contentBaseURLString stringByAppendingString:[NSString stringWithFormat:@"%@&timestamp=%llu&v=1.0&mpuffgvbvbttn3Rc&sign=%@", sid, timestamp, sign]];
-        //NSLog(@"%@",contentURLString);
-        
-        
-    }
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    DataModel *currentNews = self.newsList[indexPath.row];
+    
+    UIStoryboard *mainStoryboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
+    contentViewController *contentvc = [mainStoryboard instantiateViewControllerWithIdentifier:@"contentViewController"];
+    contentvc.newsId = currentNews.sid;
+    contentvc.newsTitle = currentNews.title;
+    contentvc.thumb = currentNews.thumb;
+    
+    contentvc.hidesBottomBarWhenPushed = YES;
+    
+    [_collection addNewsID:currentNews.sid];
+
+    [self.navigationController pushViewController:contentvc animated:YES];
+    
 }
 
 
@@ -287,7 +315,9 @@ static NSString *const newsListURLString = @"http://cnbeta.techoke.com/api/list?
 - (void)cycleScrollView:(SDCycleScrollView *)cycleScrollView didSelectItemAtIndex:(NSInteger)index
 {
     CycleNewsModel *data = self.cycleNews[index];
-    contentViewController *contentVC = [self.storyboard instantiateViewControllerWithIdentifier:@"contentVC"];
+    //contentViewController *contentVC = [self.storyboard instantiateViewControllerWithIdentifier:@"contentVC"];
+    UIStoryboard *mainStoryboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
+    contentViewController *contentVC = [mainStoryboard instantiateViewControllerWithIdentifier:@"contentViewController"];
     contentVC.hidesBottomBarWhenPushed = YES;
     contentVC.newsId = data.id;
     [self.navigationController pushViewController:contentVC animated:YES];

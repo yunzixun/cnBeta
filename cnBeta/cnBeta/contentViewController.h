@@ -15,6 +15,6 @@
 @property (weak, nonatomic) IBOutlet UIWebView *contentWebView;
 
 @property (nonatomic, copy) NSString *newsId;
-//@property (nonatomic, copy) NSString *thumb;
+@property (nonatomic, copy) NSString *thumb;
 @property (nonatomic, copy) NSString *newsTitle;
 @end

@@ -10,6 +10,8 @@
 #import "HTTPRequester.h"
 #import "JDStatusBarNotification.h"
 #import "Constant.h"
+#import "CRToast.h"
+#import "WKProgressHUD.h"
 
 @interface commentPostViewController ()
 @property (weak, nonatomic) IBOutlet UIImageView *contentBorder;
@@ -74,16 +76,20 @@
         [[HTTPRequester sharedHTTPRequester]postCommentToNewsWithSid:self.sid content:content securityCode:code completion:^(id responseObject, NSError *error) {
             if (error) {
                 [self refetchSecurityCode:nil];
-                [JDStatusBarNotification showWithStatus:@"评论失败" dismissAfter:2];
+                [WKProgressHUD popMessage:@"评论失败" inView:self.view duration:1.5 animated:YES];
+                //[JDStatusBarNotification showWithStatus:@"评论失败" dismissAfter:2];
                 return;
             } else {
                 NSDictionary *resultDic = responseObject;
                 if ([resultDic[@"state"] isEqualToString:@"success"]) {
-                    [JDStatusBarNotification showWithStatus:@"评论成功，请稍后刷新" dismissAfter:2];
+                    //[WKProgressHUD popMessage:@"评论成功，等待后台审核，请稍后刷新" inView:self.view duration:1.5 animated:YES];
+                    [self showNotificationWithText:@"评论成功，等待后台审核，请稍后刷新"];
+                    //[JDStatusBarNotification showWithStatus:@"评论成功，请稍后刷新" dismissAfter:2];
                     [self.navigationController popToViewController:[self.navigationController.viewControllers objectAtIndex:2] animated:YES];
                 } else {
                     [self refetchSecurityCode:nil];
-                    [JDStatusBarNotification showWithStatus:resultDic[@"error"] dismissAfter:2];
+                    [WKProgressHUD popMessage:resultDic[@"error"] inView:self.view duration:1.5 animated:YES];
+                    //[JDStatusBarNotification showWithStatus:resultDic[@"error"] dismissAfter:2];
                 }
             }
         }];
@@ -91,21 +97,42 @@
         [[HTTPRequester sharedHTTPRequester]replyCommentWithSid:self.sid andTid:self.tid content:content securityCode:code completion:^(id responseObject, NSError *error) {
             if (error) {
                 [self refetchSecurityCode:nil];
-                [JDStatusBarNotification showWithStatus:@"回复失败" dismissAfter:2];
+                [WKProgressHUD popMessage:@"评论失败" inView:self.view duration:1.5 animated:YES];
+                //[JDStatusBarNotification showWithStatus:@"回复失败" dismissAfter:2];
                 return;
             } else {
                 NSDictionary *resultDic = responseObject;
                 if ([resultDic[@"state"] isEqualToString:@"success"]) {
-                    [JDStatusBarNotification showWithStatus:@"回复成功，请稍后刷新" dismissAfter:2];
+                    [self showNotificationWithText:@"回复成功，等待后台审核，请稍后刷新"];
+                    //[JDStatusBarNotification showWithStatus:@"回复成功，等待后台审核，请稍后刷新" dismissAfter:2];
                     [self.navigationController popToViewController:[self.navigationController.viewControllers objectAtIndex:2] animated:YES];
                 } else {
                     [self refetchSecurityCode:nil];
-                    [JDStatusBarNotification showWithStatus:resultDic[@"error"] dismissAfter:2];
+                    [WKProgressHUD popMessage:resultDic[@"error"] inView:self.view duration:1.5 animated:YES];
+                    //[JDStatusBarNotification showWithStatus:resultDic[@"error"] dismissAfter:2];
                 }
             }
         }];
     }
     
+}
+
+- (void)showNotificationWithText:(NSString *)text
+{
+    NSDictionary *options = @{
+                              kCRToastTextKey : text,
+                              kCRToastTextAlignmentKey : @(NSTextAlignmentCenter),
+                              kCRToastBackgroundColorKey : [UIColor greenColor],
+                              kCRToastKeepNavigationBarBorderKey : @(CRToastTypeNavigationBar),
+                              kCRToastAnimationInTypeKey : @(CRToastAnimationTypeGravity),
+                              kCRToastAnimationOutTypeKey : @(CRToastAnimationTypeGravity),
+                              kCRToastAnimationInDirectionKey : @(CRToastAnimationDirectionLeft),
+                              kCRToastAnimationOutDirectionKey : @(CRToastAnimationDirectionRight)
+                              };
+    [CRToastManager showNotificationWithOptions:options
+                                completionBlock:^{
+                                    NSLog(@"Completed");
+                                }];
 }
 
 - (IBAction)codeText_DidEndOnExit:(UITextField *)sender {

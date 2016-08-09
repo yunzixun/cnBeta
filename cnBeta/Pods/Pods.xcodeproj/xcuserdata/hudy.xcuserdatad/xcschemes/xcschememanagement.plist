@@ -9,6 +9,11 @@
 			<key>isShown</key>
 			<false/>
 		</dict>
+		<key>CRToast.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
 		<key>JDStatusBarNotification.xcscheme</key>
 		<dict>
 			<key>isShown</key>
@@ -39,15 +44,20 @@
 			<key>isShown</key>
 			<false/>
 		</dict>
+		<key>WKProgressHUD.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
+		<key>hpple.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
-		<key>1E7180EA665767157BB33076C16FE58E</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
-		<key>540E000107A181252322217EE04C18F6</key>
+		<key>03B97B53E6CC9492E402BCCF4E7C0498</key>
 		<dict>
 			<key>primary</key>
 			<true/>
@@ -57,7 +67,7 @@
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>6B4BBDDD1F7D1E14F480985F873C91D4</key>
+		<key>7112751ACED56349A420B879DDAD76F8</key>
 		<dict>
 			<key>primary</key>
 			<true/>
@@ -68,6 +78,26 @@
 			<true/>
 		</dict>
 		<key>9EAB3E42EF957541E6C3C76D35FD008E</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>9F3FF82B007338BA3AE2E8E07B79E859</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>BA250BDE05647A8E5AE0B5FB0421E3CC</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>C2934B7F4B088319B8078577C113F417</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>CAD6AF463472A3D16DD76B44C9B4AC44</key>
 		<dict>
 			<key>primary</key>
 			<true/>

@@ -60,7 +60,8 @@
     self.center = CGPointMake(self.scrollView.sd_width * 0.5, [self yOfCenterPoint]);
     
     // 手动刷新
-    if (self.isManuallyRefreshing && !_hasLayoutedForManuallyRefreshing && self.scrollView.contentInset.top > 0) {
+    //NSLog(@"%f", self.scrollView.contentInset.top);
+    if (self.isManuallyRefreshing && !_hasLayoutedForManuallyRefreshing && self.scrollView.contentInset.top >= 0) {
         self.activityIndicatorView.hidden = NO;
         
         // 模拟下拉操作

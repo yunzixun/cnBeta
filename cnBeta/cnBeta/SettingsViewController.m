@@ -14,14 +14,27 @@
 #import "FileCache.h"
 #import <MessageUI/MFMailComposeViewController.h>
 #import "NSString+iphoneType.h"
+#import "SettingCell.h"
+#import "SettingArrowItem.h"
+#import "SettingSwitchItem.h"
+#import "SettingGroup.h"
 
 @interface SettingsViewController ()<UITableViewDelegate,UITableViewDataSource,MFMailComposeViewControllerDelegate>
 @property (nonatomic, strong)UITableView *settingsTableView;
 @property (nonatomic, strong)NSArray *dataSource;
 @property (nonatomic)float cacheSize;
+@property (nonatomic, strong)NSMutableArray *groupArray;
 @end
 
 @implementation SettingsViewController
+
+- (NSMutableArray *)groupArray
+{
+    if (!_groupArray) {
+        _groupArray = [[NSMutableArray alloc]init];
+    }
+    return _groupArray;
+}
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -32,10 +45,20 @@
     _settingsTableView.dataSource = self;
     _settingsTableView.bounces = NO;
     _settingsTableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
-    _dataSource = @[@"清除缓存", @"反馈建议", @"去App Store给我们好评", @"关于"];
+    if ([self.settingsTableView respondsToSelector:@selector(setSeparatorInset:)]) {
+        [self.settingsTableView setSeparatorInset:UIEdgeInsetsZero];
+        
+    }
+    if ([self.settingsTableView respondsToSelector:@selector(setLayoutMargins:)])  {
+        [self.settingsTableView setLayoutMargins:UIEdgeInsetsZero];
+    }
+    
+    
+    _dataSource = @[@"网络切换通知", @"清除缓存", @"反馈建议", @"去App Store给我们好评", @"关于"];
 //    HTMLCache *cache = [HTMLCache sharedCache];
 //    _cacheSize = [cache folderSizeOfCache];
-    
+    [self setupGroup0];
+    [self setupGroup1];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -43,21 +66,68 @@
     [super viewWillAppear:animated];
     FileCache *cache = [FileCache sharedCache];
     _cacheSize = [cache folderSizeOfCache];
+    
+    SettingGroup * group = _groupArray[0];
+    SettingItem *item = group.items[1];
+    item.subtitle = [NSString stringWithFormat:@"%.2fMB", _cacheSize];
     [_settingsTableView reloadData];
+}
+
+
+
+
+- (void)setupGroup0
+{
+    //网络切换通知
+    SettingItem *networkNotification = [SettingSwitchItem itemWithTitle:_dataSource[0]];
+
+    //清除缓存
+    SettingItem *clearCache = [SettingArrowItem itemWithTitle:_dataSource[1] subtitle:[NSString stringWithFormat:@"%.2fMB", _cacheSize]];
+    clearCache.option = ^{
+        [self showAlert];
+    };
+    
+    SettingGroup *group0 = [[SettingGroup alloc]init];
+    group0.items = @[networkNotification, clearCache];
+    [self.groupArray addObject:group0];
+}
+
+- (void)setupGroup1
+{
+    //反馈建议
+    SettingItem *feedback = [SettingArrowItem itemWithTitle:_dataSource[2]];
+    feedback.option = ^{
+        [self sendMailInApp];
+    };
+    
+    //跳转AppStore
+    SettingItem *remark = [SettingArrowItem itemWithTitle:_dataSource[3]];
+    remark.option = ^{
+        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:cnBeta_APP_STORE_URL]];
+    };
+    
+    //关于
+    SettingItem *about = [SettingArrowItem itemWithTitle:_dataSource[4]];
+    about.option = ^{
+        NSDictionary *infoDictionary = [[NSBundle mainBundle]infoDictionary];
+        NSString *version = [NSString stringWithFormat:@"Version: %@", [infoDictionary objectForKey:@"CFBundleShortVersionString"]];
+        [self alertView:@"西贝news For cnBeta"message:version cancel:@"OK"];
+    };
+    
+    SettingGroup *group1 = [[SettingGroup alloc]init];
+    group1.items = @[feedback, remark, about];
+    [self.groupArray addObject:group1];
 }
 
 #pragma mark - Table view data source
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    return 2;
+    return _groupArray.count;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    if (section == 0) {
-        return 1;
-    }else {
-        return 3;
-    }
+    SettingGroup *group = _groupArray[section];
+    return group.items.count;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
@@ -77,17 +147,12 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    UITableViewCell *cell = nil;
-    if (indexPath.section ==0) {
-        cell = [[UITableViewCell alloc]initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:@"user"];
-        cell.textLabel.text = _dataSource[0];
-        
-        cell.detailTextLabel.text = [NSString stringWithFormat:@"%.2fMB", _cacheSize];
-    }else {
-        cell = [[UITableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"user2"];
-        cell.textLabel.text = _dataSource[indexPath.row+1];
-    }
-    cell.accessoryView = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"CellArrow"]];
+    SettingCell *cell = [SettingCell cellWithTableView:tableView];
+    SettingGroup *group = self.groupArray[indexPath.section];
+    SettingItem *item = group.items[indexPath.row];
+    
+    cell.item = item;
+    
     return cell;
 }
 
@@ -96,25 +161,23 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if (indexPath.section == 0) {
-        if (_cacheSize < 0.01) {
-            [self alertView:@"当前无缓存"message:nil cancel:@"OK"];
-        } else {
-            [self alertView:@"确定要清除缓存吗？"message:nil cancel:@"取消"];
-        }
-    }else {
-        if (indexPath.row == 0) {
-            [self sendMailInApp];
-        } else if(indexPath.row == 2){
-            NSDictionary *infoDictionary = [[NSBundle mainBundle]infoDictionary];
-            NSString *version = [NSString stringWithFormat:@"Version: %@", [infoDictionary objectForKey:@"CFBundleShortVersionString"]];
-            [self alertView:@"西贝news For cnBeta"message:version cancel:@"OK"];
-        } else {
-            //[[UIApplication sharedApplication] openURL:[NSURL URLWithString:cnBeta_APP_STORE_REVIEW_URL]];
-            [[UIApplication sharedApplication] openURL:[NSURL URLWithString:cnBeta_APP_STORE_URL]];
-        }
-    }
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];
     
+    SettingGroup *group = self.groupArray[indexPath.section];
+    SettingItem *item = group.items[indexPath.row];
+    if (item.option) {
+        item.option();
+    }
+        
+}
+
+- (void)showAlert
+{
+    if (_cacheSize < 0.01) {
+        [self alertView:@"当前无缓存"message:nil cancel:@"OK"];
+    } else {
+        [self alertView:@"确定要清除缓存吗？"message:nil cancel:@"取消"];
+    }
 }
 
 - (void)alertView:(NSString *)alertString message:(NSString *)msg cancel:(NSString *)action

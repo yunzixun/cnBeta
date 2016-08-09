@@ -22,6 +22,16 @@
     return dataBase;
 }
 
+- (id)init
+{
+    if (self = [super init]) {
+        ioQueue = dispatch_queue_create("sqlActions", DISPATCH_QUEUE_SERIAL);
+        
+    }
+    return self;
+}
+
+
 - (void)createDataBase
 {
     NSString *databasePath = [self pathForDataBase];
@@ -113,17 +123,20 @@
 //清空
 - (void)deleteAll
 {
-    sqlite3_stmt *statement;
-    const char *dbpath = [[self pathForDataBase]UTF8String];
-    if (sqlite3_open(dbpath, &database) == SQLITE_OK) {
-        const char *deleteStatement = "DELETE FROM collection";
-        int deleteResult = sqlite3_prepare_v2(database, deleteStatement, -1, &statement, NULL);
-        if (deleteResult == SQLITE_OK) {
-            sqlite3_step(statement);
+    dispatch_async(ioQueue, ^{
+        sqlite3_stmt *statement;
+        const char *dbpath = [[self pathForDataBase]UTF8String];
+        if (sqlite3_open(dbpath, &database) == SQLITE_OK) {
+            const char *deleteStatement = "DELETE FROM collection";
+            int deleteResult = sqlite3_prepare_v2(database, deleteStatement, -1, &statement, NULL);
+            if (deleteResult == SQLITE_OK) {
+                sqlite3_step(statement);
+            }
+            sqlite3_finalize(statement);
+            sqlite3_close(database);
         }
-        sqlite3_finalize(statement);
-        sqlite3_close(database);
-    }
+    });
+
 }
 
 //删除单条新闻

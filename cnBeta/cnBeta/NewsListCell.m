@@ -6,7 +6,7 @@
 //  Copyright © 2016年 hudy. All rights reserved.
 //
 
-#define SCREEN_WIDTH                    ([UIScreen mainScreen].bounds.size.width)
+#define SCREEN_WIDTH                    [UIScreen mainScreen].bounds.size.width
 
 #import "NewsListCell.h"
 #import "UIImageView+WebCache.h"
@@ -21,33 +21,94 @@
 
 @implementation NewsListCell
 
++ (instancetype)cellWithTableView:(UITableView *)tableView
+{
+    static NSString *cellId = @"cell";
+    NewsListCell *cell = [tableView dequeueReusableCellWithIdentifier:cellId];
+    
+    if (cell == nil) {
+        cell = [[NewsListCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellId];
+        cell.selectionStyle = UITableViewCellSelectionStyleNone;
+    }
+    return cell;
+}
+
+- (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
+{
+    self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
+    if (self) {
+        
+        //新闻标题
+        UILabel *newstitle = [[UILabel alloc]init];
+        _newstitle = newstitle;
+        //_newstitle.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+        _newstitle.numberOfLines = 0;
+        //[_newstitle setText:newsModel.title];
+        _newstitle.font = [UIFont systemFontOfSize:15];
+        _newstitle.textAlignment = NSTextAlignmentLeft;
+        [self.contentView addSubview:_newstitle];
+        
+        //时间
+        UILabel *time = [[UILabel alloc]init];
+        _time = time;
+        //_time.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+        //[_time setText:newsModel.pubtime];
+        _time.font = [UIFont systemFontOfSize:11];
+        _time.textColor = [UIColor grayColor];
+        _time.textAlignment = NSTextAlignmentLeft;
+        [self.contentView addSubview:_time];
+        
+        //图片
+        _imageThumb = [[UIImageView alloc]init];
+        [self.contentView addSubview:_imageThumb];
+        //[self.imageThumb sd_setImageWithURL:[NSURL URLWithString:newsModel.thumb] placeholderImage:[UIImage imageNamed:@"placeholder"]];
+    }
+    return self;
+}
+//- (void)setNewsModel:(DataModel *)newsModel
+//{
+//    _newsModel = newsModel;
+//    for (UILabel *label in self.contentView.subviews) {
+//        [label removeFromSuperview];
+//    }
+//    //新闻标题
+//    _newstitle = [[UILabel alloc]initWithFrame:CGRectMake(100, 10, SCREEN_WIDTH-10-100, 50)];
+//    _newstitle.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+//    _newstitle.numberOfLines = 3;
+//    [_newstitle setText:newsModel.title];
+//    _newstitle.font = [UIFont systemFontOfSize:16];
+//    _newstitle.textAlignment = NSTextAlignmentLeft;
+//    [self.contentView addSubview:_newstitle];
+//    //时间
+//    _time = [[UILabel alloc]initWithFrame:CGRectMake(100, 60, 250, 10)];
+//    _time.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+//    [_time setText:newsModel.pubtime];
+//    _time.font = [UIFont systemFontOfSize:11];
+//    _time.textColor = [UIColor grayColor];
+//    _time.textAlignment = NSTextAlignmentLeft;
+//    [self.contentView addSubview:_time];
+//    //NSLog(@"%@", newsModel.thumb);
+//    //图片
+//    _imageThumb = [[UIImageView alloc]initWithFrame:CGRectMake(10, 10, 80, 60)];
+//    [self.contentView addSubview:_imageThumb];
+//    [self.imageThumb sd_setImageWithURL:[NSURL URLWithString:newsModel.thumb] placeholderImage:[UIImage imageNamed:@"placeholder"]];
+//}
+
 - (void)setNewsModel:(DataModel *)newsModel
 {
     _newsModel = newsModel;
-    for (UILabel *label in self.contentView.subviews) {
-        [label removeFromSuperview];
-    }
+    
     //新闻标题
-    _newstitle = [[UILabel alloc]initWithFrame:CGRectMake(120, 10, SCREEN_WIDTH-10-120, 50)];
-    _newstitle.autoresizingMask = UIViewAutoresizingFlexibleWidth;
-    _newstitle.numberOfLines = 3;
     [_newstitle setText:newsModel.title];
-    _newstitle.font = [UIFont systemFontOfSize:16];
-    _newstitle.textAlignment = NSTextAlignmentLeft;
-    [self.contentView addSubview:_newstitle];
+    _newstitle.frame = CGRectMake(100, 10, SCREEN_WIDTH -10-100, 50);
+    
     //时间
-    _time = [[UILabel alloc]initWithFrame:CGRectMake(120, 70, 250, 10)];
-    _time.autoresizingMask = UIViewAutoresizingFlexibleWidth;
     [_time setText:newsModel.pubtime];
-    _time.font = [UIFont systemFontOfSize:11];
-    _time.textColor = [UIColor grayColor];
-    _time.textAlignment = NSTextAlignmentLeft;
-    [self.contentView addSubview:_time];
-    //NSLog(@"%@", newsModel.thumb);
+    _time.frame = CGRectMake(100, 60, 250, 10);
+    
     //图片
-    _imageThumb = [[UIImageView alloc]initWithFrame:CGRectMake(10, 10, 90, 70)];
-    [self.contentView addSubview:_imageThumb];
     [self.imageThumb sd_setImageWithURL:[NSURL URLWithString:newsModel.thumb] placeholderImage:[UIImage imageNamed:@"placeholder"]];
+    self.imageThumb.frame = CGRectMake(10, 10, 80, 60);
     
     
     
@@ -60,6 +121,21 @@
 //    });
 }
 
+- (void)setHotNewsModel:(HotNewsModel *)hotNewsModel
+{
+    _hotNewsModel = hotNewsModel;
+
+    //新闻标题
+    [_newstitle setText:hotNewsModel.title];
+    _newstitle.frame = CGRectMake(100, 10, [UIScreen mainScreen].bounds.size.width -10-100, 50);
+    //时间
+    [_time setText:hotNewsModel.inputtime];
+    _time.frame = CGRectMake(100, 60, 250, 10);
+    //图片
+    [self.imageThumb sd_setImageWithURL:[NSURL URLWithString:hotNewsModel.thumb] placeholderImage:[UIImage imageNamed:@"placeholder"]];
+    self.imageThumb.frame = CGRectMake(10, 10, 80, 60);
+}
+
 - (void)awakeFromNib {
     [super awakeFromNib];
     // Initialization code
@@ -70,5 +146,6 @@
 
     // Configure the view for the selected state
 }
-
+//We've attached screenshot(s) for your reference.
+//I think thay are just some news about iPhone 7 and Apple didn't provide me with any pre-release versions of iPhone 7. You know, iPhone 7 attracts so much attention that you can see many similar news about iPhone 7 in almost all the news-apps or on the news websites. I've attached screenshots for your reference. And all the news resources in my app are from cnBeta.com and the news articles are written by technology enthusiasts. Even so, I will remove the news about iPhone 7 from the home page of my app.
 @end

@@ -13,6 +13,7 @@
 @interface DataBase : NSObject
 {
     sqlite3 *database;
+    dispatch_queue_t ioQueue;
 }
 + (DataBase *)sharedDataBase;
 

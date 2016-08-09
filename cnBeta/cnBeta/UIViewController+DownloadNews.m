@@ -64,6 +64,7 @@ static NSString *const contentBaseURLString = @"http://api.cnbeta.com/capi?app_k
     }
     
     AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
+    [manager.requestSerializer setTimeoutInterval:10.0];
     if ([type isEqualToString:@"SN"]) {
         manager.responseSerializer = [AFHTTPResponseSerializer serializer];
     }

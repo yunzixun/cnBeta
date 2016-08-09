@@ -29,6 +29,13 @@
     self.tableView.rowHeight = 60.0f;
     self.tableView.separatorColor = [UIColor grayColor];
     self.tableView.tableFooterView=[[UIView alloc]init];
+    if ([self.tableView respondsToSelector:@selector(setSeparatorInset:)]) {
+        [self.tableView setSeparatorInset:UIEdgeInsetsZero];
+        
+    }
+    if ([self.tableView respondsToSelector:@selector(setLayoutMargins:)])  {
+        [self.tableView setLayoutMargins:UIEdgeInsetsZero];
+    }
     
     _newsCollection = [NSMutableArray array];
         // Uncomment the following line to preserve selection between presentations.
@@ -76,6 +83,25 @@
     return cell;
 }
 
+
+
+- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    return TRUE;
+}
+
+- (UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    return UITableViewCellEditingStyleDelete;
+}
+
+- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    collectionModel *item = _newsCollection[[_newsCollection count]-indexPath.row-1];
+    [_newsCollection removeObjectAtIndex:[_newsCollection count]-indexPath.row-1];
+    [_collection deleteCellOfSid:item.sid];
+    [self.tableView reloadData];
+}
 
 #pragma mark - Navigation
 

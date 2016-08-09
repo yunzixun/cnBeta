@@ -322,7 +322,7 @@
     headerLabel.opaque = NO;
     
     headerLabel.highlightedTextColor = [UIColor whiteColor];
-    headerLabel.font = [UIFont systemFontOfSize:14];
+    headerLabel.font = [UIFont systemFontOfSize:13];
     headerLabel.frame = CGRectMake(10.0, 0.0, 300.0, 25.0);
     
     if ([self.hotFlooredCommentArray count]) {
@@ -331,7 +331,7 @@
             headerLabel.textColor = [UIColor redColor];
         }else {
             headerLabel.text = @"全部评论";
-            headerLabel.textColor = [UIColor blueColor];
+            headerLabel.textColor = [UIColor brownColor];
         }
     }else {
         headerLabel.text = @"全部评论";

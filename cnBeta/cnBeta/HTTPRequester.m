@@ -8,6 +8,7 @@
 
 #import "HTTPRequester.h"
 #import "AFNetWorking.h"
+#import "TFHpple.h"
 
 @implementation HTTPRequester
 
@@ -145,10 +146,64 @@
     } success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
         block(responseObject, nil);
     } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
-        block(error, nil);
+        block(nil, error);
     }];
 }
 
+//- (void)fetchWeekly:(CompletionBlock)block
+//{
+//    AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
+//    manager.responseSerializer = [AFHTTPResponseSerializer serializer];
+//    [manager GET:@"http://m.cnbeta.com" parameters:nil progress:^(NSProgress * _Nonnull downloadProgress) {
+//        
+//    } success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+//        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+//            TFHpple *hpple = [[TFHpple alloc] initWithHTMLData:responseObject];
+//            NSArray *modules = [hpple searchWithXPathQuery:@"//div[@class=\"module\"]/ul"];
+//            
+//            
+//            // 人气推荐
+//            TFHppleElement *module = modules[1];
+//            NSArray *lis = [module childrenWithTagName:@"li"];
+//            for (TFHppleElement *element in lis) {
+//                NSData *recommendData = [[element raw] dataUsingEncoding:NSUTF8StringEncoding];
+//                TFHpple *recommendHpple = [[TFHpple alloc] initWithHTMLData:recommendData];
+//                
+//                if ([[element objectForKey:@"class"] isEqualToString:@"module_imgNewsTwoCol"]) {
+//                    TFHppleElement *aNode = [[recommendHpple searchWithXPathQuery:@"//a"] firstObject];
+//                    NSString *link = [aNode objectForKey:@"href"];
+//                    NSString *aidString = [[link lastPathComponent] stringByDeletingPathExtension];
+//                    if (aidString) {
+//                        PRArticle *article = [[PRArticle alloc] init];
+//                        article.articleId = @([aidString integerValue]);
+//                        
+//                        article.title = [[[recommendHpple searchWithXPathQuery:@"//p"] lastObject] text];
+//                        article.thumb = [[[recommendHpple searchWithXPathQuery:@"//img"] firstObject] objectForKey:@"src"];
+//                        
+//                        [[PRDatabase sharedDatabase] storeArticle:article weeklyType:PRWeeklyTypeRecommend];
+//                    }
+//                }
+//                else {
+//                    TFHppleElement *aNode = [[recommendHpple searchWithXPathQuery:@"//a"] firstObject];
+//                    NSString *link = [aNode objectForKey:@"href"];
+//                    NSString *aidString = [[link lastPathComponent] stringByDeletingPathExtension];
+//                    if (aidString) {
+//                        PRArticle *article = [[PRArticle alloc] init];
+//                        article.articleId = @([aidString integerValue]);
+//                        article.title = aNode.text;
+//                        
+//                        [[PRDatabase sharedDatabase] storeArticle:article weeklyType:PRWeeklyTypeRecommend];
+//                    }
+//                }
+//            }
+//
+//        });
+//    } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+//        block(nil, error);
+//    }];
+//    
+//    
+//}
 
 
 @end

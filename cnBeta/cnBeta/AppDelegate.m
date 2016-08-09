@@ -7,20 +7,12 @@
 //
 
 #import "AppDelegate.h"
+#import "AFNetworking.h"
 #import "AFNetworkActivityIndicatorManager.h"
-//#import <ShareSDK/ShareSDK.h>
-//#import <ShareSDKConnector/ShareSDKConnector.h>
-//
-////腾讯开放平台（对应QQ和QQ空间）SDK头文件
-//#import <TencentOpenAPI/TencentOAuth.h>
-//#import <TencentOpenAPI/QQApiInterface.h>
-//
-////微信SDK头文件
-//#import "WXApi.h"
-//
-////新浪微博SDK头文件
-//#import "WeiboSDK.h"
-//新浪微博SDK需要在项目Build Settings中的Other Linker Flags添加"-ObjC"
+#import "UMSocial.h"
+#import "UMSocialWechatHandler.h"
+#import "UMSocialQQHandler.h"
+#import "CRToast.h"
 
 @interface AppDelegate ()
 
@@ -28,12 +20,22 @@
 
 @implementation AppDelegate
 
+//[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reachabilityStatusChange) name:kReachabilityChangedNotification object:nil];
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     [AFNetworkActivityIndicatorManager sharedManager].enabled = YES;
+    [self listenNetWorkingPort];
     // Override point for customization after application launch.
-    [[UINavigationBar appearance] setBarTintColor:[UIColor colorWithRed:20/255.0 green:100/255.0 blue:180/255.0 alpha:1.0]];
+    [[UINavigationBar appearance] setBarTintColor:[UIColor colorWithRed:50/255.0 green:100/255.0 blue:200/255.0 alpha:1.0]];
     [[UINavigationBar appearance] setTintColor:[UIColor whiteColor]];
+    
+    //设置友盟社会化组件appkey
+    [UMSocialData setAppKey:@"579b1ed4e0f55ab08c000e90"];
+    //设置微信AppId、appSecret，分享url
+    [UMSocialWechatHandler setWXAppId:@"wx9006182f5fb2bb8a" appSecret:@"84ac7593b76c84ff04abaaa543d792b7" url:@"http://www.umeng.com/social"];
+    //设置手机QQ 的AppId，Appkey，和分享URL，需要#import "UMSocialQQHandler.h"
+    [UMSocialQQHandler setQQWithAppId:@"1105528200" appKey:@"9Av2cIJcSmVtgxoJ" url:@"http://www.umeng.com/social"];
+    
     
 //    /**
 //     *  设置ShareSDK的appKey，如果尚未在ShareSDK官网注册过App，请移步到http://mob.com/login 登录后台进行应用注册，
@@ -93,6 +95,90 @@
 //         }
 //     }];
     return YES;
+}
+
+- (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation
+{
+    BOOL result = [UMSocialSnsService handleOpenURL:url];
+    if (result == FALSE) {
+        //调用其他SDK，例如支付宝SDK等
+    }
+    return result;
+}
+
+-(void)listenNetWorkingPort
+{
+    //创建网络监听管理者对象
+    AFNetworkReachabilityManager *manager = [AFNetworkReachabilityManager sharedManager];
+    
+    /*
+     typedef NS_ENUM(NSInteger, AFNetworkReachabilityStatus) {
+     AFNetworkReachabilityStatusUnknown          = -1,//未识别的网络
+     AFNetworkReachabilityStatusNotReachable     = 0,//不可达的网络(未连接)
+     AFNetworkReachabilityStatusReachableViaWWAN = 1,//2G,3G,4G...
+     AFNetworkReachabilityStatusReachableViaWiFi = 2,//wifi网络
+     };
+     */
+    //设置监听
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    __block int count = 0;
+    [manager setReachabilityStatusChangeBlock:^(AFNetworkReachabilityStatus status) {
+        BOOL switchOn = [defaults boolForKey:@"networkSwitch"];
+        switch (status) {
+            case AFNetworkReachabilityStatusUnknown:
+                NSLog(@"未识别的网络");
+                break;
+                
+            case AFNetworkReachabilityStatusNotReachable:
+                if (switchOn && count) {
+                    [self showNotificationWithText:@"网络连接已断开"];
+                    
+                }
+                NSLog(@"不可达的网络(未连接)");
+                break;
+                
+            case AFNetworkReachabilityStatusReachableViaWWAN:
+                if (switchOn && count) {
+                    [self showNotificationWithText:@"网络连接已切换至蜂窝网络"];
+                    
+                }
+                NSLog(@"2G,3G,4G...的网络");
+                break;
+                
+            case AFNetworkReachabilityStatusReachableViaWiFi:
+                if (switchOn && count) {
+                    [self showNotificationWithText:@"网络连接已切换至无线网络"];
+                    
+                }
+                NSLog(@"wifi的网络");
+                break;
+            default:
+                break;
+                
+                
+        }
+        count++;
+    }];
+    //开始监听
+    [manager startMonitoring];
+}
+
+- (void)showNotificationWithText:(NSString *)text
+{
+    NSDictionary *options = @{
+                              kCRToastTextKey : text,
+                              kCRToastTextAlignmentKey : @(NSTextAlignmentCenter),
+                              kCRToastBackgroundColorKey : [UIColor redColor],
+                              kCRToastKeepNavigationBarBorderKey : @(CRToastTypeNavigationBar),
+                              kCRToastAnimationInTypeKey : @(CRToastAnimationTypeGravity),
+                              kCRToastAnimationOutTypeKey : @(CRToastAnimationTypeGravity),
+                              kCRToastAnimationInDirectionKey : @(CRToastAnimationDirectionLeft),
+                              kCRToastAnimationOutDirectionKey : @(CRToastAnimationDirectionRight)
+                              };
+    [CRToastManager showNotificationWithOptions:options
+                                completionBlock:^{
+                                    NSLog(@"Completed");
+                                }];
 }
 
 - (void)applicationWillResignActive:(UIApplication *)application {
