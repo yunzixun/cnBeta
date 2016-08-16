@@ -1,4 +1,6 @@
 # cnBeta
+更新于 2016.8.16   
+
 名称：西贝news    版本：1.2.1   
 
 一款cnBeta新闻第三方客户端。AppStore地址：https://itunes.apple.com/cn/app/id1133433243?mt=8  
