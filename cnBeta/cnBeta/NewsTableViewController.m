@@ -10,8 +10,9 @@
 #define SCREEN_HEIGHT                   ([UIScreen mainScreen].bounds.size.height)
 
 #import "NewsTableViewController.h"
-#import "SDRefresh.h"
+#import "MJRefresh.h"
 #import "UIViewController+DownloadNews.h"
+#import "UIView+isShowingOnScreen.h"
 #import "contentViewController.h"
 #import "NewsListCell.h"
 #import "MJExtension.h"
@@ -28,14 +29,14 @@ static NSString *const newsListURLString = @"http://cnbeta.techoke.com/api/list?
 
 @interface NewsTableViewController ()<SDCycleScrollViewDelegate>
 @property (nonatomic, assign) NSUInteger RowCount;
-@property (nonatomic, weak) SDRefreshHeaderView *refreshHeader;
-@property (nonatomic, weak) SDRefreshFooterView *refreshFooter;
 @property (nonatomic, strong) NSMutableArray *newsList;
 @property (nonatomic, strong) NSArray *cycleNews;
 @property (nonatomic, strong) NSMutableArray *imagesArray;
 @property (nonatomic, strong) NSMutableArray *titlesArray;
 @property (nonatomic, strong) FileCache *fileCache;
 @property (nonatomic, strong) DataBase *collection;
+
+@property (nonatomic, strong) UIViewController *lastVC;
 @end
 
 @implementation NewsTableViewController
@@ -64,21 +65,24 @@ static NSString *const newsListURLString = @"http://cnbeta.techoke.com/api/list?
     _collection = [DataBase sharedDataBase];
     [self loadCache];
     
-    [self initCycleView];
-    [self setupHeader];
-    [self setupFooter];
-    [self setupDataBase];
-    // Uncomment the following line to preserve selection between presentations.
-    // self.clearsSelectionOnViewWillAppear = NO;
+    //监听点击TabBar的通知
+    //NSLog(@"%@", self.tabBarController.selectedViewController);
     
-    // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-    // self.navigationItem.rightBarButtonItem = self.editButtonItem;
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(tabBarClick) name:@"TabRefresh" object:nil];
+    
+    [self initCycleView];
+    [self setupRefreshView];
+    [self setupDataBase];
+    
+    //[self tabBarClick];
+    [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"firstLoad"];
 }
 
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
     //self.navigationController.hidesBarsOnSwipe = YES;
+    
     [self.tableView reloadData];
 }
 
@@ -177,44 +181,47 @@ static NSString *const newsListURLString = @"http://cnbeta.techoke.com/api/list?
     
 }
 
-- (void)setupHeader
+- (void)tabBarClick
 {
-    SDRefreshHeaderView *refreshHeader = [SDRefreshHeaderView refreshView];
-    [refreshHeader addToScrollView:self.tableView];
-    _refreshHeader = refreshHeader;
-    __weak typeof(self) weakSelf = self;
-    refreshHeader.beginRefreshingOperation = ^{
-        [weakSelf requestWithURLType:@"updatedNews" completion:^(id data, NSError *error) {
-            if (!error) {
-                //NSLog(@"%@",dataDic[@"lists"]);
-                
-                NSArray *dataList = [DataModel mj_objectArrayWithKeyValuesArray:data[@"result"]];
-                [weakSelf.newsList removeAllObjects];
-                [weakSelf.newsList addObjectsFromArray:dataList];
-                weakSelf.RowCount = [weakSelf.newsList count];
-                [weakSelf.tableView reloadData];
-                [_refreshHeader endRefreshing];
-                //FileCache *fileCache = [FileCache sharedCache];
-                [_fileCache cacheNewsListToFile:weakSelf.newsList forKey:@"newsList"];
-            }else {
-                [_refreshHeader endRefreshing];
-            }
-        }];
-        
-    };
+    if (self.tabBarController.selectedViewController == self.lastVC && [self.view isShowingOnKeyWindow]) {
+        [self.tableView.mj_header beginRefreshing];
+    }
     
-    //[self loadData];
-    [refreshHeader autoRefreshWhenViewDidAppear];
+    self.lastVC = self.tabBarController.selectedViewController;
 }
 
-
-- (void)setupFooter
+- (void)setupRefreshView
 {
-    SDRefreshFooterView *refreshFooter = [SDRefreshFooterView refreshView];
-    [refreshFooter addToScrollView:self.tableView];
-    [refreshFooter addTarget:self refreshAction:@selector(footerRefresh)];
-    _refreshFooter = refreshFooter;
+    self.tableView.mj_header = [MJRefreshNormalHeader headerWithRefreshingTarget:self refreshingAction:@selector(headerRefresh)];
+    self.tableView.mj_header.automaticallyChangeAlpha = YES;
+    [self.tableView.mj_header beginRefreshing];
+    
+    self.tableView.mj_footer = [MJRefreshBackNormalFooter footerWithRefreshingTarget:self refreshingAction:@selector(footerRefresh)];
 }
+
+
+
+- (void)headerRefresh
+{
+    [self requestWithURLType:@"updatedNews" completion:^(id data, NSError *error) {
+        if (!error) {
+            //NSLog(@"%@",dataDic[@"lists"]);
+            
+            NSArray *dataList = [DataModel mj_objectArrayWithKeyValuesArray:data[@"result"]];
+            [self.newsList removeAllObjects];
+            [self.newsList addObjectsFromArray:dataList];
+            self.RowCount = [self.newsList count];
+            [self.tableView reloadData];
+            [self.tableView.mj_header endRefreshing];
+            //FileCache *fileCache = [FileCache sharedCache];
+            [_fileCache cacheNewsListToFile:self.newsList forKey:@"newsList"];
+        }else {
+            [self.tableView.mj_header endRefreshing];
+        }
+    }];
+    
+}
+
 
 - (void)footerRefresh
 {
@@ -227,9 +234,9 @@ static NSString *const newsListURLString = @"http://cnbeta.techoke.com/api/list?
             [self.newsList addObjectsFromArray:dataList];
             self.RowCount = [self.newsList count];
             [self.tableView reloadData];
-            [self.refreshFooter endRefreshing];
+            [self.tableView.mj_footer endRefreshing];
         }else {
-            [self.refreshFooter endRefreshing];
+            [self.tableView.mj_footer endRefreshing];
         }
         
     }];
@@ -263,6 +270,8 @@ static NSString *const newsListURLString = @"http://cnbeta.techoke.com/api/list?
     cell.newsModel = dataModel;
     if ([_collection queryWithSid:dataModel.sid tableType:@"newsID"]) {
         cell.newstitle.textColor = [UIColor grayColor];
+    } else {
+        cell.newstitle.textColor = [UIColor blackColor];
     }
     
     
@@ -320,16 +329,22 @@ static NSString *const newsListURLString = @"http://cnbeta.techoke.com/api/list?
     contentViewController *contentVC = [mainStoryboard instantiateViewControllerWithIdentifier:@"contentViewController"];
     contentVC.hidesBottomBarWhenPushed = YES;
     contentVC.newsId = data.id;
+    contentVC.newsTitle = data.title;
+    contentVC.thumb = data.images[0];
     [self.navigationController pushViewController:contentVC animated:YES];
 }
 
 
 
-
-
-
-
-
+- (void)viewDidLayoutSubviews
+{
+    [super viewDidLayoutSubviews];
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    if ([defaults boolForKey:@"firstLoad"]) {
+        self.lastVC = self.tabBarController.selectedViewController;
+        [defaults setBool:NO forKey:@"firstLoad"];
+    }
+}
 
 
 

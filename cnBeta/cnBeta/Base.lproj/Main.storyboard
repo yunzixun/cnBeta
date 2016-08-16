@@ -3,7 +3,6 @@
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
-        <capability name="Navigation items with more than one left or right bar item" minToolsVersion="7.0"/>
     </dependencies>
     <scenes>
         <!--Nav Tab Bar Controller-->
@@ -44,86 +43,127 @@
                             <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" animating="YES" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="btT-Db-oba">
                                 <rect key="frame" x="-10" y="-10" width="20" height="20"/>
                                 <color key="color" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
-                                <variation key="widthClass=compact" fixedFrame="YES">
-                                    <rect key="frame" x="182" y="289" width="37" height="37"/>
-                                </variation>
                             </activityIndicatorView>
+                            <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Mp8-67-p1l">
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                                <items>
+                                    <barButtonItem style="plain" id="fWX-xt-aTc">
+                                        <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="bWS-4O-8C8" userLabel="GoBack">
+                                            <rect key="frame" x="-23" y="-15" width="46" height="30"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <state key="normal" image="GobackIOS7_NORMAL_25x25_"/>
+                                            <connections>
+                                                <action selector="goBack:" destination="dTE-fz-fVY" eventType="touchUpInside" id="z7E-wf-jTE"/>
+                                            </connections>
+                                        </button>
+                                    </barButtonItem>
+                                    <barButtonItem style="plain" systemItem="flexibleSpace" id="rIt-B7-fWw"/>
+                                    <barButtonItem style="plain" id="HdW-sJ-rcb">
+                                        <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="sfH-HW-gcS" userLabel="comment">
+                                            <rect key="frame" x="-23" y="-15" width="46" height="30"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <state key="normal" image="replyaction">
+                                                <color key="titleColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                                            </state>
+                                            <connections>
+                                                <action selector="showComments:" destination="dTE-fz-fVY" eventType="touchUpInside" id="34v-J2-HKR"/>
+                                            </connections>
+                                        </button>
+                                    </barButtonItem>
+                                    <barButtonItem width="42" style="plain" systemItem="fixedSpace" id="r4v-bg-6Hl"/>
+                                    <barButtonItem style="plain" id="NVb-8z-Ukm">
+                                        <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="iFA-7j-sK3" userLabel="Share">
+                                            <rect key="frame" x="-23" y="-15" width="46" height="30"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <state key="normal" image="ShareIOS7_NORMAL_25x25_"/>
+                                            <connections>
+                                                <action selector="shareNews:" destination="dTE-fz-fVY" eventType="touchUpInside" id="BFN-zm-mnP"/>
+                                            </connections>
+                                        </button>
+                                    </barButtonItem>
+                                    <barButtonItem width="30" style="plain" systemItem="fixedSpace" id="pCA-3b-B9k"/>
+                                    <barButtonItem style="plain" id="1a9-cY-VwU">
+                                        <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="uv6-Kb-0Jq" userLabel="Refresh">
+                                            <rect key="frame" x="-23" y="-15" width="46" height="30"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <state key="normal" image="refreshIOS7_25x25_">
+                                                <color key="titleColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                                            </state>
+                                            <connections>
+                                                <action selector="refreshWebView:" destination="dTE-fz-fVY" eventType="touchUpInside" id="FS9-tE-0UI"/>
+                                            </connections>
+                                        </button>
+                                    </barButtonItem>
+                                    <barButtonItem width="20" style="plain" systemItem="fixedSpace" id="XKo-R1-RvN"/>
+                                </items>
+                            </toolbar>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstItem="PL5-wx-vFx" firstAttribute="centerX" secondItem="4ac-KH-8IN" secondAttribute="centerX" id="7gm-NZ-mvq"/>
-                            <constraint firstItem="PL5-wx-vFx" firstAttribute="top" secondItem="1b6-7j-bDr" secondAttribute="bottom" id="7ro-Gj-iQr"/>
-                            <constraint firstItem="PL5-wx-vFx" firstAttribute="centerX" secondItem="4ac-KH-8IN" secondAttribute="centerX" id="S3Z-B2-ZGp"/>
-                            <constraint firstItem="PL5-wx-vFx" firstAttribute="leading" secondItem="4ac-KH-8IN" secondAttribute="leading" id="dV7-Fx-US8"/>
-                            <constraint firstItem="PL5-wx-vFx" firstAttribute="bottom" secondItem="meu-xW-Xoa" secondAttribute="top" id="wXC-SL-83q"/>
+                            <constraint firstItem="btT-Db-oba" firstAttribute="top" secondItem="1b6-7j-bDr" secondAttribute="bottom" constant="225" id="956-2K-lzi"/>
+                            <constraint firstAttribute="bottom" secondItem="Mp8-67-p1l" secondAttribute="bottom" id="Gsf-mZ-MXD"/>
+                            <constraint firstItem="PL5-wx-vFx" firstAttribute="leading" secondItem="Mp8-67-p1l" secondAttribute="leading" id="Nf5-KL-7qo"/>
+                            <constraint firstAttribute="trailing" secondItem="PL5-wx-vFx" secondAttribute="trailing" id="VND-7q-C8S"/>
+                            <constraint firstItem="Mp8-67-p1l" firstAttribute="centerX" secondItem="btT-Db-oba" secondAttribute="centerX" id="dcI-mT-nYJ"/>
+                            <constraint firstItem="PL5-wx-vFx" firstAttribute="top" secondItem="1b6-7j-bDr" secondAttribute="bottom" id="kIR-Jm-BjI"/>
+                            <constraint firstItem="PL5-wx-vFx" firstAttribute="leading" secondItem="4ac-KH-8IN" secondAttribute="leading" id="o1R-2Q-XQr"/>
+                            <constraint firstItem="PL5-wx-vFx" firstAttribute="bottom" secondItem="Mp8-67-p1l" secondAttribute="top" id="syR-2l-TuL"/>
+                            <constraint firstItem="PL5-wx-vFx" firstAttribute="trailing" secondItem="Mp8-67-p1l" secondAttribute="trailing" id="yKc-ja-qYh"/>
                         </constraints>
                         <variation key="default">
                             <mask key="subviews">
                                 <exclude reference="PL5-wx-vFx"/>
                                 <exclude reference="btT-Db-oba"/>
+                                <exclude reference="Mp8-67-p1l"/>
                             </mask>
                             <mask key="constraints">
-                                <exclude reference="7gm-NZ-mvq"/>
-                                <exclude reference="7ro-Gj-iQr"/>
-                                <exclude reference="S3Z-B2-ZGp"/>
-                                <exclude reference="dV7-Fx-US8"/>
-                                <exclude reference="wXC-SL-83q"/>
+                                <exclude reference="Nf5-KL-7qo"/>
+                                <exclude reference="VND-7q-C8S"/>
+                                <exclude reference="kIR-Jm-BjI"/>
+                                <exclude reference="o1R-2Q-XQr"/>
+                                <exclude reference="syR-2l-TuL"/>
+                                <exclude reference="yKc-ja-qYh"/>
+                                <exclude reference="956-2K-lzi"/>
+                                <exclude reference="Gsf-mZ-MXD"/>
+                                <exclude reference="dcI-mT-nYJ"/>
                             </mask>
                         </variation>
                         <variation key="widthClass=compact">
                             <mask key="subviews">
                                 <include reference="PL5-wx-vFx"/>
                                 <include reference="btT-Db-oba"/>
+                                <include reference="Mp8-67-p1l"/>
                             </mask>
                             <mask key="constraints">
-                                <include reference="7gm-NZ-mvq"/>
-                                <include reference="7ro-Gj-iQr"/>
-                                <include reference="S3Z-B2-ZGp"/>
-                                <include reference="dV7-Fx-US8"/>
-                                <include reference="wXC-SL-83q"/>
+                                <include reference="Nf5-KL-7qo"/>
+                                <include reference="VND-7q-C8S"/>
+                                <include reference="kIR-Jm-BjI"/>
+                                <include reference="o1R-2Q-XQr"/>
+                                <include reference="syR-2l-TuL"/>
+                                <include reference="yKc-ja-qYh"/>
+                                <include reference="956-2K-lzi"/>
+                                <include reference="Gsf-mZ-MXD"/>
+                                <include reference="dcI-mT-nYJ"/>
                             </mask>
                         </variation>
                     </view>
                     <navigationItem key="navigationItem" id="AsB-80-ZjL">
                         <nil key="title"/>
-                        <rightBarButtonItems>
-                            <barButtonItem style="done" id="54s-BE-71g">
-                                <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="4vG-W4-x9A">
-                                    <rect key="frame" x="-23" y="-15" width="46" height="30"/>
-                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                    <fontDescription key="fontDescription" type="system" pointSize="13"/>
-                                    <state key="normal" title="分享"/>
-                                    <connections>
-                                        <action selector="shareNews:" destination="dTE-fz-fVY" eventType="touchUpInside" id="hik-wD-rVh"/>
-                                    </connections>
-                                </button>
-                            </barButtonItem>
-                            <barButtonItem style="done" id="6Gf-Oo-mvd">
-                                <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="f6o-63-GQJ">
-                                    <rect key="frame" x="534" y="7" width="46" height="30"/>
-                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                    <fontDescription key="fontDescription" type="system" pointSize="13"/>
-                                    <state key="normal" title="评论"/>
-                                    <connections>
-                                        <action selector="showComments:" destination="dTE-fz-fVY" eventType="touchUpInside" id="ayb-Ce-XrE"/>
-                                    </connections>
-                                </button>
-                            </barButtonItem>
-                            <barButtonItem style="done" id="foB-yC-EaK">
-                                <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="NYC-1P-nTI">
-                                    <rect key="frame" x="480" y="7" width="46" height="30"/>
-                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                    <fontDescription key="fontDescription" type="system" pointSize="13"/>
-                                    <state key="normal" title="收藏"/>
-                                    <connections>
-                                        <action selector="collectNews:" destination="dTE-fz-fVY" eventType="touchUpInside" id="FMv-cm-Vgj"/>
-                                    </connections>
-                                </button>
-                            </barButtonItem>
-                        </rightBarButtonItems>
+                        <barButtonItem key="rightBarButtonItem" style="done" id="foB-yC-EaK">
+                            <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="NYC-1P-nTI">
+                                <rect key="frame" x="480" y="7" width="46" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="13"/>
+                                <state key="normal" title="收藏"/>
+                                <connections>
+                                    <action selector="collectNews:" destination="dTE-fz-fVY" eventType="touchUpInside" id="FMv-cm-Vgj"/>
+                                </connections>
+                            </button>
+                        </barButtonItem>
                     </navigationItem>
                     <connections>
                         <outlet property="collect" destination="NYC-1P-nTI" id="Gjo-bM-dZO"/>
+                        <outlet property="commentNum" destination="sfH-HW-gcS" id="5KQ-cC-vEN"/>
                         <outlet property="contentWebView" destination="PL5-wx-vFx" id="81w-3r-rYE"/>
                         <outlet property="spinner" destination="btT-Db-oba" id="PtM-pH-rfk"/>
                     </connections>
@@ -220,7 +260,7 @@
         <!--资讯-->
         <scene sceneID="m2K-Fs-QQ0">
             <objects>
-                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="AyA-lq-wIZ" colorLabel="IBBuiltInLabel-Blue" sceneMemberID="viewController">
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="AyA-lq-wIZ" customClass="NewsNavigationViewController" colorLabel="IBBuiltInLabel-Blue" sceneMemberID="viewController">
                     <tabBarItem key="tabBarItem" title="资讯" image="tabbar_news" id="qvB-UM-Gfw"/>
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="cKF-Gt-4Ia">
@@ -277,7 +317,7 @@
         <!--收藏-->
         <scene sceneID="0Eg-J8-Vic">
             <objects>
-                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="36S-5a-eCR" sceneMemberID="viewController">
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="36S-5a-eCR" customClass="CollectionNavigationController" sceneMemberID="viewController">
                     <tabBarItem key="tabBarItem" title="收藏" image="star" id="BP6-68-Z6b"/>
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="8FG-wF-D0u">
@@ -295,6 +335,10 @@
         </scene>
     </scenes>
     <resources>
+        <image name="GobackIOS7_NORMAL_25x25_" width="25" height="25"/>
+        <image name="ShareIOS7_NORMAL_25x25_" width="25" height="25"/>
+        <image name="refreshIOS7_25x25_" width="25" height="25"/>
+        <image name="replyaction" width="32" height="32"/>
         <image name="star" width="22" height="22"/>
         <image name="tabbar_news" width="22" height="22"/>
         <image name="user_main_setting" width="21" height="21"/>

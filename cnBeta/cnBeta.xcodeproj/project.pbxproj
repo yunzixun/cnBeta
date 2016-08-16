@@ -12,6 +12,9 @@
 		850013B21D58ACBF00D2CC6F /* SettingArrowItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 850013B11D58ACBF00D2CC6F /* SettingArrowItem.m */; };
 		850013B51D58ACDE00D2CC6F /* SettingSwitchItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 850013B41D58ACDE00D2CC6F /* SettingSwitchItem.m */; };
 		850013B81D58C80000D2CC6F /* SettingGroup.m in Sources */ = {isa = PBXBuildFile; fileRef = 850013B71D58C7FF00D2CC6F /* SettingGroup.m */; };
+		850013BB1D5C55FC00D2CC6F /* NewsNavigationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 850013BA1D5C55FC00D2CC6F /* NewsNavigationViewController.m */; };
+		850013C11D5C80E100D2CC6F /* CollectionNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 850013C01D5C80E100D2CC6F /* CollectionNavigationController.m */; };
+		850013C41D5F7CEF00D2CC6F /* UIView+isShowingOnScreen.m in Sources */ = {isa = PBXBuildFile; fileRef = 850013C31D5F7CEF00D2CC6F /* UIView+isShowingOnScreen.m */; };
 		850A080B1D3E22C000DA0FDE /* HTTPRequester.m in Sources */ = {isa = PBXBuildFile; fileRef = 850A080A1D3E22C000DA0FDE /* HTTPRequester.m */; };
 		852064F61D16D7D70073F05C /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 852064F51D16D7D70073F05C /* main.m */; };
 		852064F91D16D7D70073F05C /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 852064F81D16D7D70073F05C /* AppDelegate.m */; };
@@ -123,6 +126,12 @@
 		850013B41D58ACDE00D2CC6F /* SettingSwitchItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SettingSwitchItem.m; sourceTree = "<group>"; };
 		850013B61D58C7FF00D2CC6F /* SettingGroup.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SettingGroup.h; sourceTree = "<group>"; };
 		850013B71D58C7FF00D2CC6F /* SettingGroup.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SettingGroup.m; sourceTree = "<group>"; };
+		850013B91D5C55FC00D2CC6F /* NewsNavigationViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NewsNavigationViewController.h; sourceTree = "<group>"; };
+		850013BA1D5C55FC00D2CC6F /* NewsNavigationViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NewsNavigationViewController.m; sourceTree = "<group>"; };
+		850013BF1D5C80E100D2CC6F /* CollectionNavigationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CollectionNavigationController.h; sourceTree = "<group>"; };
+		850013C01D5C80E100D2CC6F /* CollectionNavigationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CollectionNavigationController.m; sourceTree = "<group>"; };
+		850013C21D5F7CEF00D2CC6F /* UIView+isShowingOnScreen.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+isShowingOnScreen.h"; sourceTree = "<group>"; };
+		850013C31D5F7CEF00D2CC6F /* UIView+isShowingOnScreen.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+isShowingOnScreen.m"; sourceTree = "<group>"; };
 		850A08091D3E22C000DA0FDE /* HTTPRequester.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HTTPRequester.h; sourceTree = "<group>"; };
 		850A080A1D3E22C000DA0FDE /* HTTPRequester.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HTTPRequester.m; sourceTree = "<group>"; };
 		852064F11D16D7D70073F05C /* cnBeta.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = cnBeta.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -418,6 +427,10 @@
 			children = (
 				85EE4CDF1D2E69D1003D2DB4 /* Info.plist */,
 				852064FD1D16D7D70073F05C /* Main.storyboard */,
+				850013B91D5C55FC00D2CC6F /* NewsNavigationViewController.h */,
+				850013BA1D5C55FC00D2CC6F /* NewsNavigationViewController.m */,
+				850013BF1D5C80E100D2CC6F /* CollectionNavigationController.h */,
+				850013C01D5C80E100D2CC6F /* CollectionNavigationController.m */,
 				859063F91D38E49A004D1BCB /* Constant.h */,
 				852064F71D16D7D70073F05C /* AppDelegate.h */,
 				852064F81D16D7D70073F05C /* AppDelegate.m */,
@@ -555,12 +568,12 @@
 		85977AE11D40B0ED00D5CD6F /* Controller */ = {
 			isa = PBXGroup;
 			children = (
+				85A4DDEC1D54FD0B00E58712 /* NavTabBarController.h */,
+				85A4DDED1D54FD0B00E58712 /* NavTabBarController.m */,
 				852065271D16DB410073F05C /* NewsTableViewController.h */,
 				852065281D16DB410073F05C /* NewsTableViewController.m */,
 				85A4DDE91D54732400E58712 /* otherNewsViewController.h */,
 				85A4DDEA1D54732400E58712 /* otherNewsViewController.m */,
-				85A4DDEC1D54FD0B00E58712 /* NavTabBarController.h */,
-				85A4DDED1D54FD0B00E58712 /* NavTabBarController.m */,
 			);
 			name = Controller;
 			sourceTree = "<group>";
@@ -728,6 +741,8 @@
 				85F9A80F1D35244A004DBB1B /* NSString+iphoneType.m */,
 				853DD42D1D30D7EE0039273C /* NSDate+gyh.h */,
 				853DD42E1D30D7EE0039273C /* NSDate+gyh.m */,
+				850013C21D5F7CEF00D2CC6F /* UIView+isShowingOnScreen.h */,
+				850013C31D5F7CEF00D2CC6F /* UIView+isShowingOnScreen.m */,
 			);
 			name = Categary;
 			sourceTree = "<group>";
@@ -1025,6 +1040,7 @@
 			files = (
 				8520653A1D16E8E20073F05C /* SDRefreshHeaderView.m in Sources */,
 				85FB7C3D1D2A83FC00192D5C /* TAAnimatedDotView.m in Sources */,
+				850013BB1D5C55FC00D2CC6F /* NewsNavigationViewController.m in Sources */,
 				859063F71D38CE29004D1BCB /* LayoutCommentView.m in Sources */,
 				85F9A8101D35244A004DBB1B /* NSString+iphoneType.m in Sources */,
 				8562041F1D2CD16F002156D2 /* commentModel.m in Sources */,
@@ -1048,6 +1064,7 @@
 				85A4DDEB1D54732400E58712 /* otherNewsViewController.m in Sources */,
 				850013AC1D58ABC600D2CC6F /* SettingCell.m in Sources */,
 				852065391D16E8E20073F05C /* SDRefreshFooterView.m in Sources */,
+				850013C41D5F7CEF00D2CC6F /* UIView+isShowingOnScreen.m in Sources */,
 				856204221D2CDDC4002156D2 /* commentCell.m in Sources */,
 				85EE4CEA1D2F9ACC003D2DB4 /* collectionModel.m in Sources */,
 				8520653F1D17E25A0073F05C /* UIViewController+DownloadNews.m in Sources */,
@@ -1064,6 +1081,7 @@
 				85FB7C411D2A83FC00192D5C /* SDCycleScrollView.m in Sources */,
 				85EE4CF11D2F9D11003D2DB4 /* DataBase.m in Sources */,
 				85FB7C3B1D2A83FC00192D5C /* NSData+SDDataCache.m in Sources */,
+				850013C11D5C80E100D2CC6F /* CollectionNavigationController.m in Sources */,
 				85A4DDEE1D54FD0B00E58712 /* NavTabBarController.m in Sources */,
 				85EE4CDE1D2E6859003D2DB4 /* commentViewController.m in Sources */,
 				85598FFF1D3134E600CD17EA /* FileCache.m in Sources */,
@@ -1246,7 +1264,7 @@
 					"$(PROJECT_DIR)/cnBeta/Lib/UMSocial_Sdk_Extra_Frameworks/TencentOpenAPI",
 					"$(PROJECT_DIR)/cnBeta/Lib/UMSocial_Sdk_Extra_Frameworks/Wechat",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.hudy.cnBeta;
+				PRODUCT_BUNDLE_IDENTIFIER = com.hudyseu.cnBeta;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				TARGETED_DEVICE_FAMILY = 1;
@@ -1275,7 +1293,7 @@
 					"$(PROJECT_DIR)/cnBeta/Lib/UMSocial_Sdk_Extra_Frameworks/TencentOpenAPI",
 					"$(PROJECT_DIR)/cnBeta/Lib/UMSocial_Sdk_Extra_Frameworks/Wechat",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.hudy.cnBeta;
+				PRODUCT_BUNDLE_IDENTIFIER = com.hudyseu.cnBeta;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				TARGETED_DEVICE_FAMILY = 1;

@@ -31,7 +31,7 @@ typedef NS_ENUM(NSInteger, AFNetworkActivityManagerState) {
     AFNetworkActivityManagerStateDelayingEnd
 };
 
-static NSTimeInterval const kDefaultAFNetworkActivityManagerActivationDelay = 1.0;
+static NSTimeInterval const kDefaultAFNetworkActivityManagerActivationDelay = 0.10;
 static NSTimeInterval const kDefaultAFNetworkActivityManagerCompletionDelay = 0.17;
 
 static NSURLRequest * AFNetworkRequestFromNotification(NSNotification *notification) {

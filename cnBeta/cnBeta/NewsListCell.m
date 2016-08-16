@@ -149,3 +149,5 @@
 //We've attached screenshot(s) for your reference.
 //I think thay are just some news about iPhone 7 and Apple didn't provide me with any pre-release versions of iPhone 7. You know, iPhone 7 attracts so much attention that you can see many similar news about iPhone 7 in almost all the news-apps or on the news websites. I've attached screenshots for your reference. And all the news resources in my app are from cnBeta.com and the news articles are written by technology enthusiasts. Even so, I will remove the news about iPhone 7 from the home page of my app.
 @end
+
+//OK, here is my explanation for this problem. Firstly, the API of cnBeta.com is open so we can get news data by using the API and that's why there are some third-party clients for cnBeta in AppStore. Secondly, when my app was rejected at the first time, one of your team members gave me some solutions to rights infringement, and one of the solutions is " include links to third-party news articles that launch in a web browser outside of the application", and I have done it. If my explanation is still not reasoned, I think I can do nothing anymore.

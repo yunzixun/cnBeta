@@ -10,6 +10,8 @@
 
 @interface commentViewController : UIViewController
 
-- (id)initWithSid:(NSString *)sid andSN:(NSString *)sn;
+@property (nonatomic,assign)BOOL isExpired;
+
+- (id)initWithSid:(NSString *)sid andSN:(NSString *)sn Type:(BOOL)isExpired;
 
 @end

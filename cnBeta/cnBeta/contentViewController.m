@@ -21,8 +21,12 @@
 #import "collectionModel.h"
 #import "UMSocial.h"
 
+#import "NewsNavigationViewController.h"
+#import "JSBadgeView.h"
+#import "WKProgressHUD.h"
 //#import <ShareSDK/ShareSDK.h>
 //#import <ShareSDKUI/ShareSDK+SSUI.h>
+
 
 @interface contentViewController ()<UMSocialUIDelegate, UIWebViewDelegate>
 
@@ -34,6 +38,14 @@
 @property (nonatomic,strong)collectionModel *news;
 
 @property (weak, nonatomic) IBOutlet UIButton *collect;
+
+@property (nonatomic, strong) UIPanGestureRecognizer *panLeft;
+
+@property (weak, nonatomic) IBOutlet UIButton *commentNum;
+
+@property (weak, nonatomic) JSBadgeView *badgeView;
+
+@property (nonatomic, assign) BOOL isExpired;
 
 @end
 
@@ -53,20 +65,30 @@
     _news.title = _newsTitle;
     _contentWebView.delegate = self;
     
+    //评论数量badge
+    JSBadgeView *badgeView = [[JSBadgeView alloc]initWithParentView:self.commentNum alignment:JSBadgeViewAlignmentTopRight];
+    self.badgeView = badgeView;
+    self.badgeView.badgePositionAdjustment = CGPointMake(-6, 5);
+    [self.badgeView setBadgeTextFont:[UIFont systemFontOfSize:10]];
+    
+    //右滑手势
+//    self.panLeft = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handlePanLeft:)];
+//    [self.contentWebView addGestureRecognizer:self.panLeft];
 }
 
 
 -(void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    self.navigationController.navigationBarHidden = NO;
+    //self.navigationController.navigationBarHidden = NO;
+    [self.navigationController setNavigationBarHidden:NO animated:YES];
     self.navigationController.hidesBarsOnSwipe = NO;
     self.automaticallyAdjustsScrollViewInsets = NO;
     _spinner.center = CGPointMake(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 );
     [_spinner startAnimating];
     
     [self setupWebView];
-    
+
     
 }
 
@@ -86,11 +108,34 @@
         
     } else{
         [_contentWebView loadHTMLString:_contentHTMLString baseURL:nil];
+        
         dispatch_async(dispatch_get_main_queue(), ^{
             [_spinner stopAnimating];
             //[_spinner removeFromSuperview];
             //_spinner.hidden = YES;
         });
+        
+        //更新评论数目
+        [self requestWithURLType:@"content" andId:self.newsId completion:^(id data, NSError *error) {
+            if (!error) {
+                
+                NSArray *dataDic = @[(NSDictionary *)data[@"result"]];
+                _newsContent = [NewsContentModel mj_objectArrayWithKeyValuesArray:dataDic][0];
+                
+                //新闻发布是否已超过24小时
+                NSDateFormatter *fmt = [[NSDateFormatter alloc]init];
+                fmt.dateFormat = @"yyyy-MM-dd HH:mm:ss";
+                NSDate *pubDate = [fmt dateFromString:_newsContent.time];
+                //NSLog(@"%@", pubDate);
+                NSDateComponents *timeDelta = [pubDate deltaWithNow];
+                //NSLog(@"%@", timeDelta);
+                if (timeDelta.hour >= 24) {
+                    self.isExpired = YES;
+                }
+                //评论数目
+                self.badgeView.badgeText = [NSString stringWithFormat:@"%@", _newsContent.comments];
+            }
+        }];
     }
 
     [self requestWithURLType:@"SN" andId:_newsId completion:^(id data, NSError *error) {
@@ -118,6 +163,7 @@
                 //缓存到文件系统
                 FileCache *fileCache = [FileCache sharedCache];
                 [fileCache cacheHTMLToFile:_contentHTMLString forKey:_newsId];
+                
             }
             
         }];
@@ -130,14 +176,28 @@
     NSArray *dataDic = @[(NSDictionary *)data];
     
     _newsContent = [NewsContentModel mj_objectArrayWithKeyValuesArray:dataDic][0];
-    _newsContent.source = @"";
+    //_newsContent.source = @"";
+    self.badgeView.badgeText = [NSString stringWithFormat:@"%@", _newsContent.comments];
+    
+    NSMutableString *cmt = [NSMutableString stringWithFormat:@"%@条评论", _newsContent.comments];
+    
+    //新闻发布是否已超过24小时
+    NSDateFormatter *fmt = [[NSDateFormatter alloc]init];
+    fmt.dateFormat = @"yyyy-MM-dd HH:mm:ss";
+    NSDate *pubDate = [fmt dateFromString:_newsContent.time];
+    //NSLog(@"%@", pubDate);
+    NSDateComponents *timeDelta = [pubDate deltaWithNow];
+    //NSLog(@"%@", timeDelta);
+    if (timeDelta.hour >= 24) {
+        [cmt appendString:@"(评论已关闭)"];
+    }
     
     NSMutableString *allTitleStr =[NSMutableString stringWithString:@"<style type='text/css'> p.thicker{font-weight: 500}p.light{font-weight: 0}p{font-size: 108%}h2 {font-size: 120%}h3 {font-size: 80%}</style> <h2 class = 'thicker'>title</h2><h3>hehe      lala      gaga</h3>"];
     
     [allTitleStr replaceOccurrencesOfString:@"title" withString:_newsContent.title options:NSCaseInsensitiveSearch range:[allTitleStr rangeOfString:@"title"]];
     [allTitleStr replaceOccurrencesOfString:@"hehe" withString:_newsContent.source options:NSCaseInsensitiveSearch range:[allTitleStr rangeOfString:@"hehe"]];
     [allTitleStr replaceOccurrencesOfString:@"lala" withString:_newsContent.time options:NSCaseInsensitiveSearch range:[allTitleStr rangeOfString:@"lala"]];
-    [allTitleStr replaceOccurrencesOfString:@"gaga" withString:[NSString stringWithFormat:@"%@条评论", _newsContent.comments] options:NSCaseInsensitiveSearch range:[allTitleStr rangeOfString:@"gaga"]];
+    [allTitleStr replaceOccurrencesOfString:@"gaga" withString:cmt options:NSCaseInsensitiveSearch range:[allTitleStr rangeOfString:@"gaga"]];
     
     NSMutableString *head = (NSMutableString *)@"<head><style>img{width:360px !important;}</style></head>";
     _contentHTMLString = [[[head stringByAppendingString:allTitleStr] stringByAppendingString:_newsContent.hometext] stringByAppendingString:_newsContent.bodytext];
@@ -150,7 +210,15 @@
         [_spinner stopAnimating];
         //[_spinner removeFromSuperview];
         //_spinner.hidden = YES;
+        
+        if ([[NSUserDefaults standardUserDefaults] boolForKey:@"Refresh"]) {
+            [WKProgressHUD dismissInView:self.view animated:YES];
+            [WKProgressHUD popMessage:@"刷新成功" inView:self.view duration:1.5 animated:YES];
+            [[NSUserDefaults standardUserDefaults] setBool:NO forKey:@"Refresh"];
+
+        }
     });
+    
     
     
 }
@@ -169,9 +237,20 @@
 
 #pragma mark - Actions
 
+//- (void)handlePanLeft:(UIPanGestureRecognizer *)sender
+//{
+//    UIPanGestureRecognizer *pan = (UIPanGestureRecognizer *)sender;
+//    
+//    CGPoint point = [pan translationInView:self.view];
+//    if (point.x < 0) {
+//        [self.navigationController pushViewController:[[commentViewController alloc]initWithSid:_newsId andSN:_sn] animated:YES];
+//
+//    }
+//}
+
 - (IBAction)showComments:(id)sender
 {
-    [self.navigationController pushViewController:[[commentViewController alloc]initWithSid:_newsId andSN:_sn] animated:YES];
+    [self.navigationController pushViewController:[[commentViewController alloc]initWithSid:_newsId andSN:_sn Type:self.isExpired] animated:YES];
 }
 
 - (IBAction)collectNews:(id)sender
@@ -188,6 +267,19 @@
         [_collect setTitleColor:[UIColor blackColor] forState:UIControlStateSelected];
         [_collection deleteCellOfSid:_newsId];
     }
+}
+
+- (IBAction)refreshWebView:(UIButton *)sender {
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    [defaults setBool:YES forKey:@"Refresh"];
+    //[defaults synchronize];
+    [WKProgressHUD showInView:self.view withText:@"" animated:YES];
+    [self startDownloadContent:self.newsId];
+    
+}
+
+- (IBAction)goBack:(UIButton *)sender {
+    [self.navigationController popToViewController:[self.navigationController.viewControllers objectAtIndex:0] animated:YES];
 }
 
 - (IBAction)shareNews:(UIButton *)sender {

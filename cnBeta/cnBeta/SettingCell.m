@@ -40,7 +40,7 @@
 - (void)switchchange
 {
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    [defaults setBool:self.switchview.isOn forKey:@"networkSwitch"];
+    [defaults setBool:self.switchview.isOn forKey:self.item.title];
     [defaults synchronize];
     
 }
@@ -81,7 +81,17 @@
     if ([self.item isKindOfClass:[SettingSwitchItem class]]) {
         self.accessoryView = self.switchview;
         self.selectionStyle = UITableViewCellSelectionStyleNone;
-        self.switchview.on = YES;
+        
+        NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+        if ([defaults boolForKey:@"everLaunched"]) {
+            //BOOL s = [defaults boolForKey:self.item.title];
+            self.switchview.on = [defaults boolForKey:self.item.title];
+        } else {
+            self.switchview.on = YES;
+            [defaults setBool:self.switchview.isOn forKey:self.item.title];
+            [defaults synchronize];
+        }
+        
         
     } else if ([self.item isKindOfClass:[SettingArrowItem class]]) {
         self.accessoryView = self.arrow;

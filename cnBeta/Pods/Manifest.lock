@@ -17,7 +17,9 @@ PODS:
   - CRToast (0.0.9)
   - hpple (0.2.0)
   - JDStatusBarNotification (1.5.3)
+  - JSBadgeView (1.4.1)
   - MJExtension (3.0.11)
+  - MJRefresh (3.1.10)
   - ObjectiveGumbo (0.1)
   - SDWebImage (3.7.6):
     - SDWebImage/Core (= 3.7.6)
@@ -30,7 +32,9 @@ DEPENDENCIES:
   - CRToast (~> 0.0.9)
   - hpple (~> 0.2.0)
   - JDStatusBarNotification (~> 1.5)
+  - JSBadgeView (~> 1.4.1)
   - MJExtension (~> 3.0.10)
+  - MJRefresh (~> 3.1.10)
   - ObjectiveGumbo (~> 0.1)
   - SDWebImage (~> 3.7.3)
   - UITableView+FDTemplateLayoutCell (~> 1.4)
@@ -41,12 +45,14 @@ SPEC CHECKSUMS:
   CRToast: 5a78c22b921c5ed3487488af605bc403a9c92fed
   hpple: 3b765f96fc2cd56ad1a49aef6f7be5cb2aa64b57
   JDStatusBarNotification: 29413865af11c862c17180610b0f46a21118b412
+  JSBadgeView: 3861ddee41094284d9468e6d0af5107f703aaac5
   MJExtension: f9ae6ddc0f1c482c3c9af750280ccebd14381958
+  MJRefresh: bb72948c985914b0b5cecac573a2c69a8915fb02
   ObjectiveGumbo: 0704c4930688132abb3d5df2000334f30504856f
   SDWebImage: c325cf02c30337336b95beff20a13df489ec0ec9
   UITableView+FDTemplateLayoutCell: 234e1582bcc4e18461af91155123bb96538ed030
   WKProgressHUD: 3eeb66423a702bb8c43707f0627f673f12da475e
 
-PODFILE CHECKSUM: fbcd371cc1835ce705ac70f9b899107e3828a9f1
+PODFILE CHECKSUM: cffbc16d326b80a551cc4da0cd7cc709782c1cfc
 
 COCOAPODS: 1.0.0

@@ -94,7 +94,8 @@
     
     //初始时按下第一个button
     UIButton *button = _itemButtons[0];
-    [self pressItemButton:button];
+    button.selected = YES;
+    [button setTitleColor:[UIColor redColor] forState:UIControlStateSelected];
                          
 }
 

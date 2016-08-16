@@ -45,7 +45,7 @@
 -(NSDate *)dateWithYMD
 {
     NSDateFormatter *fmt = [[NSDateFormatter alloc]init];
-    fmt.dateFormat = @"yyyy-MM-dd";
+    fmt.dateFormat = @"yyyy-MM-dd HH:mm:ss";
     NSString *str = [fmt stringFromDate:self];
     return [fmt dateFromString:str];
 }

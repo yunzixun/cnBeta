@@ -8,9 +8,10 @@
 
 #import "otherNewsViewController.h"
 #import "Constant.h"
-#import "SDRefresh.h"
 #import "MJExtension.h"
+#import "MJRefresh.h"
 #import "UIViewController+DownloadNews.h"
+#import "UIView+isShowingOnScreen.h"
 
 #import "HotNewsModel.h"
 #import "contentViewController.h"
@@ -23,10 +24,9 @@
 @property (nonatomic, assign) NSUInteger RowCount;
 @property (nonatomic, strong) UITableView *tableView;
 @property (nonatomic, strong) NSMutableArray *dataSource;
-@property (nonatomic, weak) SDRefreshHeaderView *refreshHeader;
-@property (nonatomic, weak) SDRefreshFooterView *refreshFooter;
 @property (nonatomic, assign) int page;
 
+@property (nonatomic, strong) UIViewController *lastVC;
 @end
 
 @implementation otherNewsViewController
@@ -47,8 +47,13 @@
     
     self.page = 1;
     [self initTableView];
-    [self setupHeader];
-    [self setupFooter];
+    [self setupRefreshView];
+    
+    //监听点击TabBar的通知
+    self.lastVC = self.tabBarController.selectedViewController;
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(tabBarClick) name:@"TabRefresh" object:nil];
+    
+    [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"firstLoad"];
 }
 
 - (void)initTableView
@@ -69,15 +74,24 @@
     }
 }
 
-- (void)setupHeader
+- (void)tabBarClick
 {
-    SDRefreshHeaderView *refreshHeader = [SDRefreshHeaderView refreshView];
-    [refreshHeader addToScrollView:self.tableView];
-    _refreshHeader = refreshHeader;
-    [refreshHeader addTarget:self refreshAction:@selector(headerRefresh)];
+    if (self.tabBarController.selectedViewController == self.lastVC && [self.view isShowingOnKeyWindow]) {
+        [self.tableView.mj_header beginRefreshing];
+    }
     
-    [refreshHeader autoRefreshWhenViewDidAppear];
+    self.lastVC = self.tabBarController.selectedViewController;
 }
+
+- (void)setupRefreshView
+{
+    self.tableView.mj_header = [MJRefreshNormalHeader headerWithRefreshingTarget:self refreshingAction:@selector(headerRefresh)];
+    self.tableView.mj_header.automaticallyChangeAlpha = YES;
+    [self.tableView.mj_header beginRefreshing];
+    
+    self.tableView.mj_footer = [MJRefreshBackNormalFooter footerWithRefreshingTarget:self refreshingAction:@selector(footerRefresh)];
+}
+
 
 - (void)headerRefresh
 {
@@ -92,20 +106,13 @@
             [self.dataSource addObjectsFromArray:dataList];
             self.RowCount = [self.dataSource count];
             [self.tableView reloadData];
-            [self.refreshHeader endRefreshing];
+            [self.tableView.mj_header endRefreshing];
         }else {
-            [self.refreshHeader endRefreshing];
+            [self.tableView.mj_header endRefreshing];
         }
     }];
 }
 
--(void)setupFooter
-{
-    SDRefreshFooterView *refreshFooter = [SDRefreshFooterView refreshView];
-    [refreshFooter addToScrollView:self.tableView];
-    _refreshFooter = refreshFooter;
-    [refreshFooter addTarget:self refreshAction:@selector(footerRefresh)];
-}
 
 - (void)footerRefresh
 {
@@ -118,9 +125,9 @@
             [self.dataSource addObjectsFromArray:dataList];
             self.RowCount = [self.dataSource count];
             [self.tableView reloadData];
-            [self.refreshFooter endRefreshing];
+            [self.tableView.mj_footer endRefreshing];
         }else {
-            [self.refreshFooter endRefreshing];
+            [self.tableView.mj_footer endRefreshing];
         }
     }];
 
@@ -162,14 +169,17 @@
     [self.navigationController pushViewController:contentvc animated:YES];
 }
 
-/*
-#pragma mark - Navigation
 
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
+#pragma mark - layoutSubviews
+
+- (void)viewDidLayoutSubviews
+{
+    [super viewDidLayoutSubviews];
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    if ([defaults boolForKey:@"firstLoad"]) {
+        self.lastVC = self.tabBarController.selectedViewController;
+        [defaults setBool:NO forKey:@"firstLoad"];
+    }
 }
-*/
 
 @end

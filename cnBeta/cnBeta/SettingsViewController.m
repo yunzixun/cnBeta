@@ -20,6 +20,9 @@
 #import "SettingGroup.h"
 
 @interface SettingsViewController ()<UITableViewDelegate,UITableViewDataSource,MFMailComposeViewControllerDelegate>
+{
+    NSInteger _index;
+}
 @property (nonatomic, strong)UITableView *settingsTableView;
 @property (nonatomic, strong)NSArray *dataSource;
 @property (nonatomic)float cacheSize;
@@ -54,11 +57,13 @@
     }
     
     
-    _dataSource = @[@"网络切换通知", @"清除缓存", @"反馈建议", @"去App Store给我们好评", @"关于"];
-//    HTMLCache *cache = [HTMLCache sharedCache];
-//    _cacheSize = [cache folderSizeOfCache];
+    _dataSource = @[@"手势操作", @"网络切换通知", @"清除缓存", @"反馈建议", @"去App Store给我们好评", @"关于"];
+    _index = 0;
+
     [self setupGroup0];
     [self setupGroup1];
+    
+    
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -68,8 +73,9 @@
     _cacheSize = [cache folderSizeOfCache];
     
     SettingGroup * group = _groupArray[0];
-    SettingItem *item = group.items[1];
+    SettingItem *item = group.items[2];
     item.subtitle = [NSString stringWithFormat:@"%.2fMB", _cacheSize];
+    
     [_settingsTableView reloadData];
 }
 
@@ -78,36 +84,39 @@
 
 - (void)setupGroup0
 {
+    //
+    SettingItem *gesture = [SettingSwitchItem itemWithTitle:_dataSource[_index++]];
+    
     //网络切换通知
-    SettingItem *networkNotification = [SettingSwitchItem itemWithTitle:_dataSource[0]];
+    SettingItem *networkNotification = [SettingSwitchItem itemWithTitle:_dataSource[_index++]];
 
     //清除缓存
-    SettingItem *clearCache = [SettingArrowItem itemWithTitle:_dataSource[1] subtitle:[NSString stringWithFormat:@"%.2fMB", _cacheSize]];
+    SettingItem *clearCache = [SettingArrowItem itemWithTitle:_dataSource[_index++] subtitle:[NSString stringWithFormat:@"%.2fMB", _cacheSize]];
     clearCache.option = ^{
         [self showAlert];
     };
     
     SettingGroup *group0 = [[SettingGroup alloc]init];
-    group0.items = @[networkNotification, clearCache];
+    group0.items = @[gesture, networkNotification, clearCache];
     [self.groupArray addObject:group0];
 }
 
 - (void)setupGroup1
 {
     //反馈建议
-    SettingItem *feedback = [SettingArrowItem itemWithTitle:_dataSource[2]];
+    SettingItem *feedback = [SettingArrowItem itemWithTitle:_dataSource[_index++]];
     feedback.option = ^{
         [self sendMailInApp];
     };
     
     //跳转AppStore
-    SettingItem *remark = [SettingArrowItem itemWithTitle:_dataSource[3]];
+    SettingItem *remark = [SettingArrowItem itemWithTitle:_dataSource[_index++]];
     remark.option = ^{
         [[UIApplication sharedApplication] openURL:[NSURL URLWithString:cnBeta_APP_STORE_URL]];
     };
     
     //关于
-    SettingItem *about = [SettingArrowItem itemWithTitle:_dataSource[4]];
+    SettingItem *about = [SettingArrowItem itemWithTitle:_dataSource[_index++]];
     about.option = ^{
         NSDictionary *infoDictionary = [[NSBundle mainBundle]infoDictionary];
         NSString *version = [NSString stringWithFormat:@"Version: %@", [infoDictionary objectForKey:@"CFBundleShortVersionString"]];
@@ -200,7 +209,12 @@
         FileCache *cache = [FileCache sharedCache];
         [cache clearCache];
         _cacheSize = 0;
-        [self.settingsTableView reloadRowsAtIndexPaths:[NSArray arrayWithObjects:[NSIndexPath indexPathForRow:0 inSection:0], nil] withRowAnimation:UITableViewRowAnimationNone];
+        
+        SettingGroup * group = _groupArray[0];
+        SettingItem *item = group.items[2];
+        item.subtitle = [NSString stringWithFormat:@"%.2fMB", _cacheSize];
+        
+        [self.settingsTableView reloadRowsAtIndexPaths:[NSArray arrayWithObjects:[NSIndexPath indexPathForRow:2 inSection:0], nil] withRowAnimation:UITableViewRowAnimationNone];
         //[_settingsTableView reloadData];
     }
 }
@@ -269,6 +283,19 @@
             break;
     }
     [self dismissViewControllerAnimated:YES completion:nil];
+}
+
+
+- (void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+    //是否是第一次进入setting界面
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    if (![defaults boolForKey:@"everLaunched"]) {
+        [defaults setBool:YES forKey:@"everLaunched"];
+        [defaults synchronize];
+    }
+    
 }
 /*
 #pragma mark - Navigation

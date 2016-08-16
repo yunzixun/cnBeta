@@ -25,6 +25,7 @@
 #import "NSArray+transform.h"
 #import "HTTPRequester.h"
 #import "JDStatusBarNotification.h"
+#import "WKProgressHUD.h"
 
 @interface commentViewController ()<UITableViewDelegate,UITableViewDataSource,UIActionSheetDelegate,replyActionDelegate>
 @property (nonatomic, strong)UITableView *commentTableView;
@@ -57,11 +58,12 @@
     return _hotFlooredCommentArray;
 }
 
-- (id)initWithSid:(NSString *)sid andSN:(NSString *)sn
+- (id)initWithSid:(NSString *)sid andSN:(NSString *)sn Type:(BOOL)isExpired
 {
     if (self = [super init]) {
         _sid = sid;
         _sn = sn;
+        _isExpired = isExpired;
     }
     return self;
     
@@ -69,11 +71,11 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    //self.navigationItem.title = @"暂不支持评论";
+    
     UIBarButtonItem *backItem = [[UIBarButtonItem alloc] init];
     backItem.title = @"取消";
     self.navigationItem.backBarButtonItem = backItem;
-    UIBarButtonItem *commentItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"ic_edit"] style:UIBarButtonItemStyleDone target:self action:@selector(postComment)];
+    UIBarButtonItem *commentItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"WriteComment"] style:UIBarButtonItemStyleDone target:self action:@selector(postComment)];
     self.navigationItem.rightBarButtonItem = commentItem;
     
     
@@ -106,6 +108,13 @@
 
 }
 
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    [self.navigationController setNavigationBarHidden:NO animated:YES];
+    
+}
+
 - (void)setupHeader
 {
     SDRefreshHeaderView *refreshHeader = [SDRefreshHeaderView refreshView];
@@ -121,9 +130,19 @@
             weakSelf.hotFlooredCommentArray = [_flooredCommentArray selectHotFlooredCommentArrayWithHotList:hotList];
             
             [weakSelf.commentTableView reloadData];
-            [_refreshHeader endRefreshing];
+            
+            if (!weakSelf.flooredCommentArray.count) {
+                if (self.isExpired) {
+                    [WKProgressHUD popMessage:@"评论已关闭" inView:self.view duration:1.5 animated:YES];
+                } else {
+                    [WKProgressHUD popMessage:@"暂无评论" inView:self.view duration:1.5 animated:YES];
+                }
+            }
+            
+            [weakSelf.refreshHeader endRefreshing];
         } failure:^(NSError *error) {
             NSLog(@"%@",error);
+            [weakSelf.refreshHeader endRefreshing];
         }];
         
     };
@@ -207,9 +226,11 @@
             } else {
                 NSDictionary *result = responseObject;
                 if ([result[@"state"] isEqualToString:@"success"]) {
-                    [JDStatusBarNotification showWithStatus:@"操作成功,请稍后刷新" dismissAfter:2];
+                    [WKProgressHUD popMessage:@"操作成功,请稍后刷新" inView:self.view duration:1.5 animated:YES];
+                    //[JDStatusBarNotification showWithStatus:@"操作成功,请稍后刷新" dismissAfter:2];
                 } else {
-                    [JDStatusBarNotification showWithStatus:@"操作失败" dismissAfter:2];
+                    [WKProgressHUD popMessage:@"操作失败" inView:self.view duration:1.5 animated:YES];
+                    //[JDStatusBarNotification showWithStatus:@"操作失败" dismissAfter:2];
                 }
             }
         }];
@@ -220,9 +241,11 @@
             } else {
                 NSDictionary *result = responseObject;
                 if ([result[@"state"] isEqualToString:@"success"]) {
-                    [JDStatusBarNotification showWithStatus:@"操作成功,请稍后刷新" dismissAfter:2];
+                    [WKProgressHUD popMessage:@"操作成功,请稍后刷新" inView:self.view duration:1.5 animated:YES];
+                    //[JDStatusBarNotification showWithStatus:@"操作成功,请稍后刷新" dismissAfter:2];
                 } else {
-                    [JDStatusBarNotification showWithStatus:@"操作失败" dismissAfter:2];
+                    [WKProgressHUD popMessage:@"操作失败" inView:self.view duration:1.5 animated:YES];
+                    //[JDStatusBarNotification showWithStatus:@"操作失败" dismissAfter:2];
                 }
             }
         }];
@@ -333,8 +356,10 @@
             headerLabel.text = @"全部评论";
             headerLabel.textColor = [UIColor brownColor];
         }
-    }else {
+    }else if ([self.flooredCommentArray count]){
         headerLabel.text = @"全部评论";
+        headerLabel.textColor = [UIColor brownColor];
+
     }
     
     [customView addSubview:headerLabel];

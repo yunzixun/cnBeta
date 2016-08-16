@@ -14,20 +14,30 @@
 #import "UMSocialQQHandler.h"
 #import "CRToast.h"
 
-@interface AppDelegate ()
+#import "NewsNavigationViewController.h"
+
+@interface AppDelegate ()<UITabBarControllerDelegate>
 
 @end
 
 @implementation AppDelegate
 
-//[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reachabilityStatusChange) name:kReachabilityChangedNotification object:nil];
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
+    
     [AFNetworkActivityIndicatorManager sharedManager].enabled = YES;
+    
+    
+    //监听网络状态
     [self listenNetWorkingPort];
+    
     // Override point for customization after application launch.
     [[UINavigationBar appearance] setBarTintColor:[UIColor colorWithRed:50/255.0 green:100/255.0 blue:200/255.0 alpha:1.0]];
     [[UINavigationBar appearance] setTintColor:[UIColor whiteColor]];
+    
+    //获取tabBarController
+    UITabBarController *tabBarController = (UITabBarController *)self.window.rootViewController;
+    tabBarController.delegate = self;
     
     //设置友盟社会化组件appkey
     [UMSocialData setAppKey:@"579b1ed4e0f55ab08c000e90"];
@@ -37,63 +47,6 @@
     [UMSocialQQHandler setQQWithAppId:@"1105528200" appKey:@"9Av2cIJcSmVtgxoJ" url:@"http://www.umeng.com/social"];
     
     
-//    /**
-//     *  设置ShareSDK的appKey，如果尚未在ShareSDK官网注册过App，请移步到http://mob.com/login 登录后台进行应用注册，
-//     *  在将生成的AppKey传入到此方法中。
-//     *  方法中的第二个第三个参数为需要连接社交平台SDK时触发，
-//     *  在此事件中写入连接代码。第四个参数则为配置本地社交平台时触发，根据返回的平台类型来配置平台信息。
-//     *  如果您使用的时服务端托管平台信息时，第二、四项参数可以传入nil，第三项参数则根据服务端托管平台来决定要连接的社交SDK。
-//     */
-//    [ShareSDK registerApp:@"14b50242ef1d0"
-//     
-//          activePlatforms:@[
-//                            @(SSDKPlatformTypeSinaWeibo),
-//                            @(SSDKPlatformTypeMail),
-//                            @(SSDKPlatformTypeCopy),
-//                            @(SSDKPlatformTypeWechat),
-//                            @(SSDKPlatformTypeQQ)]
-//                 onImport:^(SSDKPlatformType platformType)
-//     {
-//         switch (platformType)
-//         {
-//             case SSDKPlatformTypeWechat:
-//                 [ShareSDKConnector connectWeChat:[WXApi class]];
-//                 break;
-//             case SSDKPlatformTypeQQ:
-//                 [ShareSDKConnector connectQQ:[QQApiInterface class] tencentOAuthClass:[TencentOAuth class]];
-//                 break;
-//             case SSDKPlatformTypeSinaWeibo:
-//                 [ShareSDKConnector connectWeibo:[WeiboSDK class]];
-//                 break;
-//             default:
-//                 break;
-//         }
-//     }
-//          onConfiguration:^(SSDKPlatformType platformType, NSMutableDictionary *appInfo)
-//     {
-//         
-//         switch (platformType)
-//         {
-//             case SSDKPlatformTypeSinaWeibo:
-//                 //设置新浪微博应用信息,其中authType设置为使用SSO＋Web形式授权
-//                 [appInfo SSDKSetupSinaWeiboByAppKey:@"2324480522"
-//                                           appSecret:@"57f4365b81dc68e5cb32ef6c16f31f37"
-//                                         redirectUri:@"http://www.sharesdk.cn"
-//                                            authType:SSDKAuthTypeBoth];
-//                 break;
-//             case SSDKPlatformTypeWechat:
-//                 [appInfo SSDKSetupWeChatByAppId:@"wx4868b35061f87885"
-//                                       appSecret:@"64020361b8ec4c99936c0e3999a9f249"];
-//                 break;
-//             case SSDKPlatformTypeQQ:
-//                 [appInfo SSDKSetupQQByAppId:@"100371282"
-//                                      appKey:@"aed9b0303e3ed1e27bae87c33761161d"
-//                                    authType:SSDKAuthTypeBoth];
-//                 break;
-//             default:
-//                 break;
-//         }
-//     }];
     return YES;
 }
 
@@ -123,7 +76,11 @@
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     __block int count = 0;
     [manager setReachabilityStatusChangeBlock:^(AFNetworkReachabilityStatus status) {
-        BOOL switchOn = [defaults boolForKey:@"networkSwitch"];
+        BOOL everLaunch = [[NSUserDefaults standardUserDefaults] boolForKey:@"everLaunched"];
+        BOOL switchOn = [defaults boolForKey:@"网络切换通知"];
+        if (!everLaunch) {
+            switchOn = YES;
+        }
         switch (status) {
             case AFNetworkReachabilityStatusUnknown:
                 NSLog(@"未识别的网络");
@@ -180,6 +137,20 @@
                                     NSLog(@"Completed");
                                 }];
 }
+
+#pragma mark - UITabBarControllerDelegate
+
+- (void)tabBarController:(UITabBarController *)tabBarController didSelectViewController:(UIViewController *)viewController
+{
+    //NSLog(@"%@", viewController);
+//    if ([viewController isKindOfClass: [NewsNavigationViewController class]]) {
+//        [[NSNotificationCenter defaultCenter] postNotificationName:@"TabRefresh" object:nil userInfo:nil];
+//    }
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"TabRefresh" object:nil userInfo:nil];
+}
+
+
+
 
 - (void)applicationWillResignActive:(UIApplication *)application {
     // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
