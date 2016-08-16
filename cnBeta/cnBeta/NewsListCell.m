@@ -13,8 +13,10 @@
 
 @interface NewsListCell ()
 
-@property (nonatomic,strong)UILabel *time;
+@property (nonatomic,strong)UILabel      *time;
 @property (strong, nonatomic)UIImageView *imageThumb;
+@property (nonatomic, strong)UIImageView *cmtImg;
+@property (nonatomic, strong)UILabel     *cmtNum;
 
 
 @end
@@ -46,6 +48,7 @@
         //[_newstitle setText:newsModel.title];
         _newstitle.font = [UIFont systemFontOfSize:15];
         _newstitle.textAlignment = NSTextAlignmentLeft;
+        _newstitle.frame = CGRectMake(100, 10, SCREEN_WIDTH -10-100, 50);
         [self.contentView addSubview:_newstitle];
         
         //时间
@@ -56,12 +59,27 @@
         _time.font = [UIFont systemFontOfSize:11];
         _time.textColor = [UIColor grayColor];
         _time.textAlignment = NSTextAlignmentLeft;
+        _time.frame = CGRectMake(100, 60, 250, 10);
         [self.contentView addSubview:_time];
         
         //图片
         _imageThumb = [[UIImageView alloc]init];
+        self.imageThumb.frame = CGRectMake(10, 10, 80, 60);
         [self.contentView addSubview:_imageThumb];
         //[self.imageThumb sd_setImageWithURL:[NSURL URLWithString:newsModel.thumb] placeholderImage:[UIImage imageNamed:@"placeholder"]];
+        
+        _cmtImg = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"iPhone_TableViewCell_Reply_13x10_"]];
+        _cmtImg.frame = CGRectMake(SCREEN_WIDTH - 50, 60, 15, 10);
+        [self.contentView addSubview:_cmtImg];
+        
+        
+        UILabel *cmtNum = [[UILabel alloc]init];
+        _cmtNum = cmtNum;
+        _cmtNum.font = [UIFont systemFontOfSize:10];
+        _cmtNum.textColor = [UIColor grayColor];
+        _cmtNum.textAlignment = NSTextAlignmentLeft;
+        _cmtNum.frame = CGRectMake(SCREEN_WIDTH - 30, 60, 30, 10);
+        [self.contentView addSubview:_cmtNum];
     }
     return self;
 }
@@ -100,15 +118,20 @@
     
     //新闻标题
     [_newstitle setText:newsModel.title];
-    _newstitle.frame = CGRectMake(100, 10, SCREEN_WIDTH -10-100, 50);
+    
     
     //时间
     [_time setText:newsModel.pubtime];
-    _time.frame = CGRectMake(100, 60, 250, 10);
+    
     
     //图片
     [self.imageThumb sd_setImageWithURL:[NSURL URLWithString:newsModel.thumb] placeholderImage:[UIImage imageNamed:@"placeholder"]];
-    self.imageThumb.frame = CGRectMake(10, 10, 80, 60);
+    
+    //评论数
+    [_cmtNum setText:newsModel.comments];
+    
+    
+    
     
     
     
