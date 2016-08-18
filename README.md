@@ -1,7 +1,14 @@
 # cnBeta
-更新于 2016.8.16   
+名称：西贝news    
 
-名称：西贝news       
+更新于 2016.8.18
+版本：1.2.2     
+
+1、优化首页新闻显示；
+2、优化收藏界面；
+3、修复手势bug。
+
+更新于 2016.8.16   
 版本：1.2.1   
 
 一款cnBeta新闻第三方客户端。AppStore地址：https://itunes.apple.com/cn/app/id1133433243?mt=8  
@@ -22,3 +29,4 @@
 ![image](https://github.com/hudyseu/cnBeta/blob/master/cnBeta/screenshots/2.png)
 ![image](https://github.com/hudyseu/cnBeta/blob/master/cnBeta/screenshots/3.png)
 ![image](https://github.com/hudyseu/cnBeta/blob/master/cnBeta/screenshots/4.png)
+![image](https://github.com/hudyseu/cnBeta/blob/master/cnBeta/screenshots/5.png)
