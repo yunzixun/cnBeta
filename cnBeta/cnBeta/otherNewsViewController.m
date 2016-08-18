@@ -116,6 +116,7 @@
 
 - (void)footerRefresh
 {
+    self.page ++;
     NSString *url = [NSString stringWithFormat:@"http://www.cnbeta.com/more?type=%@&page=%d", self.type, self.page];
     NSMutableDictionary *headers = [[NSMutableDictionary alloc]init];
     [headers setObject:@"http://www.cnbeta.com/" forKey:@"Referer"];
@@ -149,6 +150,14 @@
 {
     NewsListCell *cell = [NewsListCell cellWithTableView:tableView];
     cell.hotNewsModel = self.dataSource[indexPath.row];
+    
+    if ([cell respondsToSelector:@selector(setLayoutMargins:)]) {
+        [cell setLayoutMargins:UIEdgeInsetsZero];
+    }
+    if ([cell respondsToSelector:@selector(setSeparatorInset:)]){
+        [cell setSeparatorInset:UIEdgeInsetsZero];
+    }
+    
     return cell;
     
 }

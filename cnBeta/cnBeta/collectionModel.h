@@ -25,4 +25,9 @@
  */
 @property (nonatomic , copy) NSString * time;
 
+/**
+ *  缩略图
+ */
+@property (nonatomic , copy) NSString * thumb;
+
 @end

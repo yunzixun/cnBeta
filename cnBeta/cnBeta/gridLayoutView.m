@@ -35,13 +35,13 @@
             floorLabel.font = FloorFont;
             floorLabel.textColor = FloorColor;
             
-            UILabel *commentLabel = [[UILabel alloc]initWithFrame:CGRectMake(5, 50 + lastHeight, frame.size.width - 10, size.height + 10)];
+            UILabel *commentLabel = [[UILabel alloc]initWithFrame:CGRectMake(5, 40 + lastHeight, frame.size.width - 10, size.height + 10)];
             commentLabel.numberOfLines = 0;
             commentLabel.font = CommentFont;
             commentLabel.textColor = CommentColor;
             
             nameLabel.text = commentItem.name;
-            hostLabel.text = commentItem.host_name;
+            hostLabel.text = [commentItem.host_name stringByAppendingString:[NSString stringWithFormat:@"  %@",commentItem.date]];
             commentLabel.text = commentItem.comment;
             floorLabel.text = commentItem.floor;
             

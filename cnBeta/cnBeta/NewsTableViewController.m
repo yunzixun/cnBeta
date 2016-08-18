@@ -268,16 +268,25 @@ static NSString *const newsListURLString = @"http://cnbeta.techoke.com/api/list?
     
     DataModel *dataModel = _newsList[indexPath.row];
     cell.newsModel = dataModel;
+    
+    //判断新闻是否已读
     if ([_collection queryWithSid:dataModel.sid tableType:@"newsID"]) {
         cell.newstitle.textColor = [UIColor grayColor];
     } else {
-        cell.newstitle.textColor = [UIColor blackColor];
+        if ([dataModel.comments intValue] >= 30) {
+            cell.newstitle.textColor = [UIColor redColor];
+        }else {
+            cell.newstitle.textColor = [UIColor blackColor];
+        }
     }
     
+    if ([cell respondsToSelector:@selector(setLayoutMargins:)]) {
+        [cell setLayoutMargins:UIEdgeInsetsZero];
+    }
+    if ([cell respondsToSelector:@selector(setSeparatorInset:)]){
+        [cell setSeparatorInset:UIEdgeInsetsZero];
+    }
     
-    //cell.textLabel.numberOfLines = 3;
-    //cell.textLabel.attributedText = [[NSAttributedString alloc] initWithData:[self.newsList[indexPath.row][@"title"] dataUsingEncoding:NSUnicodeStringEncoding] options:@{ NSDocumentTypeDocumentAttribute: NSHTMLTextDocumentType } documentAttributes:nil error:nil];
-    // Configure the cell...
     return cell;
 }
 

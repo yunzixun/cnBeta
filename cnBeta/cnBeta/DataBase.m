@@ -41,7 +41,7 @@
         const char *dbpath = [databasePath UTF8String];
         if (sqlite3_open(dbpath, &database)==SQLITE_OK) {
             char *errmsg;
-            const char *createsql = "CREATE TABLE IF NOT EXISTS collection (sid INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, title TEXT, time TEXT)";
+            const char *createsql = "CREATE TABLE IF NOT EXISTS collection (sid INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, title TEXT, time TEXT, thumb TEXT)";
             if (sqlite3_exec(database, createsql, NULL, NULL, &errmsg) != SQLITE_OK) {
                 NSLog(@"create table failed.");
             }
@@ -74,7 +74,7 @@
     sqlite3_stmt *statement;
     const char *dbpath = [[self pathForDataBase]UTF8String];
     if (sqlite3_open(dbpath, &database) == SQLITE_OK) {
-        NSString *insertItem = [NSString stringWithFormat:@"INSERT INTO collection (sid,title,time) VALUES(\"%@\",\"%@\",\"%@\")", newsItem.sid, newsItem.title, newsItem.time];
+        NSString *insertItem = [NSString stringWithFormat:@"INSERT INTO collection (sid,title,time,thumb) VALUES(\"%@\",\"%@\",\"%@\",\"%@\")", newsItem.sid, newsItem.title, newsItem.time, newsItem.thumb];
         const char *insertStatement =[insertItem UTF8String];
         int insertReault = sqlite3_prepare_v2(database, insertStatement, -1, &statement, NULL);
         if (insertReault == SQLITE_OK) {
@@ -106,10 +106,12 @@
                 int sid = sqlite3_column_int(statement, 0);
                 const char *title = (char *)sqlite3_column_text(statement, 1);
                 const char *time = (char *)sqlite3_column_text(statement, 2);
+                const char *thumb = (char *)sqlite3_column_text(statement, 3);
                 
                 newsItem.sid = [NSString stringWithFormat:@"%d", sid];
                 newsItem.title = [NSString stringWithUTF8String:title];
                 newsItem.time = [NSString stringWithUTF8String:time];
+                newsItem.thumb = [NSString stringWithUTF8String:thumb];
                 [newsArray addObject:newsItem];
             }
             

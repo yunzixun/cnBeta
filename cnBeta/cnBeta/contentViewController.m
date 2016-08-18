@@ -60,9 +60,7 @@
     backItem.title = @"返回";
     self.navigationItem.backBarButtonItem = backItem;
     _collection = [DataBase sharedDataBase];
-    _news = [[collectionModel alloc]init];
-    self.news.sid = _newsId;
-    _news.title = _newsTitle;
+    
     _contentWebView.delegate = self;
     
     //评论数量badge
@@ -76,7 +74,16 @@
 //    [self.contentWebView addGestureRecognizer:self.panLeft];
 }
 
-
+- (collectionModel *)news
+{
+    if (!_news) {
+        _news = [[collectionModel alloc]init];
+        _news.sid = _newsId;
+        _news.title = _newsTitle;
+        _news.thumb = _thumb;
+    }
+    return _news;
+}
 -(void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
@@ -87,7 +94,17 @@
     _spinner.center = CGPointMake(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 );
     [_spinner startAnimating];
     
-    [self setupWebView];
+    UIImage *image = [UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:@"http://b163.photo.store.qq.com/psb?/e3925ed3-f579-41df-9346-6d254b4a7092/sUuM7gDh7KqPPrSmcU.wy7YWz32.lk93CNE8Gish7KQ!/b/dIGfNWGUEwAA&bo=gAKAAgAAAAABByA!&rf=viewer_4"]]];
+    NSData *data = UIImageJPEGRepresentation(image, 1.0);
+    NSInteger length = data.length;
+    if (length > 200000) {
+        NSString *origin = [NSString stringWithFormat:@"<div style=\"text-align:center;\"><a href=\"http://www.cnbeta.com/articles/%@.htm\" target=\"_blank\">点击查看文章</a></div>", self.newsId];
+        [_contentWebView loadHTMLString:origin baseURL:nil];
+        [_spinner stopAnimating];
+    } else {
+        [self setupWebView];
+    }
+    
 
     
 }
@@ -129,7 +146,7 @@
                 //NSLog(@"%@", pubDate);
                 NSDateComponents *timeDelta = [pubDate deltaWithNow];
                 //NSLog(@"%@", timeDelta);
-                if (timeDelta.hour >= 24) {
+                if (timeDelta.hour > 72) {
                     self.isExpired = YES;
                 }
                 //评论数目
@@ -188,7 +205,8 @@
     //NSLog(@"%@", pubDate);
     NSDateComponents *timeDelta = [pubDate deltaWithNow];
     //NSLog(@"%@", timeDelta);
-    if (timeDelta.hour >= 24) {
+    if (timeDelta.hour > 72) {
+        self.isExpired = YES;
         [cmt appendString:@"(评论已关闭)"];
     }
     
@@ -260,7 +278,7 @@
     if (self.collect.selected) {
         [_collect setTitle:@"已收藏" forState:UIControlStateNormal];
         [_collect setTitleColor:[UIColor redColor] forState:UIControlStateSelected];
-        _news.time = [NSDate currentTime];
+        self.news.time = [NSDate currentTime];
         [_collection addNews:_news];
     }else {
         [_collect setTitle:@"收藏" forState:UIControlStateNormal];

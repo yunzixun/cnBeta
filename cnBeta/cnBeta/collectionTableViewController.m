@@ -81,6 +81,14 @@
     
     // Configure the cell...
     cell.newsInfo = _newsCollection[[_newsCollection count]-indexPath.row-1];
+    
+    if ([cell respondsToSelector:@selector(setLayoutMargins:)]) {
+        [cell setLayoutMargins:UIEdgeInsetsZero];
+    }
+    if ([cell respondsToSelector:@selector(setSeparatorInset:)]){
+        [cell setSeparatorInset:UIEdgeInsetsZero];
+    }
+    
     return cell;
 }
 

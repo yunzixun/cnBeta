@@ -1,0 +1,17 @@
+//
+//  cnBeta-Prefix.pch
+//  cnBeta
+//
+//  Created by hudy on 16/8/17.
+//  Copyright © 2016年 hudy. All rights reserved.
+//
+
+#ifndef cnBeta_Prefix_pch
+#define cnBeta_Prefix_pch
+
+#import <OneAPM/OneAPM.h>
+#import "UIImageView+WebCache.h"
+// Include any system framework and library headers here that should be included in all compilation units.
+// You will also need to set the Prefix Header build setting of one or more of your targets to reference this file.
+
+#endif /* cnBeta_Prefix_pch */

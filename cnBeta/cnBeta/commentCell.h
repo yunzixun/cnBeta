@@ -14,6 +14,9 @@
 @property (nonatomic, weak) id<replyActionDelegate>delegate;
 @property (nonatomic, strong)flooredCommentModel *flooredCommentItem;
 @property (weak, nonatomic) IBOutlet UILabel *floor;
+
++ (instancetype)cellWithTableView:(UITableView *)tableView forIndexPath:(NSIndexPath *)indexPath;
+
 @end
 
 

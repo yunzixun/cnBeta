@@ -21,9 +21,19 @@
 @property (weak, nonatomic) IBOutlet UIImageView *opposition;
 @property (weak, nonatomic) IBOutlet UIButton *replyButton;
 
+
+
 @end
 
 @implementation commentCell
+
++ (instancetype)cellWithTableView:(UITableView *)tableView forIndexPath:(NSIndexPath *)indexPath
+{
+    static NSString *cellId = @"cell";
+    commentCell *cell = [tableView dequeueReusableCellWithIdentifier:cellId forIndexPath:indexPath];
+    
+    return cell;
+}
 
 - (void)setFlooredCommentItem:(flooredCommentModel *)flooredCommentItem
 {
@@ -31,11 +41,11 @@
     commentModel *commentInfo = [flooredCommentItem.flooredComment lastObject];
     _floor.text = commentInfo.floor;
     _name.text = commentInfo.name;
-    _host.text = commentInfo.host_name;
+    _host.text = [commentInfo.host_name stringByAppendingString:[NSString stringWithFormat:@"  %@",commentInfo.date]];
     _upFinger.text = commentInfo.score;
     _downFinger.text = commentInfo.reason;
-    _support.image = [UIImage imageNamed:@"score"];
-    _opposition.image = [UIImage imageNamed:@"reason"];
+    
+    
     //[_replyButton setBackgroundImage:[UIImage imageNamed:@"reply"] forState:UIControlStateNormal];
     //[_replyButton setTitle:nil forState:UIControlStateNormal];
     //_opposition.transform = CGAffineTransformMakeRotation(M_PI);
@@ -46,9 +56,9 @@
     LayoutCommentView *commentView = [[LayoutCommentView alloc]initWithModel:flooredCommentItem];
     CGRect frame = _commentView.frame;
     frame.size.height = commentView.frame.size.height;
-    //frame.size.width = commentView.frame.size.width;
     _commentView.frame = frame;
     [_commentView addSubview:commentView];
+    //_commentView = commentView;
 }
 - (IBAction)replyAction:(UIButton *)sender {
     commentModel *commentItem = _flooredCommentItem.flooredComment.lastObject;

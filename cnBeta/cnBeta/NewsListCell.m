@@ -9,7 +9,7 @@
 #define SCREEN_WIDTH                    [UIScreen mainScreen].bounds.size.width
 
 #import "NewsListCell.h"
-#import "UIImageView+WebCache.h"
+
 
 @interface NewsListCell ()
 
@@ -64,7 +64,7 @@
         
         //图片
         _imageThumb = [[UIImageView alloc]init];
-        self.imageThumb.frame = CGRectMake(10, 10, 80, 60);
+        self.imageThumb.frame = CGRectMake(12, 12, 75, 56);
         [self.contentView addSubview:_imageThumb];
         //[self.imageThumb sd_setImageWithURL:[NSURL URLWithString:newsModel.thumb] placeholderImage:[UIImage imageNamed:@"placeholder"]];
         
@@ -130,6 +130,7 @@
     //评论数
     [_cmtNum setText:newsModel.comments];
     
+        
     
     
     
@@ -150,13 +151,15 @@
 
     //新闻标题
     [_newstitle setText:hotNewsModel.title];
-    _newstitle.frame = CGRectMake(100, 10, [UIScreen mainScreen].bounds.size.width -10-100, 50);
+    
     //时间
     [_time setText:hotNewsModel.inputtime];
-    _time.frame = CGRectMake(100, 60, 250, 10);
+    
     //图片
     [self.imageThumb sd_setImageWithURL:[NSURL URLWithString:hotNewsModel.thumb] placeholderImage:[UIImage imageNamed:@"placeholder"]];
-    self.imageThumb.frame = CGRectMake(10, 10, 80, 60);
+    
+    //评论数
+    [_cmtNum setText:hotNewsModel.comments];
 }
 
 - (void)awakeFromNib {

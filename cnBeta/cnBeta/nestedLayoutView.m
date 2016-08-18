@@ -45,7 +45,7 @@
         commentLabel.textColor = CommentColor;
         
         nameLabel.text = commentItem.name;
-        hostLabel.text = commentItem.host_name;
+        hostLabel.text = [commentItem.host_name stringByAppendingString:[NSString stringWithFormat:@"  %@",commentItem.date]];
         commentLabel.text = commentItem.comment;
         floorLabel.text = commentItem.floor;
         

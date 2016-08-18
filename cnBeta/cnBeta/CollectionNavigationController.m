@@ -30,12 +30,8 @@
         isOn = YES;
     }
     if (isOn) {
-        NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-        if ([defaults boolForKey:@"homepageLoaded"]) {
-            self.panGesture.enabled = YES;
-        } else {
-            //NSLog(@"%@", self.interactivePopGestureRecognizer);
-            // 获取系统自带滑动手势的target对象
+        
+        if (self.panGesture == nil) {
             id target = self.interactivePopGestureRecognizer.delegate;
             //NSLog(@"%@", target);
             // 创建全屏滑动手势，调用系统自带滑动手势的target的action方法
@@ -48,18 +44,18 @@
             
             // 给导航控制器的view添加全屏滑动手势
             [self.view addGestureRecognizer:pan];
-            
-            [defaults setBool:YES forKey:@"homepageLoaded"];
         }
-        
+        self.panGesture.enabled = YES;
         
         // 禁止使用系统自带的滑动手势
         self.interactivePopGestureRecognizer.enabled = NO;
         
     } else {
+        //[self.view removeGestureRecognizer:self.pan];
         self.panGesture.enabled = NO;
         self.interactivePopGestureRecognizer.enabled = YES;
     }
+
 }
 
 

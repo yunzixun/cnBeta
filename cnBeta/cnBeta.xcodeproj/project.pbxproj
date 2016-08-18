@@ -238,6 +238,7 @@
 		85A4DDEA1D54732400E58712 /* otherNewsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = otherNewsViewController.m; sourceTree = "<group>"; };
 		85A4DDEC1D54FD0B00E58712 /* NavTabBarController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NavTabBarController.h; sourceTree = "<group>"; };
 		85A4DDED1D54FD0B00E58712 /* NavTabBarController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NavTabBarController.m; sourceTree = "<group>"; };
+		85AA796A1D645489000F55DC /* cnBeta-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "cnBeta-Prefix.pch"; sourceTree = "<group>"; };
 		85BA2A5B1D1BD46B001188DA /* contentViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = contentViewController.m; sourceTree = "<group>"; };
 		85EE4CDC1D2E6859003D2DB4 /* commentViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = commentViewController.h; sourceTree = "<group>"; };
 		85EE4CDD1D2E6859003D2DB4 /* commentViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = commentViewController.m; sourceTree = "<group>"; };
@@ -437,6 +438,7 @@
 				852064F51D16D7D70073F05C /* main.m */,
 				852065001D16D7D70073F05C /* Assets.xcassets */,
 				852065021D16D7D70073F05C /* LaunchScreen.storyboard */,
+				85AA796A1D645489000F55DC /* cnBeta-Prefix.pch */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -1255,6 +1257,8 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/cnBeta/Lib/UMSocial_Sdk_Extra_Frameworks/TencentOpenAPI",
 				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "$(SRCROOT)/cnBeta/cnBeta-Prefix.pch";
 				INFOPLIST_FILE = cnBeta/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -1264,7 +1268,7 @@
 					"$(PROJECT_DIR)/cnBeta/Lib/UMSocial_Sdk_Extra_Frameworks/TencentOpenAPI",
 					"$(PROJECT_DIR)/cnBeta/Lib/UMSocial_Sdk_Extra_Frameworks/Wechat",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.hudyseu.cnBeta;
+				PRODUCT_BUNDLE_IDENTIFIER = com.hudy.cnBeta;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				TARGETED_DEVICE_FAMILY = 1;
@@ -1284,6 +1288,8 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/cnBeta/Lib/UMSocial_Sdk_Extra_Frameworks/TencentOpenAPI",
 				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "$(SRCROOT)/cnBeta/cnBeta-Prefix.pch";
 				INFOPLIST_FILE = cnBeta/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -1293,7 +1299,7 @@
 					"$(PROJECT_DIR)/cnBeta/Lib/UMSocial_Sdk_Extra_Frameworks/TencentOpenAPI",
 					"$(PROJECT_DIR)/cnBeta/Lib/UMSocial_Sdk_Extra_Frameworks/Wechat",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.hudyseu.cnBeta;
+				PRODUCT_BUNDLE_IDENTIFIER = com.hudy.cnBeta;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				TARGETED_DEVICE_FAMILY = 1;
