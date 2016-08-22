@@ -69,6 +69,10 @@
     self.badgeView.badgePositionAdjustment = CGPointMake(-6, 5);
     [self.badgeView setBadgeTextFont:[UIFont systemFontOfSize:10]];
     
+    _spinner.center = CGPointMake(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 );
+    [_spinner startAnimating];
+    [self setupWebView];
+    
     //右滑手势
 //    self.panLeft = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handlePanLeft:)];
 //    [self.contentWebView addGestureRecognizer:self.panLeft];
@@ -87,23 +91,21 @@
 -(void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    //self.navigationController.navigationBarHidden = NO;
-    [self.navigationController setNavigationBarHidden:NO animated:YES];
-    self.navigationController.hidesBarsOnSwipe = NO;
-    self.automaticallyAdjustsScrollViewInsets = NO;
-    _spinner.center = CGPointMake(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 );
-    [_spinner startAnimating];
+    self.navigationController.navigationBarHidden = NO;
     
-    UIImage *image = [UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:@"http://b163.photo.store.qq.com/psb?/e3925ed3-f579-41df-9346-6d254b4a7092/sUuM7gDh7KqPPrSmcU.wy7YWz32.lk93CNE8Gish7KQ!/b/dIGfNWGUEwAA&bo=gAKAAgAAAAABByA!&rf=viewer_4"]]];
-    NSData *data = UIImageJPEGRepresentation(image, 1.0);
-    NSInteger length = data.length;
-    if (length > 200000) {
-        NSString *origin = [NSString stringWithFormat:@"<div style=\"text-align:center;\"><a href=\"http://www.cnbeta.com/articles/%@.htm\" target=\"_blank\">点击查看文章</a></div>", self.newsId];
-        [_contentWebView loadHTMLString:origin baseURL:nil];
-        [_spinner stopAnimating];
-    } else {
-        [self setupWebView];
-    }
+    self.automaticallyAdjustsScrollViewInsets = NO;
+    
+    
+//    UIImage *image = [UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:@"http://b163.photo.store.qq.com/psb?/e3925ed3-f579-41df-9346-6d254b4a7092/sUuM7gDh7KqPPrSmcU.wy7YWz32.lk93CNE8Gish7KQ!/b/dIGfNWGUEwAA&bo=gAKAAgAAAAABByA!&rf=viewer_4"]]];
+//    NSData *data = UIImageJPEGRepresentation(image, 1.0);
+//    NSInteger length = data.length;
+//    if (length > 200000) {
+//        NSString *origin = [NSString stringWithFormat:@"<div style=\"text-align:center;\"><a href=\"http://www.cnbeta.com/articles/%@.htm\" target=\"_blank\">点击查看文章</a></div>", self.newsId];
+//        [_contentWebView loadHTMLString:origin baseURL:nil];
+//        [_spinner stopAnimating];
+//    } else {
+//        [self setupWebView];
+//    }
     
 
     

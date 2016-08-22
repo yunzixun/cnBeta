@@ -59,8 +59,12 @@ static NSString *const contentBaseURLString = @"http://api.cnbeta.com/capi?app_k
         url = [NSString stringWithFormat:@"http://api.cnbeta.com/capi?app_key=10000&format=json&method=Article.NewsContent&sid=%@&timestamp=%llu&v=1.0&mpuffgvbvbttn3Rc&sign=%@", sid, timestamp, sign];
         
     //SN
-    }else{
+    }else if([type isEqualToString:@"SN"]){
         url = [NSString stringWithFormat:@"http://www.cnbeta.com/articles/%@.htm",sid];
+        
+    //
+    }else {
+        url = @"http://cnbeta.techoke.com/api/list?version=1.8.6&init=1";
     }
     
     AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];

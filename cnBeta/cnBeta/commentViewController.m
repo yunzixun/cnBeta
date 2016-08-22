@@ -170,7 +170,7 @@
             int index = 0;
             int total = (int)[data[@"result"][@"cmntlist"] count];
             for (commentList *temp in cmList) {
-                commentModel* comment = [commentModel mj_objectWithKeyValues:data[@"result"][@"cmntstore"][temp.tid]];
+                commentModel *comment = [commentModel mj_objectWithKeyValues:data[@"result"][@"cmntstore"][temp.tid]];
                 comment.floor = [NSString stringWithFormat:@"%d楼",total-index];
                 index++;
                 [commentArray addObject:comment];
@@ -320,11 +320,12 @@
     LayoutCommentView *commentView = [[LayoutCommentView alloc]initWithModel:flooredCommentItem];
     
   
-//    CGFloat h = [_commentTableView fd_heightForCellWithIdentifier:@"newCell" cacheByIndexPath:indexPath configuration:^(id cell) {
+//    return [_commentTableView fd_heightForCellWithIdentifier:@"newCell" cacheByIndexPath:indexPath configuration:^(id cell) {
 //        [cell setFlooredCommentItem:flooredCommentItem];
 //    }];
     
     return commentView.frame.size.height + 80;
+    
     
 }
 

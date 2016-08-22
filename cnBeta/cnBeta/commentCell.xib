@@ -100,6 +100,7 @@
                         <rect key="frame" x="269" y="115" width="21" height="18"/>
                         <constraints>
                             <constraint firstAttribute="width" constant="21" id="gWY-ux-60d"/>
+                            <constraint firstAttribute="height" constant="18" id="r7f-78-9dx"/>
                         </constraints>
                         <state key="normal" backgroundImage="replyaction"/>
                         <connections>
@@ -120,6 +121,7 @@
                     <constraint firstItem="Vht-n8-ZnN" firstAttribute="leading" secondItem="RQi-Zd-N8U" secondAttribute="leading" id="FIF-LK-UN5"/>
                     <constraint firstItem="eB4-p2-r0S" firstAttribute="top" secondItem="GfW-Bh-sGt" secondAttribute="bottom" constant="8" symbolic="YES" id="HA9-4a-VfK"/>
                     <constraint firstItem="Kwa-Q8-0OA" firstAttribute="leading" secondItem="NaR-ph-RdL" secondAttribute="trailing" constant="8" symbolic="YES" id="KU1-3R-Zja"/>
+                    <constraint firstItem="Vht-n8-ZnN" firstAttribute="top" secondItem="d16-Oi-WvH" secondAttribute="top" constant="33" id="MdS-kG-yEa"/>
                     <constraint firstItem="n6x-MF-sxW" firstAttribute="bottom" secondItem="lWo-CK-Kgz" secondAttribute="bottom" id="MxB-he-QfW"/>
                     <constraint firstItem="Vht-n8-ZnN" firstAttribute="centerX" secondItem="n6x-MF-sxW" secondAttribute="centerX" id="NFe-kK-J0B"/>
                     <constraint firstItem="ItF-KN-EVg" firstAttribute="top" secondItem="d16-Oi-WvH" secondAttribute="topMargin" constant="7" id="NmJ-E7-Pae"/>
@@ -134,6 +136,7 @@
                     <constraint firstItem="RQi-Zd-N8U" firstAttribute="top" secondItem="d16-Oi-WvH" secondAttribute="topMargin" constant="6" id="Z5M-3r-x9f"/>
                     <constraint firstItem="eB4-p2-r0S" firstAttribute="leading" secondItem="d16-Oi-WvH" secondAttribute="leading" id="ceq-6q-5RX"/>
                     <constraint firstItem="Kwa-Q8-0OA" firstAttribute="leading" secondItem="NaR-ph-RdL" secondAttribute="trailing" constant="8" symbolic="YES" id="dzd-8Q-rO3"/>
+                    <constraint firstItem="GfW-Bh-sGt" firstAttribute="top" secondItem="d16-Oi-WvH" secondAttribute="top" constant="8" id="fYT-bI-nrX"/>
                     <constraint firstItem="Kwa-Q8-0OA" firstAttribute="leading" secondItem="d16-Oi-WvH" secondAttribute="leading" constant="106" id="fuQ-I7-cLH"/>
                     <constraint firstItem="ItF-KN-EVg" firstAttribute="top" secondItem="d16-Oi-WvH" secondAttribute="topMargin" constant="10" id="hOI-Un-8gS"/>
                     <constraint firstItem="NaR-ph-RdL" firstAttribute="firstBaseline" secondItem="lWo-CK-Kgz" secondAttribute="firstBaseline" id="hdP-PS-gCr"/>
@@ -141,6 +144,7 @@
                     <constraint firstItem="ItF-KN-EVg" firstAttribute="baseline" secondItem="RQi-Zd-N8U" secondAttribute="firstBaseline" id="icm-mg-hSW"/>
                     <constraint firstItem="RQi-Zd-N8U" firstAttribute="leading" secondItem="GfW-Bh-sGt" secondAttribute="trailing" constant="8" symbolic="YES" id="jQb-C5-Bgu"/>
                     <constraint firstItem="n6x-MF-sxW" firstAttribute="leading" secondItem="lWo-CK-Kgz" secondAttribute="trailing" constant="8" symbolic="YES" id="mZd-kd-sao"/>
+                    <constraint firstAttribute="bottom" secondItem="7MU-nz-IGo" secondAttribute="bottom" constant="8" id="pKb-ZQ-ija"/>
                     <constraint firstItem="Kwa-Q8-0OA" firstAttribute="top" secondItem="n6x-MF-sxW" secondAttribute="top" id="ppF-0T-rI8"/>
                     <constraint firstItem="lWo-CK-Kgz" firstAttribute="leading" secondItem="Kwa-Q8-0OA" secondAttribute="trailing" constant="40" id="q5X-Se-207"/>
                     <constraint firstItem="7MU-nz-IGo" firstAttribute="bottom" secondItem="n6x-MF-sxW" secondAttribute="bottom" id="qLX-Px-8WC"/>

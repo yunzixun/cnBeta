@@ -23,8 +23,6 @@
 #import "FileCache.h"
 #import "DataBase.h"
 
-static NSString *const newsListURLString = @"http://cnbeta.techoke.com/api/list?version=1.8.6&init=1";
-
 
 
 @interface NewsTableViewController ()<SDCycleScrollViewDelegate>
@@ -50,6 +48,7 @@ static NSString *const newsListURLString = @"http://cnbeta.techoke.com/api/list?
     //self.tabBarItem.title = [NSString stringWithFormat:@"资讯"];
     self.tableView.rowHeight = 80.0f;
     self.tableView.separatorColor = [UIColor grayColor];
+    self.tableView.tableFooterView=[[UIView alloc]init];
     if ([self.tableView respondsToSelector:@selector(setSeparatorInset:)]) {
         [self.tableView setSeparatorInset:UIEdgeInsetsZero];
         
@@ -123,60 +122,31 @@ static NSString *const newsListURLString = @"http://cnbeta.techoke.com/api/list?
 
 - (void)initCycleView
 {
-    
-    AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
-    [manager.requestSerializer setTimeoutInterval:10.0];
-    [manager GET:newsListURLString parameters:nil progress:^(NSProgress * _Nonnull downloadProgress) {
-        
-    } success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
-        //NSLog(@"%@", responseObject);
-        NSArray *dataList = [CycleNewsModel mj_objectArrayWithKeyValuesArray:responseObject[@"data"][@"hot"]];
-        self.cycleNews = dataList;
-        NSMutableArray *imagesArray = [NSMutableArray array];
-        NSMutableArray *titlesArray = [NSMutableArray array];
-        for (CycleNewsModel *data in dataList) {
-            [imagesArray addObject:[data.images count]? data.images[0] : @"http://betanews.com/wp-content/uploads/2016/07/bitcoin-halvening.jpg"] ;
-            [titlesArray addObject:data.title];
+    [self requestWithURLType:@"cycle" completion:^(id data, NSError *error) {
+        if (!error) {
+            NSArray *dataList = [CycleNewsModel mj_objectArrayWithKeyValuesArray:data[@"data"][@"hot"]];
+            self.cycleNews = dataList;
+            NSMutableArray *imagesArray = [NSMutableArray array];
+            NSMutableArray *titlesArray = [NSMutableArray array];
+            for (CycleNewsModel *data in dataList) {
+                [imagesArray addObject:[data.images count]? data.images[0] : @"http://betanews.com/wp-content/uploads/2016/07/bitcoin-halvening.jpg"] ;
+                if (!data.images.count) {
+                    [data.images addObject:@"http://betanews.com/wp-content/uploads/2016/07/bitcoin-halvening.jpg"];
+                }
+                [titlesArray addObject:data.title];
+            }
+            [self.imagesArray addObjectsFromArray:imagesArray];
+            [self.titlesArray addObjectsFromArray:titlesArray];
+            
+            SDCycleScrollView *cycleScrollView = [SDCycleScrollView cycleScrollViewWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_WIDTH *0.55) imageURLStringsGroup:self.imagesArray];
+            cycleScrollView.delegate = self;
+            cycleScrollView.pageControlAliment = SDCycleScrollViewPageContolAlimentRight;
+            cycleScrollView.titlesGroup = self.titlesArray;
+            cycleScrollView.pageControlStyle = SDCycleScrollViewPageContolStyleClassic;
+            cycleScrollView.autoScrollTimeInterval = 6.0;
+            self.tableView.tableHeaderView = cycleScrollView;
         }
-        [self.imagesArray addObjectsFromArray:imagesArray];
-        [self.titlesArray addObjectsFromArray:titlesArray];
-        
-        SDCycleScrollView *cycleScrollView = [SDCycleScrollView cycleScrollViewWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_WIDTH *0.55) imageURLStringsGroup:self.imagesArray];
-        cycleScrollView.delegate = self;
-        cycleScrollView.pageControlAliment = SDCycleScrollViewPageContolAlimentRight;
-        cycleScrollView.titlesGroup = self.titlesArray;
-        cycleScrollView.pageControlStyle = SDCycleScrollViewPageContolStyleClassic;
-        cycleScrollView.autoScrollTimeInterval = 6.0;
-        self.tableView.tableHeaderView = cycleScrollView;
-        //[_fileCache cacheObjectArrayToFile:self. forKey:<#(NSString *)#>]
-
-    } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
-        
     }];
-//    [self requestWithURL:newsListURLString completion:^(NSData *data, NSError *error) {
-//        if (!error) {
-//            NSDictionary *dataDic = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:nil][@"data"];
-//            //NSLog(@"%@",dataDic[@"lists"]);
-//            NSArray *dataList = [CycleNewsModel mj_objectArrayWithKeyValuesArray:dataDic[@"hot"]];
-//            self.cycleNews = dataList;
-//            NSMutableArray *imagesArray = [NSMutableArray array];
-//            NSMutableArray *titlesArray = [NSMutableArray array];
-//            for (CycleNewsModel *data in dataList) {
-//                [imagesArray addObject:data.images[0]];
-//                [titlesArray addObject:data.title];
-//            }
-//            [self.imagesArray addObjectsFromArray:imagesArray];
-//            [self.titlesArray addObjectsFromArray:titlesArray];
-//            
-//            SDCycleScrollView *cycleScrollView = [SDCycleScrollView cycleScrollViewWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_WIDTH *0.55) imageURLStringsGroup:self.imagesArray];
-//            cycleScrollView.delegate = self;
-//            cycleScrollView.pageControlAliment = SDCycleScrollViewPageContolAlimentRight;
-//            cycleScrollView.titlesGroup = self.titlesArray;
-//            cycleScrollView.pageControlStyle = SDCycleScrollViewPageContolStyleClassic;
-//            cycleScrollView.autoScrollTimeInterval = 6.0;
-//            self.tableView.tableHeaderView = cycleScrollView;
-//        }
-//    }];
     
     
 }

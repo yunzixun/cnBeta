@@ -65,6 +65,7 @@
     self.tableView = tableView;
     self.tableView.rowHeight = 80.0f;
     self.tableView.separatorColor = [UIColor grayColor];
+    self.tableView.tableFooterView=[[UIView alloc]init];
     if ([self.tableView respondsToSelector:@selector(setSeparatorInset:)]) {
         [self.tableView setSeparatorInset:UIEdgeInsetsZero];
         

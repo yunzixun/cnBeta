@@ -12,6 +12,6 @@
 
 @property (nonatomic, copy)NSString  *id;
 @property (nonatomic, copy)NSString  *title;
-@property (nonatomic, strong)NSArray *images;
+@property (nonatomic, strong)NSMutableArray *images;
 
 @end
