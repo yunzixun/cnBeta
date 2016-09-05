@@ -26,8 +26,8 @@
         ioQueue = dispatch_queue_create("greatCache", DISPATCH_QUEUE_SERIAL);
         fileManager = [NSFileManager defaultManager];
         NSArray *paths = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES);
-        libDirectory = [paths objectAtIndex:0];
-        cacheDirectory = NSTemporaryDirectory();
+        cachesDirectory = [paths objectAtIndex:0];  //cache目录
+        tmpDirectory = NSTemporaryDirectory(); //tmp目录
     }
     return self;
 }
@@ -37,13 +37,12 @@
     if (newsList) {
         dispatch_async(ioQueue, ^{
             NSString *fileName = key;
-            NSString *filePath = [libDirectory stringByAppendingPathComponent:fileName];
+            NSString *filePath = [cachesDirectory stringByAppendingPathComponent:fileName];
             
-            NSError *error;
-            BOOL s = [NSKeyedArchiver archiveRootObject:newsList toFile:filePath];
-            if (!s) {
-                NSLog(@"%@",error);
-            }
+            [NSKeyedArchiver archiveRootObject:newsList toFile:filePath];
+//            if (!s) {
+//                NSLog(@"%@",error);
+//            }
         });
     }
 }
@@ -54,7 +53,7 @@
         return nil;
     }
     NSString *fileName = key;
-    NSString *filePath = [libDirectory stringByAppendingPathComponent:fileName];
+    NSString *filePath = [cachesDirectory stringByAppendingPathComponent:fileName];
     if ([fileManager fileExistsAtPath:filePath]) {
         return [NSKeyedUnarchiver unarchiveObjectWithFile:filePath];
     }
@@ -66,7 +65,7 @@
     if (objects) {
         dispatch_async(ioQueue, ^{
             NSString *fileName = key;
-            NSString *filePath = [libDirectory stringByAppendingPathComponent:fileName];
+            NSString *filePath = [cachesDirectory stringByAppendingPathComponent:fileName];
             [objects writeToFile:filePath atomically:YES];
         });
     }
@@ -79,7 +78,7 @@
         return nil;
     }
     NSString *fileName = key;
-    NSString *filePath = [cacheDirectory stringByAppendingPathComponent:fileName];
+    NSString *filePath = [cachesDirectory stringByAppendingPathComponent:fileName];
     if ([fileManager fileExistsAtPath:filePath]) {
         return [NSMutableArray arrayWithContentsOfFile:filePath];
     }
@@ -93,7 +92,7 @@
     }
     dispatch_async(ioQueue, ^{
         NSString *fileName = key;
-        NSString *filePath = [cacheDirectory stringByAppendingPathComponent:fileName];
+        NSString *filePath = [tmpDirectory stringByAppendingPathComponent:fileName];
         BOOL s;
         NSError *error;
         s = [HTMLString writeToFile:filePath atomically:YES encoding:NSUTF8StringEncoding error:&error];
@@ -109,7 +108,7 @@
         return nil;
     }
     NSString *fileName = key;
-    NSString *filePath = [cacheDirectory stringByAppendingPathComponent:fileName];
+    NSString *filePath = [tmpDirectory stringByAppendingPathComponent:fileName];
     if ([fileManager fileExistsAtPath:filePath]) {
         return [NSString stringWithContentsOfFile:filePath encoding:NSUTF8StringEncoding error:NULL];
     }
@@ -121,20 +120,26 @@
 - (float)fileSizeAtPath:(NSString *)path
 {
     //NSFileManager *fileManager = [NSFileManager defaultManager];
-    if ([fileManager fileExistsAtPath:path]) {
-        long long size = [fileManager attributesOfItemAtPath:path error:nil].fileSize;
-        return size/1024.0/1024.0;
-    }
-    return 0;
+    
+    long long size = [fileManager attributesOfItemAtPath:path error:nil].fileSize;
+    return size/1024.0/1024.0;
+
 }
 
 - (float)folderSizeOfCache
 {
     float folderSize = 0;
-    if ([fileManager fileExistsAtPath:cacheDirectory]) {
-        NSArray *childenFiles = [fileManager subpathsAtPath:cacheDirectory];
+    if ([fileManager fileExistsAtPath:tmpDirectory]) {
+        NSArray *childenFiles = [fileManager subpathsAtPath:tmpDirectory];
         for (NSString *fileName in childenFiles) {
-            NSString *absolutePath = [cacheDirectory stringByAppendingPathComponent:fileName];
+            NSString *absolutePath = [tmpDirectory stringByAppendingPathComponent:fileName];
+            folderSize += [self fileSizeAtPath:absolutePath];
+        }
+    }
+    if ([fileManager fileExistsAtPath:cachesDirectory]) {
+        NSArray *childenFiles = [fileManager subpathsAtPath:cachesDirectory];
+        for (NSString *fileName in childenFiles) {
+            NSString *absolutePath = [cachesDirectory stringByAppendingPathComponent:fileName];
             folderSize += [self fileSizeAtPath:absolutePath];
         }
     }
@@ -142,11 +147,21 @@
 }
 - (void)clearCache
 {
-    if ([fileManager fileExistsAtPath:cacheDirectory]) {
+    if ([fileManager fileExistsAtPath:tmpDirectory]) {
         dispatch_async(ioQueue, ^{
-            NSArray *childenFiles = [fileManager subpathsAtPath:cacheDirectory];
+            NSArray *childenFiles = [fileManager subpathsAtPath:tmpDirectory];
             for (NSString *fileName in childenFiles) {
-                NSString *absolutePath = [cacheDirectory stringByAppendingPathComponent:fileName];
+                NSString *absolutePath = [tmpDirectory stringByAppendingPathComponent:fileName];
+                [fileManager removeItemAtPath:absolutePath error:nil];
+            }
+        });
+    }
+    
+    if ([fileManager fileExistsAtPath:cachesDirectory]) {
+        dispatch_async(ioQueue, ^{
+            NSArray *childenFiles = [fileManager subpathsAtPath:cachesDirectory];
+            for (NSString *fileName in childenFiles) {
+                NSString *absolutePath = [cachesDirectory stringByAppendingPathComponent:fileName];
                 [fileManager removeItemAtPath:absolutePath error:nil];
             }
         });

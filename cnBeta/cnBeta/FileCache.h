@@ -12,8 +12,8 @@
 {
 @private
     NSFileManager *fileManager;
-    NSString *cacheDirectory;
-    NSString *libDirectory;
+    NSString *tmpDirectory;
+    NSString *cachesDirectory;
     dispatch_queue_t ioQueue;
 }
 

@@ -31,6 +31,12 @@
 
 @implementation otherNewsViewController
 
+- (void)dealloc
+{
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
+
 - (NSMutableArray *)dataSource{
     if (!_dataSource) {
         _dataSource = [[NSMutableArray alloc]init];

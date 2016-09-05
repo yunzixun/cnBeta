@@ -12,6 +12,7 @@
 
 @interface commentCell ()
 
+@property (weak, nonatomic) IBOutlet UIImageView *headImage;
 @property (weak, nonatomic) IBOutlet UILabel *name;
 @property (weak, nonatomic) IBOutlet UILabel *host;
 @property (weak, nonatomic) IBOutlet UIView  *commentView;
@@ -44,6 +45,7 @@
     _host.text = [commentInfo.host_name stringByAppendingString:[NSString stringWithFormat:@"  %@",commentInfo.date]];
     _upFinger.text = commentInfo.score;
     _downFinger.text = commentInfo.reason;
+    [_headImage sd_setImageWithURL:[NSURL URLWithString:commentInfo.icon] placeholderImage:[UIImage imageNamed:@"me_cell_nolandheader_66x66_"]];
     
     
     //[_replyButton setBackgroundImage:[UIImage imageNamed:@"reply"] forState:UIControlStateNormal];

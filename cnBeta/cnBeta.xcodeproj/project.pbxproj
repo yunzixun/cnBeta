@@ -72,7 +72,10 @@
 		85A4DDE81D4F33B600E58712 /* NavTabBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 85A4DDE71D4F33B600E58712 /* NavTabBar.m */; };
 		85A4DDEB1D54732400E58712 /* otherNewsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 85A4DDEA1D54732400E58712 /* otherNewsViewController.m */; };
 		85A4DDEE1D54FD0B00E58712 /* NavTabBarController.m in Sources */ = {isa = PBXBuildFile; fileRef = 85A4DDED1D54FD0B00E58712 /* NavTabBarController.m */; };
+		85AA8D5B1D6DBB6400AE87DD /* UIImageView+CircleCorner.m in Sources */ = {isa = PBXBuildFile; fileRef = 85AA8D5A1D6DBB6400AE87DD /* UIImageView+CircleCorner.m */; };
 		85BA2A5C1D1BD46B001188DA /* contentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 85BA2A5B1D1BD46B001188DA /* contentViewController.m */; };
+		85CAECA61D6F2E0D00E7F33F /* DYSectionHeader.m in Sources */ = {isa = PBXBuildFile; fileRef = 85CAECA51D6F2E0D00E7F33F /* DYSectionHeader.m */; };
+		85CAECAA1D703FC900E7F33F /* DYAppearanceManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 85CAECA91D703FC900E7F33F /* DYAppearanceManager.m */; };
 		85EE4CDE1D2E6859003D2DB4 /* commentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 85EE4CDD1D2E6859003D2DB4 /* commentViewController.m */; };
 		85EE4CE31D2F8BE8003D2DB4 /* collectionTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 85EE4CE21D2F8BE8003D2DB4 /* collectionTableViewController.m */; };
 		85EE4CEA1D2F9ACC003D2DB4 /* collectionModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 85EE4CE91D2F9ACC003D2DB4 /* collectionModel.m */; };
@@ -239,7 +242,13 @@
 		85A4DDEC1D54FD0B00E58712 /* NavTabBarController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NavTabBarController.h; sourceTree = "<group>"; };
 		85A4DDED1D54FD0B00E58712 /* NavTabBarController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NavTabBarController.m; sourceTree = "<group>"; };
 		85AA796A1D645489000F55DC /* cnBeta-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "cnBeta-Prefix.pch"; sourceTree = "<group>"; };
+		85AA8D591D6DBB6400AE87DD /* UIImageView+CircleCorner.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImageView+CircleCorner.h"; sourceTree = "<group>"; };
+		85AA8D5A1D6DBB6400AE87DD /* UIImageView+CircleCorner.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImageView+CircleCorner.m"; sourceTree = "<group>"; };
 		85BA2A5B1D1BD46B001188DA /* contentViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = contentViewController.m; sourceTree = "<group>"; };
+		85CAECA41D6F2E0D00E7F33F /* DYSectionHeader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DYSectionHeader.h; sourceTree = "<group>"; };
+		85CAECA51D6F2E0D00E7F33F /* DYSectionHeader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DYSectionHeader.m; sourceTree = "<group>"; };
+		85CAECA81D703FC900E7F33F /* DYAppearanceManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DYAppearanceManager.h; sourceTree = "<group>"; };
+		85CAECA91D703FC900E7F33F /* DYAppearanceManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DYAppearanceManager.m; sourceTree = "<group>"; };
 		85EE4CDC1D2E6859003D2DB4 /* commentViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = commentViewController.h; sourceTree = "<group>"; };
 		85EE4CDD1D2E6859003D2DB4 /* commentViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = commentViewController.m; sourceTree = "<group>"; };
 		85EE4CDF1D2E69D1003D2DB4 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -410,6 +419,7 @@
 		852064F31D16D7D70073F05C /* cnBeta */ = {
 			isa = PBXGroup;
 			children = (
+				85CAECA71D703F5600E7F33F /* DYAppearance */,
 				85977ADF1D40B08A00D5CD6F /* Home */,
 				85977AE21D40B10E00D5CD6F /* Content */,
 				859063EB1D378023004D1BCB /* Comment */,
@@ -508,6 +518,8 @@
 				859063FE1D3A87DF004D1BCB /* nestedLayoutView.m */,
 				859063F51D38CE29004D1BCB /* LayoutCommentView.h */,
 				859063F61D38CE29004D1BCB /* LayoutCommentView.m */,
+				85CAECA41D6F2E0D00E7F33F /* DYSectionHeader.h */,
+				85CAECA51D6F2E0D00E7F33F /* DYSectionHeader.m */,
 			);
 			name = View;
 			sourceTree = "<group>";
@@ -685,9 +697,20 @@
 			name = View;
 			sourceTree = "<group>";
 		};
+		85CAECA71D703F5600E7F33F /* DYAppearance */ = {
+			isa = PBXGroup;
+			children = (
+				85CAECA81D703FC900E7F33F /* DYAppearanceManager.h */,
+				85CAECA91D703FC900E7F33F /* DYAppearanceManager.m */,
+			);
+			name = DYAppearance;
+			sourceTree = "<group>";
+		};
 		85EE4CE41D2F9A48003D2DB4 /* Collection */ = {
 			isa = PBXGroup;
 			children = (
+				85AA8D591D6DBB6400AE87DD /* UIImageView+CircleCorner.h */,
+				85AA8D5A1D6DBB6400AE87DD /* UIImageView+CircleCorner.m */,
 				85EE4CEE1D2F9CE1003D2DB4 /* DataBase */,
 				85EE4CE71D2F9AA6003D2DB4 /* View */,
 				85EE4CE61D2F9A74003D2DB4 /* Model */,
@@ -1066,6 +1089,7 @@
 				85A4DDEB1D54732400E58712 /* otherNewsViewController.m in Sources */,
 				850013AC1D58ABC600D2CC6F /* SettingCell.m in Sources */,
 				852065391D16E8E20073F05C /* SDRefreshFooterView.m in Sources */,
+				85CAECA61D6F2E0D00E7F33F /* DYSectionHeader.m in Sources */,
 				850013C41D5F7CEF00D2CC6F /* UIView+isShowingOnScreen.m in Sources */,
 				856204221D2CDDC4002156D2 /* commentCell.m in Sources */,
 				85EE4CEA1D2F9ACC003D2DB4 /* collectionModel.m in Sources */,
@@ -1075,6 +1099,7 @@
 				85FB7C0D1D29739500192D5C /* NewsContentModel.m in Sources */,
 				859063F11D378952004D1BCB /* NSArray+transform.m in Sources */,
 				85FB7C3F1D2A83FC00192D5C /* TAPageControl.m in Sources */,
+				85AA8D5B1D6DBB6400AE87DD /* UIImageView+CircleCorner.m in Sources */,
 				85FB7BFD1D29485B00192D5C /* DataModel.m in Sources */,
 				850013B81D58C80000D2CC6F /* SettingGroup.m in Sources */,
 				85FB7C3C1D2A83FC00192D5C /* TAAbstractDotView.m in Sources */,
@@ -1086,6 +1111,7 @@
 				850013C11D5C80E100D2CC6F /* CollectionNavigationController.m in Sources */,
 				85A4DDEE1D54FD0B00E58712 /* NavTabBarController.m in Sources */,
 				85EE4CDE1D2E6859003D2DB4 /* commentViewController.m in Sources */,
+				85CAECAA1D703FC900E7F33F /* DYAppearanceManager.m in Sources */,
 				85598FFF1D3134E600CD17EA /* FileCache.m in Sources */,
 				8520653C1D16E8E20073F05C /* UIView+SDExtension.m in Sources */,
 				85A4DDE81D4F33B600E58712 /* NavTabBar.m in Sources */,

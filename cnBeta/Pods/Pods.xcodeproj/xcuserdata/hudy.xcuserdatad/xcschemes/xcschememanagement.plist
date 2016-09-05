@@ -19,6 +19,11 @@
 			<key>isShown</key>
 			<false/>
 		</dict>
+		<key>JPFPSStatus.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
 		<key>JSBadgeView-JSBadgeView.xcscheme</key>
 		<dict>
 			<key>isShown</key>
@@ -72,22 +77,22 @@
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
-		<key>0B85C24D02A6D0A7BA7143DF685408F3</key>
+		<key>5B4D2DF0A895BF05B44C20C651E6F7C6</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>2F5F5CB1E1DAA5757492045343AA1C5E</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
-		<key>6742B867507DC10016F2533DF02F5B2E</key>
+		<key>64BA524E93FAF896DC1A185210AC15C7</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
 		<key>6817A568CA43DCFE74D5C5F81D595458</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>6C39A243D5A77697AFD270AB8502276D</key>
 		<dict>
 			<key>primary</key>
 			<true/>
@@ -98,6 +103,11 @@
 			<true/>
 		</dict>
 		<key>7112751ACED56349A420B879DDAD76F8</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>744F7CD12F8BBD9F25362CDAD590D524</key>
 		<dict>
 			<key>primary</key>
 			<true/>
@@ -127,7 +137,7 @@
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>FDFCD1577D40EAE3511C066CE0D400C8</key>
+		<key>ED5853D78ACA0A0E0AD80C9264782EF5</key>
 		<dict>
 			<key>primary</key>
 			<true/>

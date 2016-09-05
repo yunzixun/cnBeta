@@ -80,7 +80,7 @@
                             <constraint firstAttribute="width" constant="18" id="7H8-9E-eGO"/>
                         </constraints>
                     </imageView>
-                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="head_default" translatesAutoresizingMaskIntoConstraints="NO" id="GfW-Bh-sGt">
+                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="GfW-Bh-sGt">
                         <rect key="frame" x="8" y="8" width="30" height="30"/>
                         <constraints>
                             <constraint firstAttribute="height" constant="30" id="gCS-qq-LhN"/>
@@ -182,6 +182,7 @@
                 <outlet property="commentView" destination="eB4-p2-r0S" id="bCs-A4-s58"/>
                 <outlet property="downFinger" destination="lWo-CK-Kgz" id="yNk-i2-ItJ"/>
                 <outlet property="floor" destination="ItF-KN-EVg" id="8i7-LD-DFT"/>
+                <outlet property="headImage" destination="GfW-Bh-sGt" id="Bze-fi-pKu"/>
                 <outlet property="host" destination="Vht-n8-ZnN" id="9gf-Us-gXT"/>
                 <outlet property="name" destination="RQi-Zd-N8U" id="jX4-EA-zjY"/>
                 <outlet property="opposition" destination="n6x-MF-sxW" id="bcM-Rd-Ii9"/>
@@ -193,7 +194,6 @@
         </tableViewCell>
     </objects>
     <resources>
-        <image name="head_default" width="30" height="30"/>
         <image name="reason" width="24" height="24"/>
         <image name="replyaction" width="32" height="32"/>
         <image name="score" width="24" height="24"/>

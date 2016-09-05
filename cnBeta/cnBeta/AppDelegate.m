@@ -13,6 +13,8 @@
 #import "UMSocialWechatHandler.h"
 #import "UMSocialQQHandler.h"
 #import "CRToast.h"
+#import "JPFPSStatus.h"
+#import "DYAppearanceManager.h"
 
 #import "NewsNavigationViewController.h"
 
@@ -26,7 +28,10 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     
     [AFNetworkActivityIndicatorManager sharedManager].enabled = YES;
-    
+    [[DYAppearanceManager sharedManager] setup];
+//#if defined(DEBUG)||defined(_DEBUG)
+//    [[JPFPSStatus sharedInstance] open];
+//#endif
     
     //监听网络状态
     [self listenNetWorkingPort];
@@ -74,9 +79,9 @@
      */
     //设置监听
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    __block int count = 0;
+    __block BOOL count = NO;
     [manager setReachabilityStatusChangeBlock:^(AFNetworkReachabilityStatus status) {
-        BOOL everLaunch = [[NSUserDefaults standardUserDefaults] boolForKey:@"everLaunched"];
+        BOOL everLaunch = [defaults boolForKey:@"everLaunched"];
         BOOL switchOn = [defaults boolForKey:@"网络切换通知"];
         if (!everLaunch) {
             switchOn = YES;
@@ -114,7 +119,7 @@
                 
                 
         }
-        count++;
+        count = YES;
     }];
     //开始监听
     [manager startMonitoring];

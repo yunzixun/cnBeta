@@ -56,7 +56,76 @@
         }
         sqlite3_close(database);
     }
+    if (![self queryIfExistsFieldname:@"thumb"]) {
+//        char *errMsg;
+//        const char *add_colomn = "ALTER TABLE collection ADD thumb TEXT";
+//        if (sqlite3_exec(database, add_colomn, NULL, NULL, &errMsg) == SQLITE_OK) {
+//            NSLog(@"adding succeeded");
+//        }else{
+//            NSLog(@"%s", errMsg);
+//        }
+        NSMutableArray *collectionItems = [self display];
+        
+        NSString *databasePath = [self pathForDataBase];
+        const char *dbpath = [databasePath UTF8String];
+        if (sqlite3_open(dbpath, &database)==SQLITE_OK) {
+            char *errmsg;
+            const char *dropsql = "DROP TABLE IF EXISTS collection";
+            if (sqlite3_exec(database, dropsql, NULL, NULL, &errmsg) != SQLITE_OK) {
+                NSLog(@"drop table failed.");
+            }
+            const char *createsql = "CREATE TABLE IF NOT EXISTS collection (sid INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, title TEXT, time TEXT, thumb TEXT)";
+            if (sqlite3_exec(database, createsql, NULL, NULL, &errmsg) != SQLITE_OK) {
+                NSLog(@"create table failed.");
+            }
+        }
+        
+        
+        for (collectionModel *newsItem in collectionItems) {
+            sqlite3_stmt *statement;
+            NSString *insertItem = [NSString stringWithFormat:@"INSERT INTO collection (sid,title,time,thumb) VALUES(\"%@\",\"%@\",\"%@\",\"%@\")", newsItem.sid, newsItem.title, newsItem.time, newsItem.thumb];
+            const char *insertStatement =[insertItem UTF8String];
+            int insertReault = sqlite3_prepare_v2(database, insertStatement, -1, &statement, NULL);
+            if (insertReault == SQLITE_OK) {
+                sqlite3_step(statement);
+            }else {
+                NSLog(@"收藏失败");
+            }
+            sqlite3_finalize(statement);
+        }
+        sqlite3_close(database);
+    }
 
+}
+
+//查询是否已收藏
+- (BOOL)queryIfExistsFieldname:(NSString *)fieldname
+{
+    BOOL isExisted = NO;
+    sqlite3_stmt *statement;
+    const char *dbpath = [[self pathForDataBase]UTF8String];
+    if (sqlite3_open(dbpath, &database) == SQLITE_OK) {
+        NSString *query;
+        
+        query = [NSString stringWithFormat:@"select * from sqlite_master where name='collection' and sql like '%%%@%%'", fieldname];
+        
+        const char *queryStatement = [query UTF8String];
+        int queryResult = sqlite3_prepare_v2(database, queryStatement, -1, &statement, NULL);
+        if (queryResult == SQLITE_OK) {
+            while (sqlite3_step(statement) == SQLITE_ROW) {
+        
+                isExisted = YES;
+                break;
+            }
+        }else {
+            NSLog(@"查询失败");
+        }
+        
+        sqlite3_finalize(statement);
+        sqlite3_close(database);
+    }
+    return isExisted;
+    
 }
 
 - (NSString *)pathForDataBase
@@ -111,7 +180,9 @@
                 newsItem.sid = [NSString stringWithFormat:@"%d", sid];
                 newsItem.title = [NSString stringWithUTF8String:title];
                 newsItem.time = [NSString stringWithUTF8String:time];
-                newsItem.thumb = [NSString stringWithUTF8String:thumb];
+                if (thumb) {
+                    newsItem.thumb = [NSString stringWithUTF8String:thumb];
+                }
                 [newsArray addObject:newsItem];
             }
             

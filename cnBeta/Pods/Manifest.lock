@@ -17,6 +17,7 @@ PODS:
   - CRToast (0.0.9)
   - hpple (0.2.0)
   - JDStatusBarNotification (1.5.3)
+  - JPFPSStatus (0.1)
   - JSBadgeView (1.4.1)
   - MJExtension (3.0.11)
   - MJRefresh (3.1.10)
@@ -33,6 +34,7 @@ DEPENDENCIES:
   - CRToast (~> 0.0.9)
   - hpple (~> 0.2.0)
   - JDStatusBarNotification (~> 1.5)
+  - JPFPSStatus (~> 0.1)
   - JSBadgeView (~> 1.4.1)
   - MJExtension (~> 3.0.10)
   - MJRefresh (~> 3.1.10)
@@ -47,6 +49,7 @@ SPEC CHECKSUMS:
   CRToast: 5a78c22b921c5ed3487488af605bc403a9c92fed
   hpple: 3b765f96fc2cd56ad1a49aef6f7be5cb2aa64b57
   JDStatusBarNotification: 29413865af11c862c17180610b0f46a21118b412
+  JPFPSStatus: 4467a17488382e4c1700bd9d18c92ae581fd6305
   JSBadgeView: 3861ddee41094284d9468e6d0af5107f703aaac5
   MJExtension: f9ae6ddc0f1c482c3c9af750280ccebd14381958
   MJRefresh: bb72948c985914b0b5cecac573a2c69a8915fb02
@@ -56,6 +59,6 @@ SPEC CHECKSUMS:
   UITableView+FDTemplateLayoutCell: 234e1582bcc4e18461af91155123bb96538ed030
   WKProgressHUD: 3eeb66423a702bb8c43707f0627f673f12da475e
 
-PODFILE CHECKSUM: 7ff50f80c26c3cdce503eec1d14e1227b11ee845
+PODFILE CHECKSUM: afda25ca77b9c002fe62ed733bcf7a53eea03791
 
 COCOAPODS: 1.0.0

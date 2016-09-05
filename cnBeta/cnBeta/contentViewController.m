@@ -127,6 +127,7 @@
         
     } else{
         [_contentWebView loadHTMLString:_contentHTMLString baseURL:nil];
+        [self webViewDidFinishLoad:_contentWebView];
         
         dispatch_async(dispatch_get_main_queue(), ^{
             [_spinner stopAnimating];
@@ -226,6 +227,8 @@
     _contentHTMLString = [_contentHTMLString stringByAppendingString:origin];
     
     [_contentWebView loadHTMLString:_contentHTMLString baseURL:nil];
+    [self webViewDidFinishLoad:_contentWebView];
+    
     dispatch_async(dispatch_get_main_queue(), ^{
         [_spinner stopAnimating];
         //[_spinner removeFromSuperview];
@@ -239,6 +242,23 @@
         }
     });
     
+    
+    
+}
+
+//webview中图片自适应宽度
+- (void)webViewDidFinishLoad:(UIWebView *)webView {
+    NSString *js = @"function imgAutoFit() { \
+    var imgs = document.getElementsByTagName('img'); \
+    for (var i = 0; i < imgs.length; ++i) {\
+    var img = imgs[i];  \
+    img.style.maxWidth = %f;  \
+    } \
+    }";
+    js = [NSString stringWithFormat:js, [UIScreen mainScreen].bounds.size.width - 20];
+    
+    [webView stringByEvaluatingJavaScriptFromString:js];
+    [webView stringByEvaluatingJavaScriptFromString:@"imgAutoFit()"];
     
     
 }

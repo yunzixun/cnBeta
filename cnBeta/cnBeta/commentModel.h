@@ -13,6 +13,7 @@
 
 @property (nonatomic, copy)NSString *comment;
 @property (nonatomic, copy)NSString *date;
+@property (nonatomic, copy)NSString *icon;
 @property (nonatomic, copy)NSString *name;
 @property (nonatomic, copy)NSString *host_name;
 @property (nonatomic, copy)NSString *sid;

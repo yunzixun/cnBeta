@@ -38,7 +38,7 @@
             [flooredcomment addObject:comment];
             newFlooredComment = [[flooredCommentModel alloc]initWithFlooredComment:flooredcomment andTid:comment.tid];
         }
-        [flooredCommentArray addObject:newFlooredComment];
+        [flooredCommentArray insertObject:newFlooredComment atIndex:0];
     }
     return flooredCommentArray;
 }
