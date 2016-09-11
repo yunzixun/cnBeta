@@ -156,9 +156,13 @@
             }
             
             [weakSelf.refreshHeader endRefreshing];
-        } failure:^(NSError *error) {
+        } failure:^(NSError *error, NSString *type) {
             NSLog(@"%@",error);
-            [WKProgressHUD popMessage:error.userInfo[@"NSLocalizedDescription"] inView:self.view duration:1.5 animated:YES];
+            if ([type isEqualToString:@"string"]) {
+                [WKProgressHUD popMessage:(NSString *)error inView:self.view duration:1.5 animated:YES];
+            } else {
+                [WKProgressHUD popMessage:error.userInfo[@"NSLocalizedDescription"] inView:self.view duration:1.5 animated:YES];
+            }
             [weakSelf.refreshHeader endRefreshing];
             
         }];
@@ -169,7 +173,7 @@
 
 
 
-- (void)loadCommentListWithSid:(NSString *)sid SN:(NSString *)sn success:(void (^)(NSArray *, NSArray *))success failure:(void(^)(NSError * error))failure{
+- (void)loadCommentListWithSid:(NSString *)sid SN:(NSString *)sn success:(void (^)(NSArray *, NSArray *))success failure:(void(^)(NSError * error, NSString *type))failure{
     NSString *url = [NSString stringWithFormat:@"http://www.cnbeta.com/cmt?op=1,%@,%@", sid, sn];
     NSMutableDictionary *headers = [NSMutableDictionary dictionary];
     [headers setObject:@"XMLHttpRequest" forKey:@"X-Requested-With"];
@@ -200,13 +204,13 @@
 
             } else {
                 if (failure) {
-                    failure(data[@"error"]);
+                    failure(data[@"error"], @"string");
                 }
             }
             
         } else {
             if (failure) {
-                failure(error);
+                failure(error, @"struct");
             }
         }
         

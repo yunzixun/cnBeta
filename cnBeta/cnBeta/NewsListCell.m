@@ -129,20 +129,7 @@
     
     //评论数
     [_cmtNum setText:newsModel.comments];
-    
-        
-    
-    
-    
-    
-    
-//    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-//        NSData *imageData = [NSData dataWithContentsOfURL:[NSURL URLWithString:newsModel.thumb]  options:NSDataReadingMappedIfSafe error:NULL];
-//        dispatch_async(dispatch_get_main_queue(), ^{
-//            UIImage *image = [UIImage imageWithData:imageData];
-//            self.imageThumb.image = image;
-//        });
-//    });
+
 }
 
 - (void)setHotNewsModel:(HotNewsModel *)hotNewsModel

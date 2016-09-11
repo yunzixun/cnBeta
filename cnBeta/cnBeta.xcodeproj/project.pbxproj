@@ -16,6 +16,7 @@
 		850013C11D5C80E100D2CC6F /* CollectionNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 850013C01D5C80E100D2CC6F /* CollectionNavigationController.m */; };
 		850013C41D5F7CEF00D2CC6F /* UIView+isShowingOnScreen.m in Sources */ = {isa = PBXBuildFile; fileRef = 850013C31D5F7CEF00D2CC6F /* UIView+isShowingOnScreen.m */; };
 		850A080B1D3E22C000DA0FDE /* HTTPRequester.m in Sources */ = {isa = PBXBuildFile; fileRef = 850A080A1D3E22C000DA0FDE /* HTTPRequester.m */; };
+		851392A31D7FC59C00C42E01 /* DYAppSettings.m in Sources */ = {isa = PBXBuildFile; fileRef = 851392A21D7FC59C00C42E01 /* DYAppSettings.m */; };
 		852064F61D16D7D70073F05C /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 852064F51D16D7D70073F05C /* main.m */; };
 		852064F91D16D7D70073F05C /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 852064F81D16D7D70073F05C /* AppDelegate.m */; };
 		852064FF1D16D7D70073F05C /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 852064FD1D16D7D70073F05C /* Main.storyboard */; };
@@ -137,6 +138,8 @@
 		850013C31D5F7CEF00D2CC6F /* UIView+isShowingOnScreen.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+isShowingOnScreen.m"; sourceTree = "<group>"; };
 		850A08091D3E22C000DA0FDE /* HTTPRequester.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HTTPRequester.h; sourceTree = "<group>"; };
 		850A080A1D3E22C000DA0FDE /* HTTPRequester.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HTTPRequester.m; sourceTree = "<group>"; };
+		851392A11D7FC59C00C42E01 /* DYAppSettings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DYAppSettings.h; sourceTree = "<group>"; };
+		851392A21D7FC59C00C42E01 /* DYAppSettings.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DYAppSettings.m; sourceTree = "<group>"; };
 		852064F11D16D7D70073F05C /* cnBeta.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = cnBeta.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		852064F51D16D7D70073F05C /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		852064F71D16D7D70073F05C /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -382,6 +385,8 @@
 		850013A61D58A96B00D2CC6F /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				851392A11D7FC59C00C42E01 /* DYAppSettings.h */,
+				851392A21D7FC59C00C42E01 /* DYAppSettings.m */,
 				850013AD1D58ABDE00D2CC6F /* SettingItem.h */,
 				850013AE1D58ABDE00D2CC6F /* SettingItem.m */,
 				850013B01D58ACBF00D2CC6F /* SettingArrowItem.h */,
@@ -1066,6 +1071,7 @@
 				8520653A1D16E8E20073F05C /* SDRefreshHeaderView.m in Sources */,
 				85FB7C3D1D2A83FC00192D5C /* TAAnimatedDotView.m in Sources */,
 				850013BB1D5C55FC00D2CC6F /* NewsNavigationViewController.m in Sources */,
+				851392A31D7FC59C00C42E01 /* DYAppSettings.m in Sources */,
 				859063F71D38CE29004D1BCB /* LayoutCommentView.m in Sources */,
 				85F9A8101D35244A004DBB1B /* NSString+iphoneType.m in Sources */,
 				8562041F1D2CD16F002156D2 /* commentModel.m in Sources */,

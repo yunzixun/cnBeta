@@ -8,9 +8,19 @@
 
 #import <UIKit/UIKit.h>
 @class SettingItem;
+@protocol SwitchControlDelegate;
 
 @interface SettingCell : UITableViewCell
 @property (nonatomic, strong)SettingItem *item;
+@property (nonatomic, weak) id<SwitchControlDelegate> delegate;
 
 + (instancetype)cellWithTableView:(UITableView *)tableView;
+@end
+
+@protocol SwitchControlDelegate <NSObject>
+
+- (void)setState: (BOOL)isOn forSwitch: (NSString *)switchName;
+
+- (BOOL)stateForSwitch: (NSString *)switchName;
+
 @end

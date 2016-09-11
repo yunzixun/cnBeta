@@ -18,8 +18,9 @@
 #import "SettingArrowItem.h"
 #import "SettingSwitchItem.h"
 #import "SettingGroup.h"
+#import "DYAppSettings.h"
 
-@interface SettingsViewController ()<UITableViewDelegate,UITableViewDataSource,MFMailComposeViewControllerDelegate>
+@interface SettingsViewController ()<UITableViewDelegate, UITableViewDataSource, SwitchControlDelegate, MFMailComposeViewControllerDelegate>
 {
     NSInteger _index;
 }
@@ -27,6 +28,8 @@
 @property (nonatomic, strong)NSArray *dataSource;
 @property (nonatomic)float cacheSize;
 @property (nonatomic, strong)NSMutableArray *groupArray;
+@property (nonatomic, strong)DYAppSettings *settings;
+@property (nonatomic, strong)NSDictionary *switchDic;
 @end
 
 @implementation SettingsViewController
@@ -42,6 +45,8 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.navigationItem.title = @"设置";
+    _settings = [DYAppSettings sharedSettings];
+    
     _settingsTableView = [[UITableView alloc]initWithFrame:CGRectMake(0, 20, [[UIScreen mainScreen]bounds].size.width, [[UIScreen mainScreen]bounds].size.height-100) style:UITableViewStyleGrouped];
     [self.view addSubview:_settingsTableView];
     _settingsTableView.delegate = self;
@@ -58,6 +63,7 @@
     
     
     _dataSource = @[@"手势操作", @"网络切换通知", @"清除缓存", @"反馈建议", @"去App Store给我们好评", @"关于"];
+    _switchDic = @{@"手势操作": @(CBGesture), @"网络切换通知": @(CBNetworkNotification)};
     _index = 0;
 
     [self setupGroup0];
@@ -157,6 +163,7 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     SettingCell *cell = [SettingCell cellWithTableView:tableView];
+    cell.delegate = self;
     SettingGroup *group = self.groupArray[indexPath.section];
     SettingItem *item = group.items[indexPath.row];
     
@@ -165,6 +172,43 @@
     return cell;
 }
 
+
+#pragma mark - SwitchControlDelegate
+
+- (void)setState:(BOOL)isOn forSwitch:(NSString *)switchName
+{
+    switch ([_switchDic[switchName] intValue]) {
+        case CBGesture:
+            _settings.gestureEnabled = isOn;
+            break;
+            
+        case CBNetworkNotification:
+            _settings.networkNotificationEnabled = isOn;
+            break;
+            
+        default:
+            break;
+    }
+}
+
+- (BOOL)stateForSwitch:(NSString *)switchName
+{
+    BOOL status;
+    switch ([_switchDic[switchName] intValue]) {
+        case CBGesture:
+            status = _settings.gestureEnabled;
+            NSLog(@"gesture:%d", status? 1:0);
+            break;
+            
+        case CBNetworkNotification:
+            status = _settings.networkNotificationEnabled;
+            break;
+            
+        default:
+            break;
+    }
+    return status;
+}
 
 #pragma mark - Table view delegate
 
@@ -286,17 +330,17 @@
 }
 
 
-- (void)viewDidAppear:(BOOL)animated
-{
-    [super viewDidAppear:animated];
-    //是否是第一次进入setting界面
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    if (![defaults boolForKey:@"everLaunched"]) {
-        [defaults setBool:YES forKey:@"everLaunched"];
-        [defaults synchronize];
-    }
-    
-}
+//- (void)viewDidAppear:(BOOL)animated
+//{
+//    [super viewDidAppear:animated];
+//    //是否是第一次进入setting界面
+//    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+//    if (![defaults boolForKey:@"everLaunched"]) {
+//        [defaults setBool:YES forKey:@"everLaunched"];
+//        [defaults synchronize];
+//    }
+//    
+//}
 /*
 #pragma mark - Navigation
 

@@ -58,7 +58,7 @@
             nameLabel.hidden = YES;
             hostLabel.hidden = YES;
             floorLabel.hidden = YES;
-            commentLabel.frame = CGRectMake(5, upperView.frame.size.height + 5, frame.size.width - 10, frame.size.height - upperView.frame.size.height - 5);
+            commentLabel.frame = CGRectMake(5, upperView.frame.size.height + 10, frame.size.width - 10, frame.size.height - upperView.frame.size.height - 10);
         }
     }
     return self;

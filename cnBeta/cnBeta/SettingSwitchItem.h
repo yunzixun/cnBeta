@@ -8,6 +8,11 @@
 
 #import "SettingItem.h"
 
+typedef NS_ENUM(NSInteger, SwitchName) {
+    CBGesture,
+    CBNetworkNotification
+};
+
 @interface SettingSwitchItem : SettingItem
 
 @end

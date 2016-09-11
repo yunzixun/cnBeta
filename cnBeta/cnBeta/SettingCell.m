@@ -10,6 +10,7 @@
 #import "SettingItem.h"
 #import "SettingSwitchItem.h"
 #import "SettingArrowItem.h"
+#import "DYAppSettings.h"
 
 @interface SettingCell ()
 
@@ -38,11 +39,12 @@
 }
 
 - (void)switchchange
-{
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    [defaults setBool:self.switchview.isOn forKey:self.item.title];
-    [defaults synchronize];
-    
+{    
+    if ([self.delegate respondsToSelector:@selector(setState:forSwitch:)]) {
+        
+        [self.delegate setState:self.switchview.isOn forSwitch:self.item.title];
+        
+    }
 }
 
 + (instancetype)cellWithTableView:(UITableView *)tableView
@@ -82,16 +84,7 @@
         self.accessoryView = self.switchview;
         self.selectionStyle = UITableViewCellSelectionStyleNone;
         
-        NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-        if ([defaults boolForKey:@"everLaunched"]) {
-            //BOOL s = [defaults boolForKey:self.item.title];
-            self.switchview.on = [defaults boolForKey:self.item.title];
-        } else {
-            self.switchview.on = YES;
-            [defaults setBool:self.switchview.isOn forKey:self.item.title];
-            [defaults synchronize];
-        }
-        
+        self.switchview.on = [self.delegate stateForSwitch:self.item.title];
         
     } else if ([self.item isKindOfClass:[SettingArrowItem class]]) {
         self.accessoryView = self.arrow;

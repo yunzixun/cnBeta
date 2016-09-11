@@ -15,6 +15,7 @@
 #import "CRToast.h"
 #import "JPFPSStatus.h"
 #import "DYAppearanceManager.h"
+#import "DYAppSettings.h"
 
 #import "NewsNavigationViewController.h"
 
@@ -78,14 +79,12 @@
      };
      */
     //设置监听
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    
     __block BOOL count = NO;
     [manager setReachabilityStatusChangeBlock:^(AFNetworkReachabilityStatus status) {
-        BOOL everLaunch = [defaults boolForKey:@"everLaunched"];
-        BOOL switchOn = [defaults boolForKey:@"网络切换通知"];
-        if (!everLaunch) {
-            switchOn = YES;
-        }
+        
+        BOOL switchOn = [DYAppSettings sharedSettings].networkNotificationEnabled;
+        
         switch (status) {
             case AFNetworkReachabilityStatusUnknown:
                 NSLog(@"未识别的网络");

@@ -32,7 +32,7 @@
     if (flooredComment.count > MaxOverlapNumber) {
         NSMutableArray *tempArray = [[NSMutableArray alloc]initWithArray:flooredComment];
         [tempArray removeObjectsInRange:NSMakeRange(flooredComment.count - MaxOverlapNumber, MaxOverlapNumber)];
-        CGRect rect = CGRectMake(MaxOverlapNumber * OverlapSpace, 10 + MaxOverlapNumber * OverlapSpace, ScreenWidth - 40 -10 - 2*(MaxOverlapNumber * OverlapSpace), 0);
+        CGRect rect = CGRectMake(MaxOverlapNumber * OverlapSpace, 2 + MaxOverlapNumber * OverlapSpace, ScreenWidth - 40 -10 - 2*(MaxOverlapNumber * OverlapSpace), 0);
         gridLayoutView *gridView = [[gridLayoutView alloc]initWithFrame:rect andModelArray:tempArray];
         lastHeight = gridView.frame.size.height;
         [self addSubview:gridView];
@@ -44,9 +44,9 @@
     for (int i = 0; i < floorCnt; i++) {
         commentModel *commentItem = flooredComment[i];
         int dif = floorCnt - i -1;
-        CGRect rect = CGRectMake(dif * OverlapSpace, 10 + dif * OverlapSpace, ScreenWidth - 40 -10 - 2*(dif * OverlapSpace), 0);
+        CGRect rect = CGRectMake(dif * OverlapSpace, 2 + dif * OverlapSpace, ScreenWidth - 40 -10 - 2*(dif * OverlapSpace), 0);
         CGSize size = [commentItem sizeWithConstrainedSize:CGSizeMake(rect.size.width - 10, 0)];
-        rect.size.height = size.height + lastHeight + (i == floorCnt - 1 ? 10 : 50);
+        rect.size.height = size.height + lastHeight + (i == floorCnt - 1 ? 15 : 50);
         
         nestedLayoutView *nestedView = [[nestedLayoutView alloc]initWithFrame:rect andModel:commentItem upperView:lastView isLast:i == floorCnt-1 ];
         lastHeight = rect.size.height;
@@ -58,7 +58,7 @@
         }
         lastView = nestedView;
     }
-    self.frame = CGRectMake(44, 0, ScreenWidth, lastHeight + 10);
+    self.frame = CGRectMake(44, 0, ScreenWidth, lastHeight + 2);
     
 
 }

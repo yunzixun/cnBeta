@@ -13,7 +13,7 @@
 #import "CRToast.h"
 #import "WKProgressHUD.h"
 
-@interface commentPostViewController ()
+@interface commentPostViewController ()<UITextFieldDelegate>
 @property (weak, nonatomic) IBOutlet UIImageView *contentBorder;
 @property (weak, nonatomic) IBOutlet UITextView *contentText;
 @property (weak, nonatomic) IBOutlet UITextField *codeText;
@@ -36,6 +36,7 @@
     [self.contentText becomeFirstResponder];
     self.codeText.keyboardType = UIKeyboardTypeAlphabet;
     self.codeText.returnKeyType = UIReturnKeySend;
+    self.codeText.delegate = self;
     [self refetchSecurityCode:nil];
    
 }
@@ -137,9 +138,108 @@
 
 - (IBAction)codeText_DidEndOnExit:(UITextField *)sender {
     [sender resignFirstResponder];
-    [self.postComment sendActionsForControlEvents:UIControlEventTouchUpInside];
+    //[self.postComment sendActionsForControlEvents:UIControlEventTouchUpInside];
 }
 
+
+#pragma mark - UITextFieldDelegate
+
+- (void)textFieldDidBeginEditing:(UITextField *)textField
+{
+    NSLog(@"textFieldDidBeginEditing");
+    
+    CGRect frame = textField.frame;
+    
+    CGFloat heights = self.view.frame.size.height;
+    
+    // 当前点击textfield的坐标的Y值 + 当前点击textFiled的高度 - （屏幕高度- 键盘高度 - 键盘上tabbar高度）
+    
+    // 在这一步 就是了一个 当前textfile的的最大Y值 和 键盘的最全高度的差值，用来计算整个view的偏移量
+    
+    int offset = frame.origin.y + 42- ( heights - 216.0-35.0);//键盘高度216
+    
+    
+    if(offset > 0)
+    
+    {
+        NSTimeInterval animationDuration = 0.30f;
+        
+        [UIView beginAnimations:@"ResizeForKeyBoard" context:nil];
+        
+        [UIView setAnimationDuration:animationDuration];
+        
+        float width = self.view.frame.size.width;
+        
+        float height = self.view.frame.size.height;
+        
+        CGRect rect = CGRectMake(0.0f, -offset,width,height);
+        
+        self.view.frame = rect;
+        [UIView commitAnimations];
+    }
+}
+
+- (void)textFieldDidEndEditing:(UITextField *)textField
+{
+    if (self.view.frame.origin.y < 0) {
+        [self.view endEditing:YES];
+        
+        NSTimeInterval animationDuration = 0.30f;
+        
+        [UIView beginAnimations:@"ResizeForKeyboard" context:nil];
+        
+        [UIView setAnimationDuration:animationDuration];
+        
+        CGRect rect = CGRectMake(0.0f, 0.0f, self.view.frame.size.width, self.view.frame.size.height);
+        
+        self.view.frame = rect;
+        
+        [UIView commitAnimations];
+    }
+}
+
+- (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event
+{
+    NSLog(@"touchesBegan");
+    
+    if (self.view.frame.origin.y < 0) {
+        [self.view endEditing:YES];
+        
+        NSTimeInterval animationDuration = 0.30f;
+        
+        [UIView beginAnimations:@"ResizeForKeyboard" context:nil];
+        
+        [UIView setAnimationDuration:animationDuration];
+        
+        CGRect rect = CGRectMake(0.0f, 0.0f, self.view.frame.size.width, self.view.frame.size.height);
+        
+        self.view.frame = rect;
+        
+        [UIView commitAnimations];
+    }
+    
+}
+
+- (BOOL)textFieldShouldReturn:(UITextField *)textField
+{
+    if (self.view.frame.origin.y < 0) {
+        [self.view endEditing:YES];
+        
+        NSTimeInterval animationDuration = 0.30f;
+        
+        [UIView beginAnimations:@"ResizeForKeyboard" context:nil];
+        
+        [UIView setAnimationDuration:animationDuration];
+        
+        CGRect rect = CGRectMake(0.0f, 0.0f, self.view.frame.size.width, self.view.frame.size.height);
+        
+        self.view.frame = rect;
+        
+        [UIView commitAnimations];
+    }
+    [self.postComment sendActionsForControlEvents:UIControlEventTouchUpInside];
+    return YES;
+}
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];

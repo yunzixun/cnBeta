@@ -7,6 +7,7 @@
 //
 
 #import "NewsNavigationViewController.h"
+#import "DYAppSettings.h"
 
 @interface NewsNavigationViewController ()<UIGestureRecognizerDelegate>
 
@@ -23,12 +24,7 @@
 {
     [super viewWillAppear:animated];
     
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    BOOL isOn = [defaults boolForKey:@"手势操作"];
-    BOOL everLaunch = [defaults boolForKey:@"everLaunched"];
-    if (!everLaunch) {
-        isOn = YES;
-    }
+    BOOL isOn = [DYAppSettings sharedSettings].gestureEnabled;
     if (isOn) {
         
         if (self.pan == nil) {

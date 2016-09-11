@@ -8,6 +8,7 @@
 
 #import "DYAppearanceManager.h"
 #import "DYSectionHeader.h"
+#import "DYAppSettings.h"
 
 @implementation DYAppearanceManager
 
@@ -24,6 +25,7 @@
 
 - (void)setup
 {
+    [DYAppSettings sharedSettings];
     [[DYSectionHeader appearance] setBackgroundColor:[UIColor colorWithWhite:0.95 alpha:0.95]];
 }
 
