@@ -6,6 +6,7 @@
 //  Copyright © 2016年 hudy. All rights reserved.
 //
 
+#define  cb_redColor            [UIColor colorWithRed:255./255. green:41./255 blue:101./255 alpha:1]
 #define  NameColor              [UIColor colorWithRed:100./255. green:100./255 blue:220./255 alpha:1]
 #define  HostColor              [UIColor lightGrayColor]
 #define  FloorColor             [UIColor lightGrayColor]

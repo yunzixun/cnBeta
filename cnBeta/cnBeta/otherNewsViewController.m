@@ -10,7 +10,7 @@
 #import "Constant.h"
 #import "MJExtension.h"
 #import "MJRefresh.h"
-#import "UIViewController+DownloadNews.h"
+#import "CBHTTPRequester.h"
 #import "UIView+isShowingOnScreen.h"
 
 #import "HotNewsModel.h"
@@ -105,7 +105,7 @@
     NSString *url = [NSString stringWithFormat:@"http://www.cnbeta.com/more?type=%@&page=1", self.type];
     NSMutableDictionary *headers = [[NSMutableDictionary alloc]init];
     [headers setObject:@"http://www.cnbeta.com/" forKey:@"Referer"];
-    [self requestWithURL:url andHeaders:headers completion:^(id data, NSError *error) {
+    [[CBHTTPRequester requester] requestWithURL:url andHeaders:headers completion:^(id data, NSError *error) {
         if (!error) {
             //NSLog(@"%@",data[@"result"]);
             NSArray *dataList = [HotNewsModel mj_objectArrayWithKeyValuesArray:data[@"result"][@"list"]];
@@ -127,7 +127,7 @@
     NSString *url = [NSString stringWithFormat:@"http://www.cnbeta.com/more?type=%@&page=%d", self.type, self.page];
     NSMutableDictionary *headers = [[NSMutableDictionary alloc]init];
     [headers setObject:@"http://www.cnbeta.com/" forKey:@"Referer"];
-    [self requestWithURL:url andHeaders:headers completion:^(id data, NSError *error) {
+    [[CBHTTPRequester requester] requestWithURL:url andHeaders:headers completion:^(id data, NSError *error) {
         if (!error) {
             NSArray *dataList = [HotNewsModel mj_objectArrayWithKeyValuesArray:data[@"result"][@"list"]];
             [self.dataSource addObjectsFromArray:dataList];

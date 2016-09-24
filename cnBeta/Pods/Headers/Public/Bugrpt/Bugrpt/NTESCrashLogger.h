@@ -1,0 +1,1 @@
+../../../../Bugrpt/Bugrpt.framework/Headers/NTESCrashLogger.h

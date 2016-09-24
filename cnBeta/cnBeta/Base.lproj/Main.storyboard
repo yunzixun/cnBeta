@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="10117" systemVersion="15E65" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="baW-f9-7en">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11201" systemVersion="15G31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="baW-f9-7en">
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11161"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
         <!--Nav Tab Bar Controller-->
@@ -14,9 +15,9 @@
                         <viewControllerLayoutGuide type="bottom" id="9be-XK-2cz"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="fqB-K5-sx6">
-                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     </view>
                     <navigationItem key="navigationItem" id="i9r-oP-cVs"/>
                 </viewController>
@@ -33,25 +34,25 @@
                         <viewControllerLayoutGuide type="bottom" id="meu-xW-Xoa"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="4ac-KH-8IN">
-                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <webView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="PL5-wx-vFx">
-                                <rect key="frame" x="0.0" y="0.0" width="240" height="128"/>
-                                <color key="backgroundColor" red="0.36078431370000003" green="0.38823529410000002" blue="0.4039215686" alpha="1" colorSpace="deviceRGB"/>
+                                <color key="backgroundColor" red="0.28958413004875183" green="0.31462949514389038" blue="0.32950475811958313" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             </webView>
                             <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" animating="YES" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="btT-Db-oba">
-                                <rect key="frame" x="-10" y="-10" width="20" height="20"/>
-                                <color key="color" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                                <color key="color" red="0.66666666666666663" green="0.66666666666666663" blue="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             </activityIndicatorView>
                             <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Mp8-67-p1l">
-                                <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="49" id="mPv-bK-42Y"/>
+                                </constraints>
                                 <items>
                                     <barButtonItem style="plain" id="fWX-xt-aTc">
                                         <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="bWS-4O-8C8" userLabel="GoBack">
-                                            <rect key="frame" x="-23" y="-15" width="46" height="30"/>
+                                            <rect key="frame" x="16" y="0.0" width="49" height="49"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                            <state key="normal" image="GobackIOS7_NORMAL_25x25_"/>
+                                            <state key="normal" image="toolbar_back_normal_50x50_"/>
                                             <connections>
                                                 <action selector="goBack:" destination="dTE-fz-fVY" eventType="touchUpInside" id="z7E-wf-jTE"/>
                                             </connections>
@@ -60,11 +61,9 @@
                                     <barButtonItem style="plain" systemItem="flexibleSpace" id="rIt-B7-fWw"/>
                                     <barButtonItem style="plain" id="HdW-sJ-rcb">
                                         <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="sfH-HW-gcS" userLabel="comment">
-                                            <rect key="frame" x="-23" y="-15" width="46" height="30"/>
+                                            <rect key="frame" x="107" y="0.0" width="49" height="49"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                            <state key="normal" image="replyaction">
-                                                <color key="titleColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
-                                            </state>
+                                            <state key="normal" image="toolbar_reply_normal_50x50_"/>
                                             <connections>
                                                 <action selector="showComments:" destination="dTE-fz-fVY" eventType="touchUpInside" id="34v-J2-HKR"/>
                                             </connections>
@@ -73,9 +72,9 @@
                                     <barButtonItem style="plain" systemItem="flexibleSpace" id="prP-nj-mxe"/>
                                     <barButtonItem style="plain" id="NVb-8z-Ukm">
                                         <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="iFA-7j-sK3" userLabel="Share">
-                                            <rect key="frame" x="-23" y="-15" width="46" height="30"/>
+                                            <rect key="frame" x="199" y="0.0" width="49" height="49"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                            <state key="normal" image="ShareIOS7_NORMAL_25x25_"/>
+                                            <state key="normal" backgroundImage="toolbar_share_normal_50x50_"/>
                                             <connections>
                                                 <action selector="shareNews:" destination="dTE-fz-fVY" eventType="touchUpInside" id="BFN-zm-mnP"/>
                                             </connections>
@@ -84,10 +83,10 @@
                                     <barButtonItem style="plain" systemItem="flexibleSpace" id="9yz-m1-CAp"/>
                                     <barButtonItem style="plain" id="1a9-cY-VwU">
                                         <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="uv6-Kb-0Jq" userLabel="Refresh">
-                                            <rect key="frame" x="-23" y="-15" width="46" height="30"/>
+                                            <rect key="frame" x="290" y="0.0" width="49" height="49"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                            <state key="normal" image="refreshIOS7_25x25_">
-                                                <color key="titleColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                                            <state key="normal" image="toolbar_refresh_normal_50x50_">
+                                                <color key="titleColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                             </state>
                                             <connections>
                                                 <action selector="refreshWebView:" destination="dTE-fz-fVY" eventType="touchUpInside" id="FS9-tE-0UI"/>
@@ -98,7 +97,7 @@
                                 </items>
                             </toolbar>
                         </subviews>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
                             <constraint firstItem="btT-Db-oba" firstAttribute="top" secondItem="1b6-7j-bDr" secondAttribute="bottom" constant="225" id="956-2K-lzi"/>
                             <constraint firstAttribute="bottom" secondItem="Mp8-67-p1l" secondAttribute="bottom" id="Gsf-mZ-MXD"/>
@@ -117,7 +116,6 @@
                                 <exclude reference="Mp8-67-p1l"/>
                             </mask>
                             <mask key="constraints">
-                                <exclude reference="956-2K-lzi"/>
                                 <exclude reference="Gsf-mZ-MXD"/>
                                 <exclude reference="dcI-mT-nYJ"/>
                                 <exclude reference="Nf5-KL-7qo"/>
@@ -126,6 +124,7 @@
                                 <exclude reference="o1R-2Q-XQr"/>
                                 <exclude reference="syR-2l-TuL"/>
                                 <exclude reference="yKc-ja-qYh"/>
+                                <exclude reference="956-2K-lzi"/>
                             </mask>
                         </variation>
                         <variation key="widthClass=compact">
@@ -135,7 +134,6 @@
                                 <include reference="Mp8-67-p1l"/>
                             </mask>
                             <mask key="constraints">
-                                <include reference="956-2K-lzi"/>
                                 <include reference="Gsf-mZ-MXD"/>
                                 <include reference="dcI-mT-nYJ"/>
                                 <include reference="Nf5-KL-7qo"/>
@@ -144,6 +142,7 @@
                                 <include reference="o1R-2Q-XQr"/>
                                 <include reference="syR-2l-TuL"/>
                                 <include reference="yKc-ja-qYh"/>
+                                <include reference="956-2K-lzi"/>
                             </mask>
                         </variation>
                     </view>
@@ -151,7 +150,7 @@
                         <nil key="title"/>
                         <barButtonItem key="rightBarButtonItem" style="done" id="foB-yC-EaK">
                             <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="NYC-1P-nTI">
-                                <rect key="frame" x="480" y="7" width="46" height="30"/>
+                                <rect key="frame" x="313" y="7" width="46" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="13"/>
                                 <state key="normal" title="收藏"/>
@@ -170,31 +169,30 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="wOD-z9-s5Z" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2356.5" y="475"/>
+            <point key="canvasLocation" x="2356" y="474.51274362818594"/>
         </scene>
         <!--Collection Table View Controller-->
         <scene sceneID="952-eb-E1T">
             <objects>
                 <tableViewController id="qH7-4Y-b03" customClass="collectionTableViewController" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" id="pQs-WC-QyE">
-                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <prototypes>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="cell" rowHeight="60" id="S2I-iy-xJC" customClass="collectionTableViewCell">
-                                <rect key="frame" x="0.0" y="92" width="600" height="44"/>
+                                <rect key="frame" x="0.0" y="92" width="375" height="60"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="S2I-iy-xJC" id="xEE-JP-hUh">
-                                    <rect key="frame" x="0.0" y="0.0" width="600" height="43"/>
+                                    <frame key="frameInset" width="375" height="59"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0XT-np-WiO">
-                                            <rect key="frame" x="-42" y="-21" width="42" height="21"/>
                                             <constraints>
                                                 <constraint firstAttribute="height" constant="35" id="rtI-Os-VWJ"/>
                                             </constraints>
                                             <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                            <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                            <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                             <nil key="highlightedColor"/>
                                             <variation key="default">
                                                 <mask key="constraints">
@@ -207,14 +205,12 @@
                                                 </mask>
                                             </variation>
                                         </label>
-                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="qfC-sy-kZh">
-                                            <rect key="frame" x="-42" y="-21" width="42" height="21"/>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="qfC-sy-kZh">
+                                            <frame key="frameInset" minX="15" minY="45" width="154" height="11"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="10"/>
-                                            <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                                            <color key="textColor" red="0.66666666666666663" green="0.66666666666666663" blue="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                             <nil key="highlightedColor"/>
-                                            <variation key="widthClass=compact" fixedFrame="YES">
-                                                <rect key="frame" x="15" y="45" width="154" height="11"/>
-                                            </variation>
                                         </label>
                                     </subviews>
                                     <constraints>
@@ -262,7 +258,7 @@
                     <navigationItem key="navigationItem" id="5H8-hk-932">
                         <barButtonItem key="rightBarButtonItem" style="done" id="gfE-g8-5ov">
                             <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="lS6-fP-LBJ">
-                                <rect key="frame" x="-23" y="-15" width="46" height="30"/>
+                                <rect key="frame" x="313" y="7" width="46" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="13"/>
                                 <state key="normal" title="清空"/>
@@ -284,7 +280,7 @@
                     <tabBar key="tabBar" contentMode="scaleToFill" id="moQ-6K-9DJ">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="49"/>
                         <autoresizingMask key="autoresizingMask"/>
-                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                        <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
                     </tabBar>
                     <connections>
                         <segue destination="AyA-lq-wIZ" kind="relationship" relationship="viewControllers" id="bmJ-Cg-i0m"/>
@@ -343,9 +339,9 @@
                         <viewControllerLayoutGuide type="bottom" id="fAx-W8-Ptc"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="e3R-Tf-M5q">
-                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     </view>
                     <navigationItem key="navigationItem" id="CdA-oO-LrD"/>
                 </viewController>
@@ -374,12 +370,12 @@
         </scene>
     </scenes>
     <resources>
-        <image name="GobackIOS7_NORMAL_25x25_" width="25" height="25"/>
-        <image name="ShareIOS7_NORMAL_25x25_" width="25" height="25"/>
-        <image name="refreshIOS7_25x25_" width="25" height="25"/>
-        <image name="replyaction" width="32" height="32"/>
         <image name="star" width="22" height="22"/>
         <image name="tabbar_news" width="22" height="22"/>
+        <image name="toolbar_back_normal_50x50_" width="50" height="50"/>
+        <image name="toolbar_refresh_normal_50x50_" width="50" height="50"/>
+        <image name="toolbar_reply_normal_50x50_" width="50" height="50"/>
+        <image name="toolbar_share_normal_50x50_" width="50" height="50"/>
         <image name="user_main_setting" width="21" height="21"/>
     </resources>
 </document>

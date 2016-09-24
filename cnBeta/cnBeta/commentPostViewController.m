@@ -7,7 +7,7 @@
 //
 
 #import "commentPostViewController.h"
-#import "HTTPRequester.h"
+#import "CBHTTPRequester.h"
 #import "JDStatusBarNotification.h"
 #import "Constant.h"
 #import "CRToast.h"
@@ -19,10 +19,15 @@
 @property (weak, nonatomic) IBOutlet UITextField *codeText;
 @property (weak, nonatomic) IBOutlet UIButton *securityCode;
 @property (weak, nonatomic) IBOutlet UIButton *postComment;
-
+@property (strong, nonatomic)CBHTTPRequester *securityCodeRequester;
 @end
 
 @implementation commentPostViewController
+
+- (void)dealloc
+{
+    [self.securityCodeRequester cancel];
+}
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -44,8 +49,9 @@
     [self.securityCode setTitle:@"" forState:UIControlStateNormal];
     [self.securityCode setBackgroundImage:nil forState:UIControlStateNormal];
     
-    HTTPRequester *request = [HTTPRequester sharedHTTPRequester];
-    [request fetchSecurityCodeForSid:self.sid completion:^(id responseObject, NSError *error) {
+    CBHTTPRequester *requester = [CBHTTPRequester requester];
+    self.securityCodeRequester = requester;
+    [requester fetchSecurityCodeForSid:self.sid completion:^(id responseObject, NSError *error) {
         if (!error) {
             UIImage *image = [UIImage imageWithData:responseObject];
             [self.securityCode setTitle:@"" forState:UIControlStateNormal];
@@ -74,7 +80,7 @@
     }
     
     if (self.tid == nil) {
-        [[HTTPRequester sharedHTTPRequester]postCommentToNewsWithSid:self.sid content:content securityCode:code completion:^(id responseObject, NSError *error) {
+        [[CBHTTPRequester requester]postCommentToNewsWithSid:self.sid content:content securityCode:code completion:^(id responseObject, NSError *error) {
             if (error) {
                 [self refetchSecurityCode:nil];
                 [WKProgressHUD popMessage:@"评论失败" inView:self.view duration:1.5 animated:YES];
@@ -95,7 +101,7 @@
             }
         }];
     } else {
-        [[HTTPRequester sharedHTTPRequester]replyCommentWithSid:self.sid andTid:self.tid content:content securityCode:code completion:^(id responseObject, NSError *error) {
+        [[CBHTTPRequester requester]replyCommentWithSid:self.sid andTid:self.tid content:content securityCode:code completion:^(id responseObject, NSError *error) {
             if (error) {
                 [self refetchSecurityCode:nil];
                 [WKProgressHUD popMessage:@"评论失败" inView:self.view duration:1.5 animated:YES];

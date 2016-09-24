@@ -14,6 +14,7 @@
 #import "UMSocialQQHandler.h"
 #import "CRToast.h"
 #import "JPFPSStatus.h"
+#import <Bugrpt/NTESCrashReporter.h>
 #import "DYAppearanceManager.h"
 #import "DYAppSettings.h"
 
@@ -30,9 +31,9 @@
     
     [AFNetworkActivityIndicatorManager sharedManager].enabled = YES;
     [[DYAppearanceManager sharedManager] setup];
-//#if defined(DEBUG)||defined(_DEBUG)
-//    [[JPFPSStatus sharedInstance] open];
-//#endif
+#if defined(DEBUG)||defined(_DEBUG)
+    [[JPFPSStatus sharedInstance] open];
+#endif
     
     //监听网络状态
     [self listenNetWorkingPort];
@@ -40,7 +41,9 @@
     // Override point for customization after application launch.
     [[UINavigationBar appearance] setBarTintColor:[UIColor colorWithRed:50/255.0 green:100/255.0 blue:200/255.0 alpha:1.0]];
     [[UINavigationBar appearance] setTintColor:[UIColor whiteColor]];
-    
+    [[UITabBar appearance] setTranslucent:NO];
+    [[UITabBar appearance] setBarTintColor:[UIColor colorWithRed:255/255.0f green:255/255.0f blue:255/255.0f alpha:1.0]];
+
     //获取tabBarController
     UITabBarController *tabBarController = (UITabBarController *)self.window.rootViewController;
     tabBarController.delegate = self;
@@ -52,7 +55,7 @@
     //设置手机QQ 的AppId，Appkey，和分享URL，需要#import "UMSocialQQHandler.h"
     [UMSocialQQHandler setQQWithAppId:@"1105528200" appKey:@"9Av2cIJcSmVtgxoJ" url:@"http://www.umeng.com/social"];
     
-    
+    [[NTESCrashReporter sharedInstance] initWithAppId:@"I000174257"];
     return YES;
 }
 

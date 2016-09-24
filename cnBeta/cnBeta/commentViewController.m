@@ -21,10 +21,10 @@
 #import "DYSectionHeader.h"
 
 #import "MJExtension.h"
-#import "UIViewController+DownloadNews.h"
 #import "UITableView+FDTemplateLayoutCell.h"
 #import "NSArray+transform.h"
-#import "HTTPRequester.h"
+#import "CBHTTPRequester.h"
+#import "DYKeyedHeightCache.h"
 #import "JDStatusBarNotification.h"
 #import "WKProgressHUD.h"
 
@@ -33,15 +33,21 @@
 @property (nonatomic, weak) SDRefreshHeaderView *refreshHeader;
 @property (nonatomic, copy)NSString *sid;
 @property (nonatomic, copy)NSString *sn;
-@property (nonatomic,copy)NSString *cellTid;
 
 @property (nonatomic, strong)NSMutableArray *flooredCommentArray;
 @property (nonatomic, strong)NSMutableArray *hotFlooredCommentArray;
 @property (nonatomic, strong)NSMutableArray *comments;
 
+@property (nonatomic, strong)CBHTTPRequester *commentsRequester;
+@property (nonatomic, strong)DYKeyedHeightCache *heightCache;
 @end
 
 @implementation commentViewController
+
+- (void)dealloc
+{
+    [self.commentsRequester cancel];
+}
 
 - (NSMutableArray *)flooredCommentArray
 {
@@ -86,7 +92,7 @@
     self.navigationItem.backBarButtonItem = backItem;
     UIBarButtonItem *commentItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"WriteComment"] style:UIBarButtonItemStyleDone target:self action:@selector(postComment)];
     self.navigationItem.rightBarButtonItem = commentItem;
-    
+    self.heightCache = [[DYKeyedHeightCache alloc] init];
     
     _commentTableView = [[UITableView alloc] initWithFrame:self.view.frame];
     //_commentTableView = [[UITableView alloc] initWithFrame:self.view.frame style:UITableViewStyleGrouped];
@@ -100,14 +106,6 @@
     _commentTableView.delegate = self;
     _commentTableView.dataSource = self;
     _commentTableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
-    
-//    UIActivityIndicatorView *spinner = [[UIActivityIndicatorView alloc]init];
-//    [self.commentTableView addSubview:spinner];
-//    
-//    [spinner startAnimating];
-//    spinner.activityIndicatorViewStyle = UIActivityIndicatorViewStyleGray;
-//    spinner.center = CGPointMake(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 - 100);
-//    [spinner setHidesWhenStopped:YES];
     
     
     [_commentTableView registerNib:[UINib nibWithNibName:@"commentCell" bundle:[NSBundle mainBundle]] forCellReuseIdentifier:@"newCell"];
@@ -179,8 +177,9 @@
     [headers setObject:@"XMLHttpRequest" forKey:@"X-Requested-With"];
     [headers setObject:@"http://www.cnbeta.com/" forKey:@"Referer"];
     
-    
-    [self requestWithURL:url andHeaders:headers completion:^(id data, NSError *error) {
+    CBHTTPRequester *commentsRequester = [CBHTTPRequester requester];
+    self.commentsRequester = commentsRequester;
+    [commentsRequester requestWithURL:url andHeaders:headers completion:^(id data, NSError *error) {
         if (!error) {
             //NSLog(@"%@", data[@"result"]);
             if ([data[@"state"] isEqualToString:@"success"]) {
@@ -227,56 +226,67 @@
 
 #pragma mark - replyActionDelegate
 
-- (void)showReplyActionsWithTid:(NSString *)tid
+- (void)reply:(DYCellButton *)button
 {
-    self.cellTid = tid;
-    UIActionSheet *actionSheet = [[UIActionSheet alloc]initWithTitle:nil delegate:self cancelButtonTitle:@"取消" destructiveButtonTitle:nil otherButtonTitles:@"回复", @"支持", @"反对", nil];
-    [actionSheet showInView:self.commentTableView];
+    commentPostViewController *vc = [[commentPostViewController alloc]initWithNibName:@"commentPostViewController" bundle:nil];
+    vc.sid = self.sid;
+    commentModel *comment = button.commentInfo;
+    vc.tid = comment.tid;
+    [self.navigationController pushViewController:vc animated:YES];
 }
-
-- (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
+- (void)support:(DYCellButton *)button
 {
-    if (buttonIndex == [actionSheet cancelButtonIndex]) {
+    commentModel *comment = button.commentInfo;
+    if (comment.supported) {
         return;
     }
-    if (buttonIndex == 0) {
-        commentPostViewController *vc = [[commentPostViewController alloc]initWithNibName:@"commentPostViewController" bundle:nil];
-        vc.sid = self.sid;
-        vc.tid = self.cellTid;
-        [self.navigationController pushViewController:vc animated:YES];
-        
-    } else if (buttonIndex == 1){
-        [[HTTPRequester sharedHTTPRequester]voteCommentWithSid:self.sid andTid:self.cellTid actionType:@"support" completion:^(id responseObject, NSError *error) {
-            if (error) {
-                [JDStatusBarNotification showWithStatus:@"操作失败" dismissAfter:2];
+    
+    comment.score = [@([comment.score intValue]+1) stringValue];
+    comment.supported = YES;
+    [self.commentTableView reloadRowsAtIndexPaths:@[button.indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
+    [[CBHTTPRequester requester] voteCommentWithSid:self.sid andTid:comment.tid actionType:@"support" completion:^(id responseObject, NSError *error) {
+        if (error) {
+            [JDStatusBarNotification showWithStatus:@"操作失败" dismissAfter:2];
+        } else {
+            NSDictionary *result = responseObject;
+            if ([result[@"state"] isEqualToString:@"success"]) {
+                [WKProgressHUD popMessage:@"操作成功" inView:self.view duration:1.5 animated:YES];
+                //[JDStatusBarNotification showWithStatus:@"操作成功,请稍后刷新" dismissAfter:2];
             } else {
-                NSDictionary *result = responseObject;
-                if ([result[@"state"] isEqualToString:@"success"]) {
-                    [WKProgressHUD popMessage:@"操作成功,请稍后刷新" inView:self.view duration:1.5 animated:YES];
-                    //[JDStatusBarNotification showWithStatus:@"操作成功,请稍后刷新" dismissAfter:2];
-                } else {
-                    [WKProgressHUD popMessage:@"操作失败" inView:self.view duration:1.5 animated:YES];
-                    //[JDStatusBarNotification showWithStatus:@"操作失败" dismissAfter:2];
-                }
+                [WKProgressHUD popMessage:@"操作失败" inView:self.view duration:1.5 animated:YES];
+                //[JDStatusBarNotification showWithStatus:@"操作失败" dismissAfter:2];
             }
-        }];
-    } else {
-        [[HTTPRequester sharedHTTPRequester]voteCommentWithSid:self.sid andTid:self.cellTid actionType:@"against" completion:^(id responseObject, NSError *error) {
-            if (error) {
-                [JDStatusBarNotification showWithStatus:@"操作失败" dismissAfter:2];
-            } else {
-                NSDictionary *result = responseObject;
-                if ([result[@"state"] isEqualToString:@"success"]) {
-                    [WKProgressHUD popMessage:@"操作成功,请稍后刷新" inView:self.view duration:1.5 animated:YES];
-                    //[JDStatusBarNotification showWithStatus:@"操作成功,请稍后刷新" dismissAfter:2];
-                } else {
-                    [WKProgressHUD popMessage:@"操作失败" inView:self.view duration:1.5 animated:YES];
-                    //[JDStatusBarNotification showWithStatus:@"操作失败" dismissAfter:2];
-                }
-            }
-        }];
-    }
+        }
+    }];
+
 }
+- (void)oppose:(DYCellButton *)button
+{
+    commentModel *comment = button.commentInfo;
+    if (comment.opposed) {
+        return;
+    }
+    
+    comment.reason = [@([comment.reason intValue]+1) stringValue];
+    comment.opposed = YES;
+    [self.commentTableView reloadRowsAtIndexPaths:@[button.indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
+    [[CBHTTPRequester requester] voteCommentWithSid:self.sid andTid:comment.tid actionType:@"against" completion:^(id responseObject, NSError *error) {
+        if (error) {
+            [JDStatusBarNotification showWithStatus:@"操作失败" dismissAfter:2];
+        } else {
+            NSDictionary *result = responseObject;
+            if ([result[@"state"] isEqualToString:@"success"]) {
+                [WKProgressHUD popMessage:@"操作成功" inView:self.view duration:1.5 animated:YES];
+                //[JDStatusBarNotification showWithStatus:@"操作成功,请稍后刷新" dismissAfter:2];
+            } else {
+                [WKProgressHUD popMessage:@"操作失败" inView:self.view duration:1.5 animated:YES];
+                //[JDStatusBarNotification showWithStatus:@"操作失败" dismissAfter:2];
+            }
+        }
+    }];
+
+}
+
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
@@ -298,8 +308,10 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     commentCell *cell = [tableView dequeueReusableCellWithIdentifier:@"newCell" forIndexPath:indexPath];
+    //commentCell *cell = [commentCell cellWithTableView:tableView Identifier: @"newCell"];
     cell.delegate = self;
     
+    cell.indexPath = indexPath;
     cell.flooredCommentItem = self.comments[indexPath.section][indexPath.row];
     //NSLog(@"%ld", (long)indexPath.row);
     // Configure the cell...return
@@ -312,26 +324,22 @@
     flooredCommentModel *flooredCommentItem = self.comments[indexPath.section][indexPath.row];
     
     
-    LayoutCommentView *commentView = [[LayoutCommentView alloc]initWithModel:flooredCommentItem];
     
+    CGFloat height = [self.heightCache heightForCellWithModel:flooredCommentItem cachedByKey:[self.sid stringByAppendingString:flooredCommentItem.tid] configuration:^CGFloat(id model) {
+        LayoutCommentView *commentView = [[LayoutCommentView alloc]initWithModel:flooredCommentItem];
+        return commentView.frame.size.height + 80;
+    }];
   
-//    return [_commentTableView fd_heightForCellWithIdentifier:@"newCell" cacheByIndexPath:indexPath configuration:^(id cell) {
+ //   return [_commentTableView fd_heightForCellWithIdentifier:@"newCell" cacheByIndexPath:indexPath configuration:^(id cell) {
 //        [cell setFlooredCommentItem:flooredCommentItem];
 //    }];
     
-    return commentView.frame.size.height + 80;
+    return height;
     
     
 }
 
-//- (nullable NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
-//{
-//    if (section == 0) {
-//        return @"热门评论";
-//    } else {
-//        return @"全部评论";
-//    }
-//}
+
 
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
 //    UIView* customView = [[UIView alloc] initWithFrame:CGRectMake(10.0, 0.0, 300.0, 44.0)];

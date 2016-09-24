@@ -11,7 +11,6 @@
 
 int main(int argc, char * argv[]) {
     @autoreleasepool {
-        [OneAPM startWithApplicationToken: @ "AD7649115F7C96141691BB8EB0120E9160"];
         return UIApplicationMain(argc, argv, nil, NSStringFromClass([AppDelegate class]));
     }
 }

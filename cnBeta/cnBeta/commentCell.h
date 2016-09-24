@@ -8,20 +8,24 @@
 
 #import <UIKit/UIKit.h>
 #import "flooredCommentModel.h"
+#import "DYCellButton.h"
 @protocol replyActionDelegate;
 
 @interface commentCell : UITableViewCell
 @property (nonatomic, weak) id<replyActionDelegate>delegate;
 @property (nonatomic, strong)flooredCommentModel *flooredCommentItem;
+@property (nonatomic, strong)NSIndexPath *indexPath;
 @property (weak, nonatomic) IBOutlet UILabel *floor;
 
-+ (instancetype)cellWithTableView:(UITableView *)tableView forIndexPath:(NSIndexPath *)indexPath;
++ (instancetype)cellWithTableView:(UITableView *)tableView Identifier:(NSString *)cellId;
 
 @end
 
 
 @protocol replyActionDelegate <NSObject>
 
-- (void)showReplyActionsWithTid:(NSString *)tid;
+- (void)reply:(DYCellButton *)button;
+- (void)support:(DYCellButton *)button;
+- (void)oppose:(DYCellButton *)button;
 
 @end

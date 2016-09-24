@@ -22,6 +22,8 @@
 @property (nonatomic, copy)NSString *reason;
 @property (nonatomic, copy)NSString *score;
 @property (nonatomic, copy)NSString *floor;
+@property (nonatomic)BOOL supported;
+@property (nonatomic)BOOL opposed;
 
 - (CGSize)sizeWithConstrainedSize:(CGSize)size;
 

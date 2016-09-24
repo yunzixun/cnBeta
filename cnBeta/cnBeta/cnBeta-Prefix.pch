@@ -9,7 +9,7 @@
 #ifndef cnBeta_Prefix_pch
 #define cnBeta_Prefix_pch
 
-#import <OneAPM/OneAPM.h>
+
 #import "UIImageView+WebCache.h"
 #import "Constant.h"
 

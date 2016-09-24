@@ -11,7 +11,7 @@
 
 #import "NewsTableViewController.h"
 #import "MJRefresh.h"
-#import "UIViewController+DownloadNews.h"
+#import "CBHTTPRequester.h"
 #import "UIView+isShowingOnScreen.h"
 #import "contentViewController.h"
 #import "NewsListCell.h"
@@ -128,7 +128,7 @@
 
 - (void)initCycleView
 {
-    [self requestWithURLType:@"cycle" completion:^(id data, NSError *error) {
+    [[CBHTTPRequester requester] requestWithURLType:@"cycle" completion:^(id data, NSError *error) {
         if (!error) {
             NSArray *dataList = [CycleNewsModel mj_objectArrayWithKeyValuesArray:data[@"data"][@"hot"]];
             self.cycleNews = dataList;
@@ -179,7 +179,7 @@
 
 - (void)headerRefresh
 {
-    [self requestWithURLType:@"updatedNews" completion:^(id data, NSError *error) {
+    [[CBHTTPRequester requester] requestWithURLType:@"updatedNews" completion:^(id data, NSError *error) {
         if (!error) {
             //NSLog(@"%@",dataDic[@"lists"]);
             
@@ -203,7 +203,7 @@
 {
     NSString *sid = [[_newsList lastObject]sid];
     
-    [self requestWithURLType:@"moreNews" andId:sid completion:^(id data, NSError *error) {
+    [[CBHTTPRequester requester] requestWithURLType:@"moreNews" andId:sid completion:^(id data, NSError *error) {
         if (!error) {
             //NSLog(@"%@",dataDic);
             NSArray *dataList = [DataModel mj_objectArrayWithKeyValuesArray:data[@"result"]];

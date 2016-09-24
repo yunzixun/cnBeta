@@ -9,6 +9,7 @@
 #import "commentCell.h"
 #import "commentModel.h"
 #import "LayoutCommentView.h"
+#import "DYCommentActionView.h"
 
 @interface commentCell ()
 
@@ -16,11 +17,7 @@
 @property (weak, nonatomic) IBOutlet UILabel *name;
 @property (weak, nonatomic) IBOutlet UILabel *host;
 @property (weak, nonatomic) IBOutlet UIView  *commentView;
-@property (weak, nonatomic) IBOutlet UILabel *upFinger;
-@property (weak, nonatomic) IBOutlet UILabel *downFinger;
-@property (weak, nonatomic) IBOutlet UIImageView *support;
-@property (weak, nonatomic) IBOutlet UIImageView *opposition;
-@property (weak, nonatomic) IBOutlet UIButton *replyButton;
+@property (weak, nonatomic) IBOutlet UIView *commentActionView;
 
 
 
@@ -28,11 +25,10 @@
 
 @implementation commentCell
 
-+ (instancetype)cellWithTableView:(UITableView *)tableView forIndexPath:(NSIndexPath *)indexPath
++ (instancetype)cellWithTableView:(UITableView *)tableView Identifier:(NSString *)cellId
 {
-    static NSString *cellId = @"cell";
-    commentCell *cell = [tableView dequeueReusableCellWithIdentifier:cellId forIndexPath:indexPath];
-    
+    commentCell *cell = [tableView dequeueReusableCellWithIdentifier:cellId];
+
     return cell;
 }
 
@@ -43,14 +39,9 @@
     _floor.text = commentInfo.floor;
     _name.text = commentInfo.name;
     _host.text = [commentInfo.host_name stringByAppendingString:[NSString stringWithFormat:@"  %@",commentInfo.date]];
-    _upFinger.text = commentInfo.score;
-    _downFinger.text = commentInfo.reason;
+    
     [_headImage sd_setImageWithURL:[NSURL URLWithString:commentInfo.icon] placeholderImage:[UIImage imageNamed:@"me_cell_nolandheader_66x66_"]];
     
-    
-    //[_replyButton setBackgroundImage:[UIImage imageNamed:@"reply"] forState:UIControlStateNormal];
-    //[_replyButton setTitle:nil forState:UIControlStateNormal];
-    //_opposition.transform = CGAffineTransformMakeRotation(M_PI);
     
     for (UIView *view in _commentView.subviews) {
         [view removeFromSuperview];
@@ -61,13 +52,35 @@
     _commentView.frame = frame;
     [_commentView addSubview:commentView];
     //_commentView = commentView;
-}
-- (IBAction)replyAction:(UIButton *)sender {
-    commentModel *commentItem = _flooredCommentItem.flooredComment.lastObject;
-    if ([self.delegate respondsToSelector:@selector(showReplyActionsWithTid:)]) {
-        [self.delegate showReplyActionsWithTid:commentItem.tid];
+    
+    for (UIView *view in _commentActionView.subviews) {
+        [view removeFromSuperview];
     }
+    DYCommentActionView *commentActionView = [[DYCommentActionView alloc] initWithFrame:CGRectMake(0, 0, 240, 25)];
+    commentActionView.comment = commentInfo;
+    [self.commentActionView addSubview:commentActionView];
+    [self setCommentActions:commentActionView];
+    
 }
+
+- (void)setCommentActions:(DYCommentActionView *)commentActionView
+{
+    commentActionView.supportButton.indexPath = self.indexPath;
+    commentActionView.opposeButton.indexPath = self.indexPath;
+    commentActionView.replyButton.indexPath = self.indexPath;
+    
+    [commentActionView.supportButton addTarget:self.delegate action:@selector(support:) forControlEvents:UIControlEventTouchUpInside];
+    [commentActionView.opposeButton addTarget:self.delegate action:@selector(oppose:) forControlEvents:UIControlEventTouchUpInside];
+    [commentActionView.replyButton addTarget:self.delegate action:@selector(reply:) forControlEvents:UIControlEventTouchUpInside];
+}
+
+//- (IBAction)replyAction:(UIButton *)sender {
+//    commentModel *commentItem = _flooredCommentItem.flooredComment.lastObject;
+//    if ([self.delegate respondsToSelector:@selector(replyWithTid:)]) {
+//        [self.delegate replyWithTid:commentItem.tid];
+//    }
+//    
+//}
 
 - (void)awakeFromNib {
     [super awakeFromNib];

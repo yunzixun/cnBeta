@@ -11,7 +11,7 @@
 
 #import "contentViewController.h"
 #import "commentViewController.h"
-#import "UIViewController+DownloadNews.h"
+#import "CBHTTPRequester.h"
 #import "NSDate+gyh.h"
 #import "FileCache.h"
 #import "NewsContentModel.h"
@@ -34,8 +34,10 @@
 @property (nonatomic, copy)NSString *contentURL;
 @property (nonatomic, copy) NSString *sn;
 @property (nonatomic, strong)NewsContentModel *newsContent;
-@property (nonatomic,strong)DataBase *collection;
-@property (nonatomic,strong)collectionModel *news;
+@property (nonatomic, strong)DataBase *collection;
+@property (nonatomic, strong)collectionModel *news;
+@property (nonatomic, strong)CBHTTPRequester *contentRequester;
+@property (nonatomic, strong)CBHTTPRequester *commentNumberRequester;
 
 @property (weak, nonatomic) IBOutlet UIButton *collect;
 
@@ -51,7 +53,11 @@
 
 @implementation contentViewController
 
-
+- (void)dealloc
+{
+    [self.contentRequester cancel];
+    [self.commentNumberRequester cancel];
+}
 
 - (void)viewDidLoad
 {
@@ -66,7 +72,7 @@
     //评论数量badge
     JSBadgeView *badgeView = [[JSBadgeView alloc]initWithParentView:self.commentNum alignment:JSBadgeViewAlignmentTopRight];
     self.badgeView = badgeView;
-    self.badgeView.badgePositionAdjustment = CGPointMake(-6, 5);
+    self.badgeView.badgePositionAdjustment = CGPointMake(-14, 15);
     [self.badgeView setBadgeTextFont:[UIFont systemFontOfSize:10]];
     
     _spinner.center = CGPointMake(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 );
@@ -136,7 +142,9 @@
         });
         
         //更新评论数目
-        [self requestWithURLType:@"content" andId:self.newsId completion:^(id data, NSError *error) {
+        CBHTTPRequester *commentNumberRequester = [CBHTTPRequester requester];
+        self.commentNumberRequester = commentNumberRequester;
+        [commentNumberRequester requestWithURLType:@"content" andId:self.newsId completion:^(id data, NSError *error) {
             if (!error) {
                 
                 NSArray *dataDic = @[(NSDictionary *)data[@"result"]];
@@ -158,7 +166,7 @@
         }];
     }
 
-    [self requestWithURLType:@"SN" andId:_newsId completion:^(id data, NSError *error) {
+    [[CBHTTPRequester requester] requestWithURLType:@"SN" andId:_newsId completion:^(id data, NSError *error) {
         if (!error) {
             OGNode *node = [ObjectiveGumbo parseNodeWithData:data];
             NSRange range = [node.text rangeOfString:@"\",SN:\""];
@@ -174,8 +182,9 @@
 - (void)startDownloadContent:(NSString *)sid
 {
     if (sid) {
-        
-        [self requestWithURLType:@"content" andId:sid completion:^(id data, NSError *error) {
+        CBHTTPRequester *contentRequester = [CBHTTPRequester requester];
+        self.contentRequester = contentRequester;
+        [contentRequester requestWithURLType:@"content" andId:sid completion:^(id data, NSError *error) {
             if (!error) {
                 
                 [self getHTMLByData:data[@"result"]];
