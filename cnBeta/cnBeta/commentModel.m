@@ -8,6 +8,7 @@
 
 #import "commentModel.h"
 #import "Constant.h"
+#import "DYAppearanceManager.h"
 
 @implementation commentModel
 

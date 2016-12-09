@@ -53,5 +53,7 @@
 @property (nonatomic, copy) NSString  *comments;
 @property (nonatomic, copy) NSString  *thumb;
 @property (nonatomic, copy) NSString  *counter;
+@property (nonatomic, copy) NSString  *aid;
+
 
 @end

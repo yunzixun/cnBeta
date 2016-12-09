@@ -1,0 +1,10 @@
+body {
+    font-family: <!-- myfont -->;
+    background-color: white;
+}
+.source {
+    color: gray;
+}
+.time {
+    color: gray;
+}

@@ -42,6 +42,7 @@
     self.codeText.keyboardType = UIKeyboardTypeAlphabet;
     self.codeText.returnKeyType = UIReturnKeySend;
     self.codeText.delegate = self;
+    
     [self refetchSecurityCode:nil];
    
 }
@@ -52,7 +53,7 @@
     CBHTTPRequester *requester = [CBHTTPRequester requester];
     self.securityCodeRequester = requester;
     [requester fetchSecurityCodeForSid:self.sid completion:^(id responseObject, NSError *error) {
-        if (!error) {
+        if (!error && responseObject) {
             UIImage *image = [UIImage imageWithData:responseObject];
             [self.securityCode setTitle:@"" forState:UIControlStateNormal];
             [self.securityCode setBackgroundImage:image forState:UIControlStateNormal];
@@ -91,6 +92,7 @@
                 if ([resultDic[@"state"] isEqualToString:@"success"]) {
                     //[WKProgressHUD popMessage:@"评论成功，等待后台审核，请稍后刷新" inView:self.view duration:1.5 animated:YES];
                     [self showNotificationWithText:@"评论成功，等待后台审核，请稍后刷新"];
+                    [[NSNotificationCenter defaultCenter] postNotificationName:@"autoStar" object:nil];
                     //[JDStatusBarNotification showWithStatus:@"评论成功，请稍后刷新" dismissAfter:2];
                     [self.navigationController popToViewController:[self.navigationController.viewControllers objectAtIndex:2] animated:YES];
                 } else {
@@ -111,6 +113,7 @@
                 NSDictionary *resultDic = responseObject;
                 if ([resultDic[@"state"] isEqualToString:@"success"]) {
                     [self showNotificationWithText:@"回复成功，等待后台审核，请稍后刷新"];
+                    [[NSNotificationCenter defaultCenter] postNotificationName:@"autoStar" object:nil];
                     //[JDStatusBarNotification showWithStatus:@"回复成功，等待后台审核，请稍后刷新" dismissAfter:2];
                     [self.navigationController popToViewController:[self.navigationController.viewControllers objectAtIndex:2] animated:YES];
                 } else {

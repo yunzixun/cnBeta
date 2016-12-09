@@ -33,6 +33,8 @@
 @property (nonatomic, strong) NSMutableArray *titlesArray;
 @property (nonatomic, strong) FileCache *fileCache;
 @property (nonatomic, strong) DataBase *collection;
+@property (nonatomic, copy)   NSString *type;
+@property (nonatomic, assign) int page;
 
 @property (nonatomic, strong) UIViewController *lastVC;
 @end
@@ -47,11 +49,13 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    UIBarButtonItem *backItem = [[UIBarButtonItem alloc] init];
-    backItem.title = @"返回";
-    self.navigationItem.backBarButtonItem = backItem;
+//    UIBarButtonItem *backItem = [[UIBarButtonItem alloc] init];
+//    backItem.title = @"返回";
+//    self.navigationItem.backBarButtonItem = backItem;
     //self.navigationItem.title = @"cnBeta新闻";
     //self.tabBarItem.title = [NSString stringWithFormat:@"资讯"];
+    self.page = 1;
+    self.type = @"all";
     self.tableView.rowHeight = 80.0f;
     self.tableView.separatorColor = [UIColor grayColor];
     self.tableView.tableFooterView=[[UIView alloc]init];
@@ -77,7 +81,7 @@
     
     [self initCycleView];
     [self setupRefreshView];
-    [self setupDataBase];
+    
     
     //[self tabBarClick];
     [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"firstLoad"];
@@ -87,7 +91,7 @@
 {
     [super viewWillAppear:animated];
     //self.navigationController.hidesBarsOnSwipe = YES;
-    
+    [(SDCycleScrollView *)self.tableView.tableHeaderView refreshTitleFont];
     [self.tableView reloadData];
 }
 
@@ -175,38 +179,38 @@
     self.tableView.mj_footer = [MJRefreshBackNormalFooter footerWithRefreshingTarget:self refreshingAction:@selector(footerRefresh)];
 }
 
-
-
 - (void)headerRefresh
 {
-    [[CBHTTPRequester requester] requestWithURLType:@"updatedNews" completion:^(id data, NSError *error) {
+    self.page = 1;
+    NSString *url = [NSString stringWithFormat:@"http://www.cnbeta.com/more?type=%@&page=1", self.type];
+    NSMutableDictionary *headers = [[NSMutableDictionary alloc]init];
+    [headers setObject:@"http://www.cnbeta.com/" forKey:@"Referer"];
+    [[CBHTTPRequester requester] requestWithURL:url andHeaders:headers completion:^(id data, NSError *error) {
         if (!error) {
-            //NSLog(@"%@",dataDic[@"lists"]);
-            
-            NSArray *dataList = [DataModel mj_objectArrayWithKeyValuesArray:data[@"result"]];
+            //NSLog(@"%@",data[@"result"]);
+            NSArray *dataList = [DataModel mj_objectArrayWithKeyValuesArray:data[@"result"][@"list"]];
             [self.newsList removeAllObjects];
             [self.newsList addObjectsFromArray:dataList];
             self.RowCount = [self.newsList count];
             [self.tableView reloadData];
             [self.tableView.mj_header endRefreshing];
-            //FileCache *fileCache = [FileCache sharedCache];
             [_fileCache cacheNewsListToFile:self.newsList forKey:@"newsList"];
         }else {
             [self.tableView.mj_header endRefreshing];
         }
     }];
-    
 }
 
 
 - (void)footerRefresh
 {
-    NSString *sid = [[_newsList lastObject]sid];
-    
-    [[CBHTTPRequester requester] requestWithURLType:@"moreNews" andId:sid completion:^(id data, NSError *error) {
+    self.page ++;
+    NSString *url = [NSString stringWithFormat:@"http://www.cnbeta.com/more?type=%@&page=%d", self.type, self.page];
+    NSMutableDictionary *headers = [[NSMutableDictionary alloc]init];
+    [headers setObject:@"http://www.cnbeta.com/" forKey:@"Referer"];
+    [[CBHTTPRequester requester] requestWithURL:url andHeaders:headers completion:^(id data, NSError *error) {
         if (!error) {
-            //NSLog(@"%@",dataDic);
-            NSArray *dataList = [DataModel mj_objectArrayWithKeyValuesArray:data[@"result"]];
+            NSArray *dataList = [DataModel mj_objectArrayWithKeyValuesArray:data[@"result"][@"list"]];
             [self.newsList addObjectsFromArray:dataList];
             self.RowCount = [self.newsList count];
             [self.tableView reloadData];
@@ -214,18 +218,53 @@
         }else {
             [self.tableView.mj_footer endRefreshing];
         }
-        
     }];
     
 }
 
-#pragma mark - DataBase
 
-- (void)setupDataBase
-{
-    
-    [_collection createDataBase];
-}
+//- (void)headerRefresh
+//{
+//    [[CBHTTPRequester requester] requestWithURLType:@"updatedNews" completion:^(id data, NSError *error) {
+//        if (!error) {
+//            //NSLog(@"%@",dataDic[@"lists"]);
+//            
+//            NSArray *dataList = [DataModel mj_objectArrayWithKeyValuesArray:data[@"result"]];
+//            [self.newsList removeAllObjects];
+//            [self.newsList addObjectsFromArray:dataList];
+//            self.RowCount = [self.newsList count];
+//            [self.tableView reloadData];
+//            [self.tableView.mj_header endRefreshing];
+//            //FileCache *fileCache = [FileCache sharedCache];
+//            [_fileCache cacheNewsListToFile:self.newsList forKey:@"newsList"];
+//        }else {
+//            [self.tableView.mj_header endRefreshing];
+//        }
+//    }];
+//    
+//}
+//
+//
+//- (void)footerRefresh
+//{
+//    NSString *sid = [[_newsList lastObject]sid];
+//    
+//    [[CBHTTPRequester requester] requestWithURLType:@"moreNews" andId:sid completion:^(id data, NSError *error) {
+//        if (!error) {
+//            //NSLog(@"%@",dataDic);
+//            NSArray *dataList = [DataModel mj_objectArrayWithKeyValuesArray:data[@"result"]];
+//            [self.newsList addObjectsFromArray:dataList];
+//            self.RowCount = [self.newsList count];
+//            [self.tableView reloadData];
+//            [self.tableView.mj_footer endRefreshing];
+//        }else {
+//            [self.tableView.mj_footer endRefreshing];
+//        }
+//        
+//    }];
+//    
+//}
+
 
 #pragma mark - Table view data source
 
@@ -292,9 +331,8 @@
     UIStoryboard *mainStoryboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
     contentViewController *contentvc = [mainStoryboard instantiateViewControllerWithIdentifier:@"contentViewController"];
     contentvc.newsId = currentNews.sid;
-    contentvc.newsTitle = currentNews.title;
     contentvc.thumb = currentNews.thumb;
-    
+    contentvc.author = currentNews.aid;
     contentvc.hidesBottomBarWhenPushed = YES;
     
     [_collection addNewsID:currentNews.sid];
@@ -314,7 +352,6 @@
     contentViewController *contentVC = [mainStoryboard instantiateViewControllerWithIdentifier:@"contentViewController"];
     contentVC.hidesBottomBarWhenPushed = YES;
     contentVC.newsId = data.id;
-    contentVC.newsTitle = data.title;
     contentVC.thumb = data.images[0];
     [self.navigationController pushViewController:contentVC animated:YES];
 }

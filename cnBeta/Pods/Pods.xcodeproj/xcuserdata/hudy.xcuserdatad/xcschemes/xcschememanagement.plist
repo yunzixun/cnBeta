@@ -14,6 +14,11 @@
 			<key>isShown</key>
 			<false/>
 		</dict>
+		<key>FMDB.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
 		<key>JDStatusBarNotification.xcscheme</key>
 		<dict>
 			<key>isShown</key>
@@ -64,6 +69,11 @@
 			<key>isShown</key>
 			<false/>
 		</dict>
+		<key>UMengUShare.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
 		<key>WKProgressHUD.xcscheme</key>
 		<dict>
 			<key>isShown</key>
@@ -77,22 +87,17 @@
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
-		<key>5B4D2DF0A895BF05B44C20C651E6F7C6</key>
+		<key>0D20EA721EDEAC5145E9352DEFFBBD61</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>64BA524E93FAF896DC1A185210AC15C7</key>
+		<key>65404947BB1380725C18D5E1F7AB5D32</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
 		<key>6817A568CA43DCFE74D5C5F81D595458</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
-		<key>6C39A243D5A77697AFD270AB8502276D</key>
 		<dict>
 			<key>primary</key>
 			<true/>
@@ -122,6 +127,16 @@
 			<key>primary</key>
 			<true/>
 		</dict>
+		<key>9F12FB4A63E20F601CFB2E64A65B57C1</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>B1EB00133F40EF55AE6D347E6C5908BB</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
 		<key>BA250BDE05647A8E5AE0B5FB0421E3CC</key>
 		<dict>
 			<key>primary</key>
@@ -132,12 +147,17 @@
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>E63EA3FC3E0A88A11341641DBAC04F9F</key>
+		<key>BFC6FDE7356C36934B4D22CBE110AF6B</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>ED5853D78ACA0A0E0AD80C9264782EF5</key>
+		<key>C61B457A9BAEEF1A31B158412BF0B78F</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>E63EA3FC3E0A88A11341641DBAC04F9F</key>
 		<dict>
 			<key>primary</key>
 			<true/>

@@ -6,19 +6,19 @@
 	<dict>
 		<key>Headers/NTESCrashLogger.h</key>
 		<data>
-		7096szMjTk3liogh8xvWSmCU9vQ=
+		eXuHs76uc+UfF9OZfy2asMo/HXg=
 		</data>
 		<key>Headers/NTESCrashReporter.h</key>
 		<data>
-		5gbXgQHcF4TpVQiCT6F7H63UJms=
+		GXwexGrLYHhKqIscJcfpiHQMA+M=
 		</data>
 		<key>Headers/NTESJSCrashReporter.h</key>
 		<data>
-		Z5hGcuV5KWpwB+rNwpoqwTZQ1wo=
+		OFNZLzPDzb9YJaKRKjw6Geg/XU4=
 		</data>
 		<key>Info.plist</key>
 		<data>
-		ukdkG6anC2SZyLNqLY/cLQyJFLU=
+		P37+zvGkL8qeSPtKTEg6fVAL86g=
 		</data>
 		<key>Modules/module.modulemap</key>
 		<data>
@@ -31,33 +31,33 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			7096szMjTk3liogh8xvWSmCU9vQ=
+			eXuHs76uc+UfF9OZfy2asMo/HXg=
 			</data>
 			<key>hash2</key>
 			<data>
-			A04CC6yU8sSByhMdhK30b0qLacFZ5nHFDA0BgWJVixA=
+			suFKJLioqeGU3FcDOApFJe2kgcMWQodw/r2NlVvm5Yo=
 			</data>
 		</dict>
 		<key>Headers/NTESCrashReporter.h</key>
 		<dict>
 			<key>hash</key>
 			<data>
-			5gbXgQHcF4TpVQiCT6F7H63UJms=
+			GXwexGrLYHhKqIscJcfpiHQMA+M=
 			</data>
 			<key>hash2</key>
 			<data>
-			KyKSFvfUxKqGgIdRlTYtwAKCpd+GSn/Sgcg2NyHCSPs=
+			raH7Zv0z/b5pw8FH7QbBq3I+l0SoByDhGXiKzfkJczA=
 			</data>
 		</dict>
 		<key>Headers/NTESJSCrashReporter.h</key>
 		<dict>
 			<key>hash</key>
 			<data>
-			Z5hGcuV5KWpwB+rNwpoqwTZQ1wo=
+			OFNZLzPDzb9YJaKRKjw6Geg/XU4=
 			</data>
 			<key>hash2</key>
 			<data>
-			FQ5PHttBxUf4wsGxJVaBZbIvz1fwgjMshh2tocKHKUw=
+			siaysScapGD9+oU8vw1c4p0c3aY2e3vkUXZALvJoajA=
 			</data>
 		</dict>
 		<key>Modules/module.modulemap</key>

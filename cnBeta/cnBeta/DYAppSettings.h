@@ -12,6 +12,8 @@
 
 @property (nonatomic) BOOL gestureEnabled;
 @property (nonatomic) BOOL networkNotificationEnabled;
+@property (nonatomic) BOOL autoCollectionEnabled;
+@property (nonatomic) BOOL thinFontEnabled;
 
 + (instancetype)sharedSettings;
 

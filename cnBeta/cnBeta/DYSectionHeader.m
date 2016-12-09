@@ -7,6 +7,7 @@
 //
 
 #import "DYSectionHeader.h"
+#import "DYAppearanceManager.h"
 
 @interface DYSectionHeader ()
 
@@ -25,7 +26,7 @@
         
         _label = [[UILabel alloc]initWithFrame:CGRectMake(3, 0, ScreenWidth - 3, frame.size.height)];
         _label.backgroundColor = [UIColor clearColor];
-        _label.font = [UIFont systemFontOfSize:13];
+        _label.font = [[DYAppearanceManager sharedManager].CBFont fontWithSize:13];
         [self addSubview:_label];
     }
     return self;

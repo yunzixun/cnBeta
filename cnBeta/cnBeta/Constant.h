@@ -17,12 +17,17 @@
 
 #define  LayoutBordWidth        .6
 
-#define  NameFont     [UIFont systemFontOfSize:14]
-#define  HostFont  [UIFont systemFontOfSize:11]
-#define  FloorFont  [UIFont systemFontOfSize:10]
-#define  CommentFont  [UIFont systemFontOfSize:15]
+#define  NameFont     [[DYAppearanceManager sharedManager].CBFont fontWithSize:14]
+#define  HostFont     [[DYAppearanceManager sharedManager].CBFont fontWithSize:11]
+#define  FloorFont    [[DYAppearanceManager sharedManager].CBFont fontWithSize:10]
+#define  CommentFont  [[DYAppearanceManager sharedManager].CBFont fontWithSize:15]
 
-#define ScreenWidth [UIScreen mainScreen].bounds.size.width
-#define ScreenHeight [UIScreen mainScreen].bounds.size.height
+#define NavTabBarFont [[DYAppearanceManager sharedManager].CBFont fontWithSize:15]
+#define NewsTitleFont [[DYAppearanceManager sharedManager].CBFont fontWithSize:15]
+#define NewsTimeFont  [[DYAppearanceManager sharedManager].CBFont fontWithSize:11]
+#define CmtNumFont    [[DYAppearanceManager sharedManager].CBFont fontWithSize:10]
+
+#define ScreenWidth   [UIScreen mainScreen].bounds.size.width
+#define ScreenHeight  [UIScreen mainScreen].bounds.size.height
 #define MaxOverlapNumber 6
 #define OverlapSpace 3

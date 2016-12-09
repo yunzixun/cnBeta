@@ -120,8 +120,8 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    //[self.navigationController setNavigationBarHidden:YES];
     [self.navigationController setNavigationBarHidden:YES animated:YES];
+    [_navTabBar refreshTitleFont];
 }
 
 - (void)viewDidDisappear:(BOOL)animated

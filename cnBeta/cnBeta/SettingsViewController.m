@@ -19,6 +19,8 @@
 #import "SettingSwitchItem.h"
 #import "SettingGroup.h"
 #import "DYAppSettings.h"
+#import "DYAppearanceManager.h"
+#import "CBDataBase.h"
 
 @interface SettingsViewController ()<UITableViewDelegate, UITableViewDataSource, SwitchControlDelegate, MFMailComposeViewControllerDelegate>
 {
@@ -62,12 +64,13 @@
     }
     
     
-    _dataSource = @[@"手势操作", @"网络切换通知", @"清除缓存", @"反馈建议", @"去App Store给我们好评", @"关于"];
-    _switchDic = @{@"手势操作": @(CBGesture), @"网络切换通知": @(CBNetworkNotification)};
+    _dataSource = @[@"手势操作", @"网络切换通知", @"自动收藏评论过的文章", @"使用细体文字", @"清除缓存", @"反馈建议", @"去App Store给我们好评", @"关于"];
+    _switchDic = @{@"手势操作": @(CBGesture), @"网络切换通知": @(CBNetworkNotification), @"自动收藏评论过的文章": @(CBAutoCollection), @"使用细体文字": @(CBFontChange)};
     _index = 0;
 
     [self setupGroup0];
     [self setupGroup1];
+    [self setupGroup2];
     
     
 }
@@ -78,8 +81,8 @@
     FileCache *cache = [FileCache sharedCache];
     _cacheSize = [cache folderSizeOfCache];
     
-    SettingGroup * group = _groupArray[0];
-    SettingItem *item = group.items[2];
+    SettingGroup * group = _groupArray[1];
+    SettingItem *item = [group.items lastObject];
     item.subtitle = [NSString stringWithFormat:@"%.2fMB", _cacheSize];
     
     [_settingsTableView reloadData];
@@ -90,24 +93,42 @@
 
 - (void)setupGroup0
 {
-    //
+    //手势
     SettingItem *gesture = [SettingSwitchItem itemWithTitle:_dataSource[_index++]];
     
     //网络切换通知
     SettingItem *networkNotification = [SettingSwitchItem itemWithTitle:_dataSource[_index++]];
 
+    //自动收藏
+    SettingItem *autoCollection = [SettingSwitchItem itemWithTitle:_dataSource[_index++]];
+    
+    //使用细体文字
+    SettingItem *fontChange = [SettingSwitchItem itemWithTitle:_dataSource[_index ++]];
+    
+    SettingGroup *group0 = [[SettingGroup alloc]init];
+    
+    if ([[UIDevice currentDevice] systemVersion].floatValue >= 8.0) {
+        group0.items = @[gesture, networkNotification, autoCollection, fontChange];
+    } else {
+        group0.items = @[gesture, networkNotification, autoCollection];
+    }
+    [self.groupArray addObject:group0];
+}
+
+- (void)setupGroup1
+{
     //清除缓存
     SettingItem *clearCache = [SettingArrowItem itemWithTitle:_dataSource[_index++] subtitle:[NSString stringWithFormat:@"%.2fMB", _cacheSize]];
     clearCache.option = ^{
         [self showAlert];
     };
+    SettingGroup *group1 = [[SettingGroup alloc] init];
+    group1.items = @[clearCache];
+    [self.groupArray addObject:group1];
     
-    SettingGroup *group0 = [[SettingGroup alloc]init];
-    group0.items = @[gesture, networkNotification, clearCache];
-    [self.groupArray addObject:group0];
 }
 
-- (void)setupGroup1
+- (void)setupGroup2
 {
     //反馈建议
     SettingItem *feedback = [SettingArrowItem itemWithTitle:_dataSource[_index++]];
@@ -147,7 +168,7 @@
 
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
 {
-    return 20;
+    return 10;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section
@@ -186,6 +207,14 @@
             _settings.networkNotificationEnabled = isOn;
             break;
             
+        case CBAutoCollection:
+            _settings.autoCollectionEnabled = isOn;
+            break;
+            
+        case CBFontChange:
+            _settings.thinFontEnabled = isOn;
+            break;
+            
         default:
             break;
     }
@@ -204,10 +233,26 @@
             status = _settings.networkNotificationEnabled;
             break;
             
+        case CBAutoCollection:
+            status = _settings.autoCollectionEnabled;
+            break;
+          
+        case CBFontChange:
+            status = _settings.thinFontEnabled;
+            break;
+            
         default:
             break;
     }
     return status;
+}
+
+- (void)reloadTableView
+{
+    if ([[UIDevice currentDevice] systemVersion].floatValue >= 8.0) {
+        [[DYAppearanceManager sharedManager] updateCBFont];
+        [self.settingsTableView reloadData];
+    }
 }
 
 #pragma mark - Table view delegate
@@ -254,12 +299,14 @@
         [cache clearCache];
         _cacheSize = 0;
         
-        SettingGroup * group = _groupArray[0];
-        SettingItem *item = group.items[2];
+        SettingGroup * group = _groupArray[1];
+        
+        SettingItem *item = [group.items lastObject];
         item.subtitle = [NSString stringWithFormat:@"%.2fMB", _cacheSize];
         
-        [self.settingsTableView reloadRowsAtIndexPaths:[NSArray arrayWithObjects:[NSIndexPath indexPathForRow:2 inSection:0], nil] withRowAnimation:UITableViewRowAnimationNone];
+        [self.settingsTableView reloadRowsAtIndexPaths:[NSArray arrayWithObjects:[NSIndexPath indexPathForRow:[group.items indexOfObject:item] inSection:1], nil] withRowAnimation:UITableViewRowAnimationNone];
         //[_settingsTableView reloadData];
+        [[CBDataBase sharedDataBase] clearExpiredCache];
     }
 }
 

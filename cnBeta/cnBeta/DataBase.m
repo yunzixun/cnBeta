@@ -34,6 +34,7 @@
 
 - (void)createDataBase
 {
+    
     dispatch_async(ioQueue, ^{
         NSString *databasePath = [self pathForDataBase];
         NSFileManager *fileManager = [NSFileManager defaultManager];
@@ -57,6 +58,48 @@
             }
             sqlite3_close(database);
         }
+        
+//        if (sqlite3_open([databasePath UTF8String], &database) == SQLITE_OK){
+////            char *errmsg;
+////            const char *searchSql = "select count(*) from sqlite_master where type='table' and name='articleCache'";
+////            int result = sqlite3_exec(database, searchSql, NULL, NULL, &errmsg);
+////            if (result != 1) {
+////                const char *dbpath = [databasePath UTF8String];
+////                if (sqlite3_open(dbpath, &database)==SQLITE_OK) {
+////                    char *errmsg;
+////                    const char *createsql = "CREATE TABLE IF NOT EXISTS articleCache (newsId INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, title TEXT, source TEXT, summary TEXT, pubTime TEXT, content TEXT, sn TEXT)";
+////                    if (sqlite3_exec(database, createsql, NULL, NULL, &errmsg) != SQLITE_OK) {
+////                        NSLog(@"create table failed.");
+////                    }
+////                    else{
+////                        NSLog(@"%s",errmsg);
+////                    }
+////                }
+////            }
+//            sqlite3_stmt *statement;
+//            const char *searchSql = "select * from sqlite_master where name='articleCache'";
+//            int result = sqlite3_prepare_v2(database, searchSql, -1, &statement, NULL);
+//            if (result == SQLITE_OK) {
+//                if (sqlite3_step(statement) != SQLITE_ROW) {
+//                    const char *dbpath = [databasePath UTF8String];
+//                    if (sqlite3_open(dbpath, &database)==SQLITE_OK) {
+//                        char *errmsg;
+//                        const char *createsql = "CREATE TABLE IF NOT EXISTS articleCache (newsId INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, title TEXT, source TEXT, summary TEXT, pubTime TEXT, content TEXT, sn TEXT)";
+//                        if (sqlite3_exec(database, createsql, NULL, NULL, &errmsg) != SQLITE_OK) {
+//                            NSLog(@"create table failed.");
+//                        }
+//                        else{
+//                            NSLog(@"%s",errmsg);
+//                        }
+//                    }
+//                }
+//            }else {
+//                NSLog(@"查询失败");
+//            }
+//            sqlite3_finalize(statement);
+//            sqlite3_close(database);
+//        }
+        
         if (![self queryIfExistsFieldname:@"thumb"]) {
     //        char *errMsg;
     //        const char *add_colomn = "ALTER TABLE collection ADD thumb TEXT";
@@ -286,5 +329,94 @@
     });
 }
 
+//查询文章是否已缓存
+- (CBArticle *)articleWithSid:(NSString *)sid
+{
+    __block CBArticle *article = nil;
+    dispatch_sync(ioQueue, ^{
+        sqlite3_stmt *statement;
+        const char *dbpath = [[self pathForDataBase]UTF8String];
+        if (sqlite3_open(dbpath, &database) == SQLITE_OK) {
+            NSString *query;
+            query = [NSString stringWithFormat:@"SELECT * FROM article WHERE newsId = %@", sid];
+            
+            const char *queryStatement = [query UTF8String];
+            int queryResult = sqlite3_prepare_v2(database, queryStatement, -1, &statement, NULL);
+            if (queryResult == SQLITE_OK) {
+                while (sqlite3_step(statement) == SQLITE_ROW) {
+                    
+                    
+                    int newsId = sqlite3_column_int(statement, 0);
+                    const char *title = (char *)sqlite3_column_text(statement, 1);
+                    const char *source = (char *)sqlite3_column_text(statement, 2);
+                    const char *summary = (char *)sqlite3_column_text(statement, 3);
+                    const char *pubTime = (char *)sqlite3_column_text(statement, 4);
+                    const char *content = (char *)sqlite3_column_text(statement, 5);
+                    const char *sn = (char *)sqlite3_column_text(statement, 6);
+                    int commentCount = sqlite3_column_int(statement, 7);
+                    
+                    article.newsId = [NSString stringWithFormat:@"%d", newsId];
+                    article.title = [NSString stringWithUTF8String:title];
+                    article.source = [NSString stringWithUTF8String:source];
+                    article.summary = [NSString stringWithUTF8String:summary];
+                    article.pubTime = [NSString stringWithUTF8String:pubTime];
+                    article.content = [NSString stringWithUTF8String:content];
+                    article.sn = [NSString stringWithUTF8String:sn];
+                    article.commentCount = @(commentCount);
+                }
 
+            }
+            sqlite3_finalize(statement);
+            sqlite3_close(database);
+        }
+    });
+    return article;
+}
+
+//缓存文章
+- (void)cacheArticle:(CBArticle *)article
+{
+    dispatch_async(ioQueue, ^{
+        sqlite3_stmt *statement;
+        const char *dbpath = [[self pathForDataBase]UTF8String];
+        if (sqlite3_open(dbpath, &database) == SQLITE_OK) {
+            NSString *insertItem = [NSString stringWithFormat:@"INSERT INTO article (newsId, title, source, summary, pubTime, content, sn) VALUES(\"%@\",\"%@\",\"%@\",\"%@\",\"%@\",\"%@\",\"%@\")", article.newsId, article.title, article.source, article.summary, article.pubTime, article.content, article.sn];
+            const char *insertStatement =[insertItem UTF8String];
+            int insertResult = sqlite3_prepare_v2(database, insertStatement, -1, &statement, NULL);
+            if (insertResult == SQLITE_OK) {
+                sqlite3_step(statement);
+            }else {
+                NSLog(@"收藏失败");
+            }
+            sqlite3_finalize(statement);
+            sqlite3_close(database);
+        }
+
+    });
+
+}
+
+- (NSArray *)starredArticleIds
+{
+    __block NSMutableArray *idArray = nil;
+    dispatch_sync(ioQueue, ^{
+        idArray = [[NSMutableArray alloc]init];
+        sqlite3_stmt *statement;
+        const char *dbpath = [[self pathForDataBase]UTF8String];
+        if (sqlite3_open(dbpath, &database) == SQLITE_OK) {
+            const char *selectStatement = "SELECT * FROM collection";
+            int selectResult = sqlite3_prepare_v2(database, selectStatement, -1, &statement, NULL);
+            if (selectResult == SQLITE_OK) {
+                while (sqlite3_step(statement) == SQLITE_ROW) {
+                    
+                    int sid = sqlite3_column_int(statement, 0);
+                    NSString *articleId = [NSString stringWithFormat:@"%d", sid];
+                    [idArray addObject:articleId];
+                }
+                
+            }
+        }
+    });
+    return idArray;
+}
 @end

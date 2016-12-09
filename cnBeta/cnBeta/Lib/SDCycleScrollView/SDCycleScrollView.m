@@ -24,6 +24,7 @@
 #import "UIView+SDExtension.h"
 #import "TAPageControl.h"
 #import "NSData+SDDataCache.h"
+#import "DYAppearanceManager.h"
 
 
 
@@ -66,7 +67,7 @@ NSString * const ID = @"cycleCell";
     _pageControlAliment = SDCycleScrollViewPageContolAlimentCenter;
     _autoScrollTimeInterval = 2.0;
     _titleLabelTextColor = [UIColor whiteColor];
-    _titleLabelTextFont= [UIFont systemFontOfSize:14];
+    _titleLabelTextFont= NewsTitleFont;
     _titleLabelBackgroundColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:0.5];
     _titleLabelHeight = 30;
     _autoScroll = YES;
@@ -77,6 +78,11 @@ NSString * const ID = @"cycleCell";
     
     self.backgroundColor = [UIColor lightGrayColor];
     
+}
+
+- (void)refreshTitleFont
+{
+    _titleLabelTextFont= NewsTitleFont;
 }
 
 + (instancetype)cycleScrollViewWithFrame:(CGRect)frame imagesGroup:(NSArray *)imagesGroup
@@ -432,10 +438,9 @@ NSString * const ID = @"cycleCell";
         cell.titleLabelBackgroundColor = self.titleLabelBackgroundColor;
         cell.titleLabelHeight = self.titleLabelHeight;
         cell.titleLabelTextColor = self.titleLabelTextColor;
-        cell.titleLabelTextFont = self.titleLabelTextFont;
         cell.hasConfigured = YES;
     }
-    
+    cell.titleLabelTextFont = self.titleLabelTextFont; //refresh font every time
     return cell;
 }
 

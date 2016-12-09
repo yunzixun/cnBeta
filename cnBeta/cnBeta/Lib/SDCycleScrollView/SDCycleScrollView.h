@@ -110,4 +110,6 @@ typedef enum {
 
 + (instancetype)cycleScrollViewWithFrame:(CGRect)frame imageURLStringsGroup:(NSArray *)imageURLStringsGroup;
 
+- (void)refreshTitleFont;
+
 @end

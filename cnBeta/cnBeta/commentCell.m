@@ -10,6 +10,7 @@
 #import "commentModel.h"
 #import "LayoutCommentView.h"
 #import "DYCommentActionView.h"
+#import "DYAppearanceManager.h"
 
 @interface commentCell ()
 
@@ -39,6 +40,10 @@
     _floor.text = commentInfo.floor;
     _name.text = commentInfo.name;
     _host.text = [commentInfo.host_name stringByAppendingString:[NSString stringWithFormat:@"  %@",commentInfo.date]];
+    
+    _floor.font = FloorFont;
+    _name.font = NameFont;
+    _host.font = HostFont;
     
     [_headImage sd_setImageWithURL:[NSURL URLWithString:commentInfo.icon] placeholderImage:[UIImage imageNamed:@"me_cell_nolandheader_66x66_"]];
     

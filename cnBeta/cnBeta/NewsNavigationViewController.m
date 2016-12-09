@@ -32,7 +32,7 @@
             //NSLog(@"%@", target);
             // 创建全屏滑动手势，调用系统自带滑动手势的target的action方法
             //SEL handleTransition = NSSelectorFromString(@"handleNavigationTransition:");
-            UIPanGestureRecognizer *pan = [[UIPanGestureRecognizer alloc]initWithTarget:target action:@selector(handleNavigationTransition:)];
+            UIPanGestureRecognizer *pan = [[UIPanGestureRecognizer alloc]initWithTarget:target action:NSSelectorFromString(@"handleNavigationTransition:")];
             self.pan = pan;
             
             // 设置手势代理，拦截手势触发

@@ -9,6 +9,7 @@
 #import "gridLayoutView.h"
 #import "commentModel.h"
 #import "Constant.h"
+#import "DYAppearanceManager.h"
 
 @implementation gridLayoutView
 
@@ -35,7 +36,7 @@
             floorLabel.font = FloorFont;
             floorLabel.textColor = FloorColor;
             
-            UILabel *commentLabel = [[UILabel alloc]initWithFrame:CGRectMake(5, 40 + lastHeight, frame.size.width - 10, size.height + 10)];
+            UILabel *commentLabel = [[UILabel alloc]initWithFrame:CGRectMake(5, 40 + lastHeight, frame.size.width - 10, size.height + 15)];
             commentLabel.numberOfLines = 0;
             commentLabel.font = CommentFont;
             commentLabel.textColor = CommentColor;

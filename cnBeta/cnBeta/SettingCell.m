@@ -11,6 +11,7 @@
 #import "SettingSwitchItem.h"
 #import "SettingArrowItem.h"
 #import "DYAppSettings.h"
+#import "DYAppearanceManager.h"
 
 @interface SettingCell ()
 
@@ -43,6 +44,7 @@
     if ([self.delegate respondsToSelector:@selector(setState:forSwitch:)]) {
         
         [self.delegate setState:self.switchview.isOn forSwitch:self.item.title];
+        [self.delegate reloadTableView];
         
     }
 }
@@ -78,6 +80,9 @@
 {
     self.textLabel.text = _item.title;
     self.detailTextLabel.text = _item.subtitle;
+    self.detailTextLabel.textColor = [UIColor lightGrayColor];
+    self.textLabel.font = [[DYAppearanceManager sharedManager].CBFont fontWithSize:15];
+    
     //NSLog(@"%@", _item.subtitle);
     
     if ([self.item isKindOfClass:[SettingSwitchItem class]]) {

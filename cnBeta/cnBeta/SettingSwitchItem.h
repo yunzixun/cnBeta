@@ -10,7 +10,9 @@
 
 typedef NS_ENUM(NSInteger, SwitchName) {
     CBGesture,
-    CBNetworkNotification
+    CBNetworkNotification,
+    CBAutoCollection,
+    CBFontChange
 };
 
 @interface SettingSwitchItem : SettingItem

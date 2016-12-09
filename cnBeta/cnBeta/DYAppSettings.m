@@ -10,6 +10,8 @@
 
 static NSString *const gestureSwitchKey = @"gestureSwitch";
 static NSString *const networkNotificationSwitchKey = @"networkNotoficationSwitch";
+static NSString *const autoCollectionSwitchKey = @"autoCollectionSwitch";
+static NSString *const thinFontSwitchKey = @"thinFontSwitch";
 
 @interface DYAppSettings ()
 
@@ -21,6 +23,8 @@ static NSString *const networkNotificationSwitchKey = @"networkNotoficationSwitc
 
 @synthesize gestureEnabled = _gestureEnabled;
 @synthesize networkNotificationEnabled = _networkNotificationEnabled;
+@synthesize autoCollectionEnabled = _autoCollectionEnabled;
+@synthesize thinFontEnabled  = _thinFontEnabled;
 
 + (instancetype)sharedSettings
 {
@@ -39,10 +43,14 @@ static NSString *const networkNotificationSwitchKey = @"networkNotoficationSwitc
         _userDefaults = [NSUserDefaults standardUserDefaults];
         
         [_userDefaults registerDefaults:@{gestureSwitchKey: @YES,
-                                          networkNotificationSwitchKey: @YES
+                                          networkNotificationSwitchKey: @YES,
+                                          autoCollectionSwitchKey:@YES,
+                                          thinFontSwitchKey:@NO
                                           }];
-         _gestureEnabled= [_userDefaults boolForKey:gestureSwitchKey];
+        _gestureEnabled= [_userDefaults boolForKey:gestureSwitchKey];
         _networkNotificationEnabled = [_userDefaults boolForKey:networkNotificationSwitchKey];
+        _autoCollectionEnabled = [_userDefaults boolForKey:autoCollectionSwitchKey];
+        _thinFontEnabled = [_userDefaults boolForKey:thinFontSwitchKey];
     }
     return self;
 }
@@ -69,7 +77,27 @@ static NSString *const networkNotificationSwitchKey = @"networkNotoficationSwitc
     [_userDefaults setBool:networkNotificationEnabled forKey:networkNotificationSwitchKey];
 }
 
+- (BOOL)autoCollectionEnabled
+{
+    return _autoCollectionEnabled;
+}
 
+- (void)setAutoCollectionEnabled:(BOOL)autoCollectionEnabled
+{
+    _autoCollectionEnabled = autoCollectionEnabled;
+    [_userDefaults setBool:autoCollectionEnabled forKey:autoCollectionSwitchKey];
+}
+
+-(BOOL)thinFontEnabled
+{
+    return _thinFontEnabled;
+}
+
+- (void)setThinFontEnabled:(BOOL)thinFontEnabled
+{
+    _thinFontEnabled = thinFontEnabled;
+    [_userDefaults setBool:thinFontEnabled forKey:thinFontSwitchKey];
+}
 
 
 
