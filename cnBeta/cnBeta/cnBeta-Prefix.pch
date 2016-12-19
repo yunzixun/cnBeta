@@ -12,6 +12,7 @@
 
 #import "UIImageView+WebCache.h"
 #import "Constant.h"
+#import "AFNetworking.h"
 #import <TFHpple.h>
 
 #ifndef __OPTIMIZE__

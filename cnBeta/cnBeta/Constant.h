@@ -14,18 +14,21 @@
 #define  CellBackgroundColor    [UIColor colorWithRed:244./255. green:244./255 blue:244./255 alpha:1]
 #define  LayoutBackgroundColor  [UIColor colorWithRed:245./255. green:245./255 blue:236./255 alpha:1]
 #define  LayoutBordColor        [UIColor colorWithRed:215./255. green:215./255 blue:191./255 alpha:1]
+#define  rectangleBorderColor   [UIColor colorWithRed:52./255. green:188./255 blue:245./255 alpha:1]
 
 #define  LayoutBordWidth        .6
+#define  rectangleBordWidth     1.0
 
-#define  NameFont     [[DYAppearanceManager sharedManager].CBFont fontWithSize:14]
-#define  HostFont     [[DYAppearanceManager sharedManager].CBFont fontWithSize:11]
-#define  FloorFont    [[DYAppearanceManager sharedManager].CBFont fontWithSize:10]
-#define  CommentFont  [[DYAppearanceManager sharedManager].CBFont fontWithSize:15]
 
-#define NavTabBarFont [[DYAppearanceManager sharedManager].CBFont fontWithSize:15]
-#define NewsTitleFont [[DYAppearanceManager sharedManager].CBFont fontWithSize:15]
-#define NewsTimeFont  [[DYAppearanceManager sharedManager].CBFont fontWithSize:11]
-#define CmtNumFont    [[DYAppearanceManager sharedManager].CBFont fontWithSize:10]
+#define  NameFont     [[CBAppearanceManager sharedManager].CBFont fontWithSize:14]
+#define  HostFont     [[CBAppearanceManager sharedManager].CBFont fontWithSize:11]
+#define  FloorFont    [[CBAppearanceManager sharedManager].CBFont fontWithSize:10]
+#define  CommentFont  [[CBAppearanceManager sharedManager].CBFont fontWithSize:15]
+
+#define NavTabBarFont [[CBAppearanceManager sharedManager].CBFont fontWithSize:15]
+#define NewsTitleFont [[CBAppearanceManager sharedManager].CBFont fontWithSize:15]
+#define NewsTimeFont  [[CBAppearanceManager sharedManager].CBFont fontWithSize:11]
+#define CmtNumFont    [[CBAppearanceManager sharedManager].CBFont fontWithSize:10]
 
 #define ScreenWidth   [UIScreen mainScreen].bounds.size.width
 #define ScreenHeight  [UIScreen mainScreen].bounds.size.height

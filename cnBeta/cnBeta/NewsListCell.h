@@ -7,18 +7,14 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "DataModel.h"
-#import "HotNewsModel.h"
+#import "NewsModel.h"
 
 @interface NewsListCell : UITableViewCell
 
 @property (nonatomic,strong)UILabel *newstitle;
-@property (nonatomic, strong)DataModel *newsModel;
-@property (nonatomic, strong)HotNewsModel *hotNewsModel;
+@property (nonatomic, strong)NewsModel *newsModel;
 
 + (instancetype)cellWithTableView:(UITableView *)tableView;
-- (void)setNewsModel:(DataModel *)newsModel;
-
--(void)setHotNewsModel:(HotNewsModel *)hotNewsModel;
+- (void)setNewsModel:(NewsModel *)newsModel;
 
 @end

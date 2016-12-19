@@ -31,6 +31,8 @@ typedef void (^CompletionBlock)(id responseObject, NSError *error);
 
 - (void)requestWithURL:(NSString *)url andHeaders:(NSDictionary *)headers completion:(CompletionBlock)completionBlock;
 
+- (void)fetchNewsListWithURL:(NSString *)url andHeaders:(NSDictionary *)headers completion:(void (^)(NSError *))completionBlock;
+
 - (void)fetchArticleWithSid:(NSString *)sid completion:(CompletionBlock)block;
 
 - (void)cancel;

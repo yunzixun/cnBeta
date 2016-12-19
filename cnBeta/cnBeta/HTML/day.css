@@ -1,8 +1,10 @@
 body {
-    font-family: <!-- myfont -->;
-    background-color: white;
+   background-color: white;
 }
 .source {
+    color: gray;
+}
+.editor {
     color: gray;
 }
 .time {

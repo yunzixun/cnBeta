@@ -21,11 +21,14 @@
 #import "collectionModel.h"
 #import "CBArticle.h"
 #import "CBStarredCache.h"
+#import "CBObjectCache.h"
+#import "CBCachedURLResponse.h"
 //#import "UMSocial.h"
 #import "UMSocialUIManager.h"
 #import "NewsNavigationViewController.h"
 #import "JSBadgeView.h"
 #import "WKProgressHUD.h"
+#import "IDMPhotoBrowser.h"
 //#import <ShareSDK/ShareSDK.h>
 //#import <ShareSDKUI/ShareSDK+SSUI.h>
 
@@ -153,96 +156,10 @@
             self.badgeView.badgeText = [NSString stringWithFormat:@"%@", _newsContent.comments];
         }
     }];
-    
-
-//    [[CBHTTPRequester requester] requestWithURLType:@"SN" andId:_newsId completion:^(id data, NSError *error) {
-//        if (!error) {
-//            OGNode *node = [ObjectiveGumbo parseNodeWithData:data];
-//            NSRange range = [node.text rangeOfString:@"\",SN:\""];
-//            if (range.location != NSNotFound) {
-//                _sn = [node.text substringWithRange:NSMakeRange(range.location + range.length, 5)];
-//                //NSLog(@"%@", _sn);
-//            }
-//        }
-//    }];
 
 }
 
-//- (void)startDownloadContent:(NSString *)sid
-//{
-//    if (sid) {
-//        CBHTTPRequester *contentRequester = [CBHTTPRequester requester];
-//        self.contentRequester = contentRequester;
-//        [contentRequester requestWithURLType:@"content" andId:sid completion:^(id data, NSError *error) {
-//            if (!error) {
-//                
-//                [self getHTMLByData:data[@"result"]];
-//                //NSLog(@"%@",data[@"result"]);
-//                //缓存到文件系统
-//                FileCache *fileCache = [FileCache sharedCache];
-//                [fileCache cacheHTMLToFile:_contentHTMLString forKey:_newsId];
-//                
-//            }
-//            
-//        }];
-//    }
-//}
 
-- (void)getHTMLByData:(id)data
-{
-    
-    NSArray *dataDic = @[(NSDictionary *)data];
-    
-    _newsContent = [NewsContentModel mj_objectArrayWithKeyValuesArray:dataDic][0];
-    //_newsContent.source = @"";
-    self.badgeView.badgeText = [NSString stringWithFormat:@"%@", _newsContent.comments];
-    
-    NSMutableString *cmt = [NSMutableString stringWithFormat:@"%@条评论", _newsContent.comments];
-    
-    //新闻发布是否已超过24小时
-    NSDateFormatter *fmt = [[NSDateFormatter alloc]init];
-    fmt.dateFormat = @"yyyy-MM-dd HH:mm:ss";
-    NSDate *pubDate = [fmt dateFromString:_newsContent.time];
-    //NSLog(@"%@", pubDate);
-    NSDateComponents *timeDelta = [pubDate deltaWithNow];
-    //NSLog(@"%@", timeDelta);
-    if (timeDelta.hour > 72) {
-        self.isExpired = YES;
-        [cmt appendString:@"(评论已关闭)"];
-    }
-    
-    NSMutableString *allTitleStr =[NSMutableString stringWithString:@"<style type='text/css'> p.thicker{font-weight: 500}p.light{font-weight: 0}p{font-size: 108%}h2 {font-size: 120%}h3 {font-size: 80%}</style> <h2 class = 'thicker'>title</h2><h3>hehe      lala      gaga</h3>"];
-    
-    [allTitleStr replaceOccurrencesOfString:@"title" withString:_newsContent.title options:NSCaseInsensitiveSearch range:[allTitleStr rangeOfString:@"title"]];
-    [allTitleStr replaceOccurrencesOfString:@"hehe" withString:_newsContent.source options:NSCaseInsensitiveSearch range:[allTitleStr rangeOfString:@"hehe"]];
-    [allTitleStr replaceOccurrencesOfString:@"lala" withString:_newsContent.time options:NSCaseInsensitiveSearch range:[allTitleStr rangeOfString:@"lala"]];
-    [allTitleStr replaceOccurrencesOfString:@"gaga" withString:cmt options:NSCaseInsensitiveSearch range:[allTitleStr rangeOfString:@"gaga"]];
-    
-    NSMutableString *head = (NSMutableString *)@"<head><style>img{width:360px !important;}</style></head>";
-    _contentHTMLString = [[[head stringByAppendingString:allTitleStr] stringByAppendingString:_newsContent.hometext] stringByAppendingString:_newsContent.bodytext];
-    
-    NSString *origin = [NSString stringWithFormat:@"<div style=\"text-align:center;\"><a href=\"http://www.cnbeta.com/articles/%@.htm\" target=\"_blank\">查看原文</a></div>", self.newsId];
-    _contentHTMLString = [_contentHTMLString stringByAppendingString:origin];
-    
-    [_contentWebView loadHTMLString:_contentHTMLString baseURL:nil];
-    [self webViewDidFinishLoad:_contentWebView];
-    
-    dispatch_async(dispatch_get_main_queue(), ^{
-        [_spinner stopAnimating];
-        //[_spinner removeFromSuperview];
-        //_spinner.hidden = YES;
-        
-        if ([[NSUserDefaults standardUserDefaults] boolForKey:@"Refresh"]) {
-            [WKProgressHUD dismissInView:self.view animated:YES];
-            [WKProgressHUD popMessage:@"刷新成功" inView:self.view duration:1.5 animated:YES];
-            [[NSUserDefaults standardUserDefaults] setBool:NO forKey:@"Refresh"];
-
-        }
-    });
-    
-    
-    
-}
 
 //webview中图片自适应宽度
 //- (void)webViewDidFinishLoad:(UIWebView *)webView {
@@ -261,16 +178,38 @@
 //    
 //}
 
+- (UIImage *)queryCachedImageForKey:(NSString *)key
+{
+    CBCachedURLResponse *cachedRespone = [[CBObjectCache sharedCache] objectForKey:key];
+    if (cachedRespone && [cachedRespone isKindOfClass:[CBCachedURLResponse class]]) {
+        if (cachedRespone.responseData) {
+            return [UIImage imageWithData:cachedRespone.responseData];
+        }
+    }
+    return nil;
+}
+
 - (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType
 {
     if (navigationType==UIWebViewNavigationTypeLinkClicked) {
-        NSURL *currentUrl=request.URL;
-        [[UIApplication sharedApplication] openURL:currentUrl];
-        return NO;
+        if ([request.URL.scheme isEqualToString:@"cnbeta"]) {
+            if (![self queryCachedImageForKey:request.URL.query]) {
+                return NO;
+            }
+            
+            IDMPhotoBrowser *browser = [[IDMPhotoBrowser alloc] initWithPhotoURLs:self.article.imageUrls];
+            NSUInteger index = [self.article.imageUrls indexOfObject:request.URL.query];
+            [browser setInitialPageIndex:index];
+            [self presentViewController:browser animated:YES completion:nil];
+            
+            browser.displayActionButton = YES;
+            browser.displayArrowButton = YES;
+            browser.displayCounterLabel = YES;
+            return NO;
+        }
     }
     return YES;
 }
-
 
 
 #pragma mark - Actions

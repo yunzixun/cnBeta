@@ -11,9 +11,9 @@
 #import "MJExtension.h"
 #import "MJRefresh.h"
 #import "CBHTTPRequester.h"
+#import "CBDataBase.h"
 #import "UIView+isShowingOnScreen.h"
 
-#import "HotNewsModel.h"
 #import "contentViewController.h"
 #import "NewsListCell.h"
 
@@ -108,9 +108,15 @@
     [[CBHTTPRequester requester] requestWithURL:url andHeaders:headers completion:^(id data, NSError *error) {
         if (!error) {
             //NSLog(@"%@",data[@"result"]);
-            NSArray *dataList = [HotNewsModel mj_objectArrayWithKeyValuesArray:data[@"result"][@"list"]];
+            NSArray *dataList = [NewsModel mj_objectArrayWithKeyValuesArray:data[@"result"][@"list"]];
+            for (NewsModel *news in dataList) {
+                [[CBDataBase sharedDataBase] cacheNews:news];
+            }
+
             [self.dataSource removeAllObjects];
-            [self.dataSource addObjectsFromArray:dataList];
+            for (NewsModel *news in dataList) {
+                [self.dataSource addObject:[[CBDataBase sharedDataBase] newsWithSid:news.sid]];
+            }
             self.RowCount = [self.dataSource count];
             [self.tableView reloadData];
             [self.tableView.mj_header endRefreshing];
@@ -123,17 +129,23 @@
 
 - (void)footerRefresh
 {
-    self.page ++;
     NSString *url = [NSString stringWithFormat:@"http://www.cnbeta.com/more?type=%@&page=%d", self.type, self.page];
     NSMutableDictionary *headers = [[NSMutableDictionary alloc]init];
     [headers setObject:@"http://www.cnbeta.com/" forKey:@"Referer"];
     [[CBHTTPRequester requester] requestWithURL:url andHeaders:headers completion:^(id data, NSError *error) {
         if (!error) {
-            NSArray *dataList = [HotNewsModel mj_objectArrayWithKeyValuesArray:data[@"result"][@"list"]];
-            [self.dataSource addObjectsFromArray:dataList];
+            NSArray *dataList = [NewsModel mj_objectArrayWithKeyValuesArray:data[@"result"][@"list"]];
+            for (NewsModel *news in dataList) {
+                [[CBDataBase sharedDataBase] cacheNews:news];
+            }
+
+            for (NewsModel *news in dataList) {
+                [self.dataSource addObject:[[CBDataBase sharedDataBase] newsWithSid:news.sid]];
+            }
             self.RowCount = [self.dataSource count];
             [self.tableView reloadData];
             [self.tableView.mj_footer endRefreshing];
+            self.page ++;
         }else {
             [self.tableView.mj_footer endRefreshing];
         }
@@ -156,7 +168,7 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     NewsListCell *cell = [NewsListCell cellWithTableView:tableView];
-    cell.hotNewsModel = self.dataSource[indexPath.row];
+    cell.newsModel = self.dataSource[indexPath.row];
     
     if ([cell respondsToSelector:@selector(setLayoutMargins:)]) {
         [cell setLayoutMargins:UIEdgeInsetsZero];
@@ -173,13 +185,18 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    HotNewsModel *currentNews= _dataSource[indexPath.row];
+    NewsModel *currentNews= _dataSource[indexPath.row];
     
     UIStoryboard *mainStoryboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
     contentViewController *contentvc = [mainStoryboard instantiateViewControllerWithIdentifier:@"contentViewController"];
     contentvc.newsId = currentNews.sid;
     contentvc.thumb = currentNews.thumb;
     contentvc.author = currentNews.aid;
+    
+    if (!currentNews.read) {
+        [currentNews setRead:@YES];
+        [[CBDataBase sharedDataBase] updateReadField:currentNews];
+    }
 
     contentvc.hidesBottomBarWhenPushed = YES;
     [self.navigationController pushViewController:contentvc animated:YES];

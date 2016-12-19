@@ -7,7 +7,7 @@
 //
 
 #import "NewsNavigationViewController.h"
-#import "DYAppSettings.h"
+#import "CBAppSettings.h"
 
 @interface NewsNavigationViewController ()<UIGestureRecognizerDelegate>
 
@@ -24,7 +24,7 @@
 {
     [super viewWillAppear:animated];
     
-    BOOL isOn = [DYAppSettings sharedSettings].gestureEnabled;
+    BOOL isOn = [CBAppSettings sharedSettings].gestureEnabled;
     if (isOn) {
         
         if (self.pan == nil) {

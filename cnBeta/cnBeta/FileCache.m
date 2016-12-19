@@ -9,8 +9,7 @@
 #import "fileCache.h"
 
 @implementation FileCache
-+ (
-   FileCache *)sharedCache
++ (FileCache *)sharedCache
 {
     static FileCache *fileCache = nil;
     static dispatch_once_t onceToken;
@@ -60,60 +59,6 @@
     return nil;
 }
 
-- (void)cacheObjectArrayToFile:(NSArray *)objects forKey:(NSString *)key
-{
-    if (objects) {
-        dispatch_async(ioQueue, ^{
-            NSString *fileName = key;
-            NSString *filePath = [cachesDirectory stringByAppendingPathComponent:fileName];
-            [objects writeToFile:filePath atomically:YES];
-        });
-    }
-}
-
-
-- (NSMutableArray*)getArrayFromFileForKey:(NSString *)key
-{
-    if (!key) {
-        return nil;
-    }
-    NSString *fileName = key;
-    NSString *filePath = [cachesDirectory stringByAppendingPathComponent:fileName];
-    if ([fileManager fileExistsAtPath:filePath]) {
-        return [NSMutableArray arrayWithContentsOfFile:filePath];
-    }
-    return nil;
-}
-
-- (void)cacheHTMLToFile:(NSString *)HTMLString forKey:(NSString *)key
-{
-    if (!HTMLString || !key) {
-        return;
-    }
-    dispatch_async(ioQueue, ^{
-        NSString *fileName = key;
-        NSString *filePath = [tmpDirectory stringByAppendingPathComponent:fileName];
-        BOOL s;
-        NSError *error;
-        s = [HTMLString writeToFile:filePath atomically:YES encoding:NSUTF8StringEncoding error:&error];
-        if (!s) {
-            NSLog(@"%@",error);
-        }
-    });
-}
-
-- (NSString *)getHTMLFromFileForKey:(NSString *)key
-{
-    if (!key) {
-        return nil;
-    }
-    NSString *fileName = key;
-    NSString *filePath = [tmpDirectory stringByAppendingPathComponent:fileName];
-    if ([fileManager fileExistsAtPath:filePath]) {
-        return [NSString stringWithContentsOfFile:filePath encoding:NSUTF8StringEncoding error:NULL];
-    }
-    return nil;
-}
 
 
 
@@ -136,13 +81,7 @@
             folderSize += [self fileSizeAtPath:absolutePath];
         }
     }
-    if ([fileManager fileExistsAtPath:cachesDirectory]) {
-        NSArray *childenFiles = [fileManager subpathsAtPath:cachesDirectory];
-        for (NSString *fileName in childenFiles) {
-            NSString *absolutePath = [cachesDirectory stringByAppendingPathComponent:fileName];
-            folderSize += [self fileSizeAtPath:absolutePath];
-        }
-    }
+    
     return folderSize;
 }
 - (void)clearCache

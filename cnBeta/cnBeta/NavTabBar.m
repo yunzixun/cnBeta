@@ -7,7 +7,7 @@
 //
 
 #import "NavTabBar.h"
-#import "DYAppearanceManager.h"
+#import "CBAppearanceManager.h"
 
 @interface NavTabBar ()
 {

@@ -8,6 +8,7 @@
 
 #import "CBHTTPRequester.h"
 #import "AFNetWorking.h"
+#import "MJExtension.h"
 #import "NSString+MD5.h"
 #import "TFHpple.h"
 #import "CBDataBase.h"
@@ -189,7 +190,7 @@
         
     }else {
         //url = @"http://cnbeta.techoke.com/api/list?version=1.8.6&init=1";
-        url = @"http://182.92.195.110/api/news?version=2.1.0&init=1";
+        url = @"http://182.92.195.110/api/news?version=2.2.0&init=1";
     }
     
     AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
@@ -224,6 +225,30 @@
         completionBlock(nil, error);
     }];
 }
+
+- (void)fetchNewsListWithURL:(NSString *)url andHeaders:(NSDictionary *)headers completion:(void (^)(NSError *))completionBlock
+{
+    AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
+    [manager.requestSerializer setTimeoutInterval:10.0];
+    NSArray *allKey = [headers allKeys];
+    for (NSString *key in allKey) {
+        [manager.requestSerializer setValue:headers[key] forHTTPHeaderField:key];
+    }
+    
+    self.requestTask = [manager GET:url parameters:nil progress:^(NSProgress * _Nonnull downloadProgress) {
+        
+    } success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+        NSArray *dataList = [NewsModel mj_objectArrayWithKeyValuesArray:responseObject[@"result"][@"list"]];
+        for (NewsModel *news in dataList) {
+            [[CBDataBase sharedDataBase] cacheNews:news];
+        }
+
+        completionBlock(nil);
+    } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+        completionBlock(error);
+    }];
+}
+
 
 - (void)fetchArticleWithSid:(NSString *)sid completion:(CompletionBlock)block
 {

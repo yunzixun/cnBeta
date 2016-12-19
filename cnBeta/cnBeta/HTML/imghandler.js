@@ -1,5 +1,5 @@
 function handleImgs () {
-    var custonPrefix = 'plainreader://article.body.img?';
+    var custonPrefix = 'cnbeta://article.body.img?';
     
     var imgOnClick = function() {
         if (this.src.indexOf(custonPrefix) != -1) {

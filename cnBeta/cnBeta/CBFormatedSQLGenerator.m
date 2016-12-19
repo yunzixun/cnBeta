@@ -48,4 +48,47 @@
     completionBlock(sql, arguments);
 }
 
++ (void)generateSQLForListNews:(NewsModel *)news completion: (void (^)(NSString * sql, NSArray *arguments))completionBlock
+{
+    NSMutableArray *columns = [[NSMutableArray alloc] init];
+    NSMutableArray *placeHolders = [[NSMutableArray alloc]init];
+    NSMutableArray *arguments = [[NSMutableArray alloc] init];
+    
+    [columns addObject:@"newsId"];
+    [placeHolders addObject:@"?"];
+    [arguments addObject:@([news.sid intValue])];
+    
+    [columns addObject:@"title"];
+    [placeHolders addObject:@"?"];
+    [arguments addObject:news.title];
+    
+    [columns addObject:@"pubTime"];
+    [placeHolders addObject:@"?"];
+    [arguments addObject:news.inputtime];
+    
+    [columns addObject:@"comments"];
+    [placeHolders addObject:@"?"];
+    [arguments addObject:news.comments];
+    
+    [columns addObject:@"thumb"];
+    [placeHolders addObject:@"?"];
+    [arguments addObject:news.thumb];
+    
+    [columns addObject:@"author"];
+    [placeHolders addObject:@"?"];
+    [arguments addObject:news.aid];
+    
+    if (news.read) {
+        [columns addObject:@"read"];
+        [placeHolders addObject:@"?"];
+        [arguments addObject:news.read];
+    }
+
+
+    NSString *sql = [NSString stringWithFormat:@"INSERT INTO newsListCache (%@) VALUES(%@)", [columns componentsJoinedByString:@","], [placeHolders componentsJoinedByString:@","]];
+    completionBlock(sql, arguments);
+
+}
+
+
 @end

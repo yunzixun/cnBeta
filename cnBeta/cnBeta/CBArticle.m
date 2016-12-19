@@ -8,7 +8,17 @@
 
 #import "CBArticle.h"
 #import "CBStarredCache.h"
-#import "DYAppearanceManager.h"
+#import "CBAppearanceManager.h"
+#import "CBAppSettings.h"
+
+
+NSString *const XPathQueryArticleImages = @"//div[@class=\"content\"]//img";
+
+@interface CBArticle ()
+
+@property (nonatomic, strong)NSArray *imageUrls;
+
+@end
 
 @implementation CBArticle
 
@@ -17,10 +27,33 @@
     return [[CBStarredCache sharedCache] isStarred:self.newsId];
 }
 
+- (NSArray *)imageUrls
+{
+    if (!self.content) {
+        return nil;
+    }
+    if (_imageUrls) {
+        return  _imageUrls;
+    }
+    NSData *contentData = [self.content dataUsingEncoding:NSUTF8StringEncoding];
+    TFHpple *hpple = [[TFHpple alloc] initWithHTMLData:contentData];
+    NSArray *images = [hpple searchWithXPathQuery:XPathQueryArticleImages];
+    NSMutableArray *imgSrcs = nil;
+    
+    for (TFHppleElement *img in images) {
+        if (!imgSrcs) {
+            imgSrcs = [[NSMutableArray alloc] init];
+        }
+        [imgSrcs addObject:[img objectForKey:@"src"]];
+    }
+    return imgSrcs;
+}
+
 - (NSString *)toHTML
 {
     static NSString *const kTitlePlaceholder = @"<!-- title -->";
     static NSString *const kSourcePlaceholder = @"<!-- source -->";
+    static NSString *const kEditorPlaceholder = @"<!-- editor -->";
     static NSString *const kTimePlaceholder = @"<!-- time -->";
     static NSString *const kSummaryPlaceholder = @"<!-- summary -->";
     static NSString *const kContentPlaceholder = @"<!-- content -->";
@@ -53,8 +86,8 @@
         css = [[NSString alloc] initWithContentsOfURL:URL encoding:NSUTF8StringEncoding error:nil];
 //    }
     
-        css = [css stringByAppendingString:@"h1{font-size:20px;}.content, summary {font-size: 17px;line-height:25px;}.source, .time{font-size: 13px;}"];
-    UIFont *bodyFont = [[DYAppearanceManager sharedManager] CBFont];
+        css = [css stringByAppendingString:@"h1{font-size:20px;}.content, summary {font-size: 17px;line-height:25px;}.source, .editor, .time{font-size: 11px;}"];
+    UIFont *bodyFont = [[CBAppearanceManager sharedManager] CBFont];
     css = [css stringByReplacingOccurrencesOfString:kFontPlaceholder withString:bodyFont.fontName];
 
     //    if (UI_USER_INTERFACE_IDIOM() != UIUserInterfaceIdiomPad) {
@@ -98,8 +131,11 @@
     if (self.title) {
         html = [html stringByReplacingOccurrencesOfString:kTitlePlaceholder withString:self.title];
     }
+    if (self.source && [CBAppSettings sharedSettings].sourceDisplayEnabled) {
+        html = [html stringByReplacingOccurrencesOfString:kSourcePlaceholder withString:self.source];
+    }
     if (self.author) {
-        html = [html stringByReplacingOccurrencesOfString:kSourcePlaceholder withString:[NSString stringWithFormat:@"责编：%@", self.author]];
+        html = [html stringByReplacingOccurrencesOfString:kEditorPlaceholder withString:[NSString stringWithFormat:@"责编：%@", self.author]];
     }
     if (self.pubTime) {
         html = [html stringByReplacingOccurrencesOfString:kTimePlaceholder withString:self.pubTime];
@@ -111,9 +147,16 @@
     if (self.content) {
         NSString *htmlString = [NSString stringWithFormat:@"<font face='%@' >%@", bodyFont.fontName,self.content];
         html = [html stringByReplacingOccurrencesOfString:kContentPlaceholder withString:htmlString];
+   
+    if ([CBAppSettings sharedSettings].imageWiFiOnlyEnabled && ![[AFNetworkReachabilityManager sharedManager] isReachableViaWiFi]) {
+        for (NSString *imgSrc in self.imageUrls) {
+            html = [html stringByReplacingOccurrencesOfString:imgSrc
+                                                   withString:[@"cnbeta://article.body.img?" stringByAppendingString:imgSrc]];
+        }
+    }
+
         
-        
-//        if (settings.isImageWIFIOnly && ![[AFNetworkReachabilityManager sharedManager] isReachableViaWiFi]) {
+//        if ([CBAppSettings sharedSettings].isImageWIFIOnly && ![[AFNetworkReachabilityManager sharedManager] isReachableViaWiFi]) {
 //            for (NSString *imgSrc in self.imgSrcs) {
 //                html = [html stringByReplacingOccurrencesOfString:imgSrc withString:[@"plainreader://article.body.img?" stringByAppendingString:imgSrc]];
 //            }

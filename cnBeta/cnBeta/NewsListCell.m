@@ -6,19 +6,29 @@
 //  Copyright © 2016年 hudy. All rights reserved.
 //
 
-#define SCREEN_WIDTH                    [UIScreen mainScreen].bounds.size.width
 
 #import "NewsListCell.h"
-#import "DYAppearanceManager.h"
+#import "CBAppearanceManager.h"
+#import "CBAppSettings.h"
+#import "Constant.h"
+#import "CBHTTPRequester.h"
+#import "CBArticle.h"
+#import "CBArticleParser.h"
+#import "CBDataBase.h"
+#import "CBCachedURLResponse.h"
+#import "CBObjectCache.h"
+#import "CBHTTPURLProtocol.h"
 
 
 
-@interface NewsListCell ()
+@interface NewsListCell () <NSURLSessionDelegate>
 
-@property (nonatomic,strong)UILabel      *time;
-@property (strong, nonatomic)UIImageView *imageThumb;
-@property (nonatomic, strong)UIImageView *cmtImg;
-@property (nonatomic, strong)UILabel     *cmtNum;
+@property (nonatomic, strong) UILabel      *time;
+@property (strong, nonatomic) UIImageView *imageThumb;
+@property (nonatomic, strong) UIImageView *newsCellCachedRectangle;
+@property (nonatomic, strong) UIImageView *cmtImg;
+@property (nonatomic, strong) UILabel     *cmtNum;
+@property (nonatomic, strong) NSOperationQueue *queue;
 
 
 @end
@@ -49,7 +59,7 @@
         _newstitle.numberOfLines = 0;
         //[_newstitle setText:newsModel.title];
         _newstitle.textAlignment = NSTextAlignmentLeft;
-        _newstitle.frame = CGRectMake(100, 10, SCREEN_WIDTH -10-100, 50);
+        _newstitle.frame = CGRectMake(100, 10, ScreenWidth -10-100, 50);
         [self.contentView addSubview:_newstitle];
         
         //时间
@@ -63,13 +73,19 @@
         [self.contentView addSubview:_time];
         
         //图片
+        _newsCellCachedRectangle = [[UIImageView alloc] init];
+        _newsCellCachedRectangle.frame = CGRectMake(10, 10, 79, 60);
+        _newsCellCachedRectangle.layer.borderWidth = rectangleBordWidth;
+        _newsCellCachedRectangle.layer.borderColor = rectangleBorderColor.CGColor;
+        [self.contentView addSubview:_newsCellCachedRectangle];
+        
         _imageThumb = [[UIImageView alloc]init];
         self.imageThumb.frame = CGRectMake(12, 12, 75, 56);
         [self.contentView addSubview:_imageThumb];
         //[self.imageThumb sd_setImageWithURL:[NSURL URLWithString:newsModel.thumb] placeholderImage:[UIImage imageNamed:@"placeholder"]];
         
         _cmtImg = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"iPhone_TableViewCell_Reply_13x10_"]];
-        _cmtImg.frame = CGRectMake(SCREEN_WIDTH - 50, 60, 15, 10);
+        _cmtImg.frame = CGRectMake(ScreenWidth - 50, 60, 15, 10);
         [self.contentView addSubview:_cmtImg];
         
         
@@ -77,81 +93,130 @@
         _cmtNum = cmtNum;
         _cmtNum.textColor = [UIColor grayColor];
         _cmtNum.textAlignment = NSTextAlignmentLeft;
-        _cmtNum.frame = CGRectMake(SCREEN_WIDTH - 30, 60, 30, 10);
+        _cmtNum.frame = CGRectMake(ScreenWidth - 30, 60, 30, 10);
         [self.contentView addSubview:_cmtNum];
     }
     return self;
 }
-//- (void)setNewsModel:(DataModel *)newsModel
-//{
-//    _newsModel = newsModel;
-//    for (UILabel *label in self.contentView.subviews) {
-//        [label removeFromSuperview];
-//    }
-//    //新闻标题
-//    _newstitle = [[UILabel alloc]initWithFrame:CGRectMake(100, 10, SCREEN_WIDTH-10-100, 50)];
-//    _newstitle.autoresizingMask = UIViewAutoresizingFlexibleWidth;
-//    _newstitle.numberOfLines = 3;
-//    [_newstitle setText:newsModel.title];
-//    _newstitle.font = [UIFont systemFontOfSize:16];
-//    _newstitle.textAlignment = NSTextAlignmentLeft;
-//    [self.contentView addSubview:_newstitle];
-//    //时间
-//    _time = [[UILabel alloc]initWithFrame:CGRectMake(100, 60, 250, 10)];
-//    _time.autoresizingMask = UIViewAutoresizingFlexibleWidth;
-//    [_time setText:newsModel.pubtime];
-//    _time.font = [UIFont systemFontOfSize:11];
-//    _time.textColor = [UIColor grayColor];
-//    _time.textAlignment = NSTextAlignmentLeft;
-//    [self.contentView addSubview:_time];
-//    //NSLog(@"%@", newsModel.thumb);
-//    //图片
-//    _imageThumb = [[UIImageView alloc]initWithFrame:CGRectMake(10, 10, 80, 60)];
-//    [self.contentView addSubview:_imageThumb];
-//    [self.imageThumb sd_setImageWithURL:[NSURL URLWithString:newsModel.thumb] placeholderImage:[UIImage imageNamed:@"placeholder"]];
-//}
 
-- (void)setNewsModel:(DataModel *)newsModel
+- (void)prepareForReuse
+{
+    [super prepareForReuse];
+    if (self.queue) {
+        [self.queue cancelAllOperations];
+        self.queue = nil;
+    }
+}
+
+- (void)setNewsModel:(NewsModel *)newsModel
 {
     _newsModel = newsModel;
     
     //新闻标题
     [_newstitle setText:[self pureTitle:newsModel.title]];
     _newstitle.font = NewsTitleFont;
+    _newstitle.textColor = [newsModel.read boolValue] ? [UIColor grayColor] : [UIColor blackColor];
+
     
     //时间
     [_time setText:newsModel.inputtime];
     _time.font = NewsTimeFont;
     
     //图片
-    [self.imageThumb sd_setImageWithURL:[NSURL URLWithString:newsModel.thumb] placeholderImage:[UIImage imageNamed:@"placeholder"]];
+    if ([[CBDataBase sharedDataBase] isCached:self.newsModel.sid]) {
+        self.newsModel.cacheStatus = @(CBArticleCacheStatusCached);
+    }
+    _newsCellCachedRectangle.hidden = [self.newsModel.cacheStatus integerValue] == CBArticleCacheStatusCached ? NO : YES;
+    if ([CBAppSettings sharedSettings].imageWiFiOnlyEnabled && ![[AFNetworkReachabilityManager sharedManager] isReachableViaWiFi]) {
+        NSString *imageUrl = [@"cnbeta://newsList.thumbnail?" stringByAppendingString:newsModel.thumb];
+        [self.imageThumb sd_setImageWithURL:[NSURL URLWithString:imageUrl] placeholderImage:[UIImage imageNamed:@"placeholder"]];
+
+    } else {
+        [self.imageThumb sd_setImageWithURL:[NSURL URLWithString:newsModel.thumb] placeholderImage:[UIImage imageNamed:@"placeholder"]];
+    }
+
     
     //评论数
     [_cmtNum setText:newsModel.comments];
     _cmtNum.font = CmtNumFont;
-
-}
-
-- (void)setHotNewsModel:(HotNewsModel *)hotNewsModel
-{
-    _hotNewsModel = hotNewsModel;
-
-    //新闻标题
-    [_newstitle setText:hotNewsModel.title];
-    _newstitle.font = NewsTitleFont;
-
-    //时间
-    [_time setText:hotNewsModel.inputtime];
-    _time.font = NewsTimeFont;
-
-    //图片
-    [self.imageThumb sd_setImageWithURL:[NSURL URLWithString:hotNewsModel.thumb] placeholderImage:[UIImage imageNamed:@"placeholder"]];
     
-    //评论数
-    [_cmtNum setText:hotNewsModel.comments];
-    _cmtNum.font = CmtNumFont;
+    [self downloadArticle];
 
 }
+
+- (void)downloadArticle
+{
+    if ([self.newsModel.cacheStatus integerValue] == CBArticleCacheStatusCached) {
+        return;
+    }
+    if (![[AFNetworkReachabilityManager sharedManager] isReachableViaWiFi]) {
+        return;
+    }
+    if (![CBAppSettings sharedSettings].prefetchEnabled ) {
+        return;
+    }
+    if (self.queue) {
+        [self.queue cancelAllOperations];
+        self.queue = nil;
+    }
+    NSOperationQueue *queue = [[NSOperationQueue alloc] init];
+    queue.name = @"cellCacheQueue";
+    queue.maxConcurrentOperationCount = 1;
+    self.queue = queue;
+    
+    NSString *url = [NSString stringWithFormat:@"http://www.cnbeta.com/articles/%@.htm", self.newsModel.sid];
+    NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:url] cachePolicy:0 timeoutInterval:15];
+    
+    NSURLSession *session = [NSURLSession sessionWithConfiguration:[NSURLSessionConfiguration defaultSessionConfiguration] delegate:self delegateQueue:self.queue];
+    
+    NSURLSessionTask *task = [session dataTaskWithRequest:request completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
+        if (!error) {
+            CBArticle *article = [[CBArticle alloc] init];
+            TFHpple *hpple = [[TFHpple alloc] initWithHTMLData:data];
+            [CBArticleParser parseArticle:article hpple:hpple];
+            article.newsId = self.newsModel.sid;
+            [[CBDataBase sharedDataBase] cacheArticle:article];
+            
+            self.newsModel.cacheStatus = @(CBArticleCacheStatusCached);
+            
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [self refreshCacheStatus];
+            });
+            
+            NSArray *imageUrls = article.imageUrls;
+            for (NSString *url in imageUrls) {
+                NSURLRequest *imageRequest = [NSURLRequest requestWithURL:[NSURL URLWithString:url] cachePolicy:0 timeoutInterval:15];
+                NSURLSessionConfiguration *config = [NSURLSessionConfiguration defaultSessionConfiguration];
+                NSURLSession *session = [NSURLSession sessionWithConfiguration:config delegate:self delegateQueue:self.queue];
+
+                config.protocolClasses = @[[CBHTTPURLProtocol class]];
+                NSURLSessionTask *imageTask = [session dataTaskWithRequest:imageRequest completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
+                    if (!error) {
+                        CBCachedURLResponse *cache = [[CBCachedURLResponse alloc] init];
+                        cache.response = response;
+                        cache.responseData = data;
+                        [[CBObjectCache sharedCache] storeObject:cache forKey:imageRequest.URL.absoluteString];
+                    }
+                }];
+                [imageTask resume];
+            }
+        } else {
+            self.newsModel.cacheStatus = @(CBArticleCacheStatusFailed);
+        }
+
+    }];
+    [task resume];
+    
+
+}
+
+- (void)refreshCacheStatus
+{
+    if ([self.newsModel.cacheStatus integerValue] == CBArticleCacheStatusCached) {
+        self.newsCellCachedRectangle.hidden = NO;
+    }
+}
+
 
 - (NSString *)pureTitle:(NSString *)title
 {

@@ -7,7 +7,6 @@
 //
 
 #import "AppDelegate.h"
-#import "AFNetworking.h"
 #import "AFNetworkActivityIndicatorManager.h"
 //#import "UMSocial.h"
 #import <UMSocialCore/UMSocialCore.h>
@@ -16,10 +15,14 @@
 #import "CRToast.h"
 #import "JPFPSStatus.h"
 #import <Bugrpt/NTESCrashReporter.h>
-#import "DYAppearanceManager.h"
-#import "DYAppSettings.h"
+#import "CBAppearanceManager.h"
+#import "CBAppSettings.h"
 #import "DataBase.h"
 #import "CBDataBase.h"
+#import "CBObjectCache.h"
+#import "CBCustomURLProtocol.h"
+#import "CBHTTPURLProtocol.h"
+#import "CBURLCache.h"
 #import "UMMobClick/MobClick.h"
 
 #import "NewsNavigationViewController.h"
@@ -34,10 +37,14 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     
     [AFNetworkActivityIndicatorManager sharedManager].enabled = YES;
-    [[DYAppearanceManager sharedManager] setup];
+    [[CBAppearanceManager sharedManager] setup];
     
     [[DataBase sharedDataBase] createDataBase];
     [[CBDataBase sharedDataBase] prepareDataBase];
+    
+    [NSURLCache setSharedURLCache:[[CBURLCache alloc] init]];
+    [NSURLProtocol registerClass:[CBHTTPURLProtocol class]];
+    [NSURLProtocol registerClass:[CBCustomURLProtocol class]];
     
 //#if defined(DEBUG)||defined(_DEBUG)
 //    [[JPFPSStatus sharedInstance] open];
@@ -110,9 +117,10 @@
     //设置监听
     
     __block BOOL count = NO;
+
     [manager setReachabilityStatusChangeBlock:^(AFNetworkReachabilityStatus status) {
         
-        BOOL switchOn = [DYAppSettings sharedSettings].networkNotificationEnabled;
+        BOOL switchOn = [CBAppSettings sharedSettings].networkNotificationEnabled;
         
         switch (status) {
             case AFNetworkReachabilityStatusUnknown:
@@ -192,6 +200,9 @@
 
 - (void)applicationDidEnterBackground:(UIApplication *)application {
     [[CBDataBase sharedDataBase] clearExpiredCache];
+    if ([CBAppSettings sharedSettings].autoClearEnabled) {
+        [[CBObjectCache sharedCache] clearExpiredDiskCache];
+    }
 }
 
 - (void)applicationWillEnterForeground:(UIApplication *)application {
@@ -204,6 +215,9 @@
 
 - (void)applicationWillTerminate:(UIApplication *)application {
     [[CBDataBase sharedDataBase] clearExpiredCache];
+    if ([CBAppSettings sharedSettings].autoClearEnabled) {
+        [[CBObjectCache sharedCache] clearExpiredDiskCache];
+    }
 }
 
 @end

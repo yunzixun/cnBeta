@@ -9,7 +9,7 @@
 #import "gridLayoutView.h"
 #import "commentModel.h"
 #import "Constant.h"
-#import "DYAppearanceManager.h"
+#import "CBAppearanceManager.h"
 
 @implementation gridLayoutView
 

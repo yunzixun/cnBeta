@@ -15,13 +15,14 @@
 #import "UIView+isShowingOnScreen.h"
 #import "contentViewController.h"
 #import "NewsListCell.h"
-#import "MJExtension.h"
 #import "AFNetworking.h"
+#import "MJExtension.h"
 #import "SDCycleScrollView.h"
-#import "DataModel.h"
+#import "NewsModel.h"
 #import "CycleNewsModel.h"
 #import "FileCache.h"
 #import "DataBase.h"
+#import "CBDataBase.h"
 
 
 
@@ -29,9 +30,6 @@
 @property (nonatomic, assign) NSUInteger RowCount;
 @property (nonatomic, strong) NSMutableArray *newsList;
 @property (nonatomic, strong) NSArray *cycleNews;
-@property (nonatomic, strong) NSMutableArray *imagesArray;
-@property (nonatomic, strong) NSMutableArray *titlesArray;
-@property (nonatomic, strong) FileCache *fileCache;
 @property (nonatomic, strong) DataBase *collection;
 @property (nonatomic, copy)   NSString *type;
 @property (nonatomic, assign) int page;
@@ -70,7 +68,6 @@
     //_RowCount = 20;
     self.newsList = [[NSMutableArray alloc]init];
     
-    _fileCache = [FileCache sharedCache];
     _collection = [DataBase sharedDataBase];
     [self loadCache];
     
@@ -79,7 +76,6 @@
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(tabBarClick) name:@"TabRefresh" object:nil];
     
-    [self initCycleView];
     [self setupRefreshView];
     
     
@@ -95,27 +91,12 @@
     [self.tableView reloadData];
 }
 
-- (NSMutableArray *)imagesArray
-{
-    if (!_imagesArray) {
-        _imagesArray = [NSMutableArray array];
-    }
-    return _imagesArray;
-}
-
-- (NSMutableArray *)titlesArray
-{
-    if (!_titlesArray) {
-        _titlesArray = [NSMutableArray array];
-    }
-    return _titlesArray;
-}
 
 - (void)loadCache
 {
-    NSMutableArray *newslist = [_fileCache getNewsListFromFileForKey:@"newsList"];
-    if (newslist) {
-        self.newsList = newslist;
+    NSArray *newslist = [[CBDataBase sharedDataBase] newsListWithLastNews:nil limit:40];
+    if (newslist.count > 0) {
+        [self.newsList addObjectsFromArray:newslist];
         self.RowCount = [self.newsList count];
         
 //        SDCycleScrollView *cycleScrollView = [SDCycleScrollView cycleScrollViewWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_WIDTH *0.55) imageURLStringsGroup:nil];
@@ -125,7 +106,6 @@
 //        cycleScrollView.pageControlStyle = SDCycleScrollViewPageContolStyleClassic;
 //        //cycleScrollView.autoScrollTimeInterval = 6.0;
 //        self.tableView.tableHeaderView = cycleScrollView;
-        [self.tableView reloadData];
     }
 
 }
@@ -145,16 +125,15 @@
                 }
                 [titlesArray addObject:data.title];
             }
-            [self.imagesArray addObjectsFromArray:imagesArray];
-            [self.titlesArray addObjectsFromArray:titlesArray];
             
-            SDCycleScrollView *cycleScrollView = [SDCycleScrollView cycleScrollViewWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_WIDTH *0.55) imageURLStringsGroup:self.imagesArray];
+            SDCycleScrollView *cycleScrollView = [SDCycleScrollView cycleScrollViewWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_WIDTH *0.55) imageURLStringsGroup:imagesArray];
             cycleScrollView.delegate = self;
             cycleScrollView.pageControlAliment = SDCycleScrollViewPageContolAlimentRight;
-            cycleScrollView.titlesGroup = self.titlesArray;
+            cycleScrollView.titlesGroup = titlesArray;
             cycleScrollView.pageControlStyle = SDCycleScrollViewPageContolStyleClassic;
             cycleScrollView.autoScrollTimeInterval = 6.0;
             self.tableView.tableHeaderView = cycleScrollView;
+            [cycleScrollView startloading];
         }
     }];
     
@@ -181,43 +160,46 @@
 
 - (void)headerRefresh
 {
-    self.page = 1;
+    //self.page = 1;
+    [self initCycleView];
+    
     NSString *url = [NSString stringWithFormat:@"http://www.cnbeta.com/more?type=%@&page=1", self.type];
     NSMutableDictionary *headers = [[NSMutableDictionary alloc]init];
     [headers setObject:@"http://www.cnbeta.com/" forKey:@"Referer"];
-    [[CBHTTPRequester requester] requestWithURL:url andHeaders:headers completion:^(id data, NSError *error) {
-        if (!error) {
-            //NSLog(@"%@",data[@"result"]);
-            NSArray *dataList = [DataModel mj_objectArrayWithKeyValuesArray:data[@"result"][@"list"]];
-            [self.newsList removeAllObjects];
-            [self.newsList addObjectsFromArray:dataList];
-            self.RowCount = [self.newsList count];
-            [self.tableView reloadData];
-            [self.tableView.mj_header endRefreshing];
-            [_fileCache cacheNewsListToFile:self.newsList forKey:@"newsList"];
-        }else {
-            [self.tableView.mj_header endRefreshing];
+    [[CBHTTPRequester requester] fetchNewsListWithURL:url andHeaders:headers completion:^(NSError *error) {
+        [self.tableView.mj_header endRefreshing];
+        if (error && error.code == NSURLErrorTimedOut) {
+            return;
         }
+        NSArray *newsArr = [[CBDataBase sharedDataBase] newsListWithLastNews:nil limit:40];
+        [self.newsList removeAllObjects];
+        [self.newsList addObjectsFromArray:newsArr];
+        self.RowCount = [self.newsList count];
+        [self.tableView reloadData];
     }];
 }
 
 
 - (void)footerRefresh
 {
-    self.page ++;
     NSString *url = [NSString stringWithFormat:@"http://www.cnbeta.com/more?type=%@&page=%d", self.type, self.page];
     NSMutableDictionary *headers = [[NSMutableDictionary alloc]init];
     [headers setObject:@"http://www.cnbeta.com/" forKey:@"Referer"];
-    [[CBHTTPRequester requester] requestWithURL:url andHeaders:headers completion:^(id data, NSError *error) {
+    [[CBHTTPRequester requester] fetchNewsListWithURL:url andHeaders:headers completion:^(NSError *error) {
         if (!error) {
-            NSArray *dataList = [DataModel mj_objectArrayWithKeyValuesArray:data[@"result"][@"list"]];
-            [self.newsList addObjectsFromArray:dataList];
+            self.page ++;
+        }
+        
+        if (error && error.code == NSURLErrorTimedOut) {
+            
+        } else {
+            NSArray *newsArr = [[CBDataBase sharedDataBase] newsListWithLastNews:[self.newsList lastObject] limit:40];
+            
+            [self.newsList addObjectsFromArray:newsArr];
             self.RowCount = [self.newsList count];
             [self.tableView reloadData];
-            [self.tableView.mj_footer endRefreshing];
-        }else {
-            [self.tableView.mj_footer endRefreshing];
         }
+        [self.tableView.mj_footer endRefreshing];
     }];
     
 }
@@ -281,18 +263,11 @@
 {
     NewsListCell *cell = [NewsListCell cellWithTableView:tableView];
     
-    DataModel *dataModel = _newsList[indexPath.row];
-    cell.newsModel = dataModel;
+    NewsModel *news = _newsList[indexPath.row];
+    cell.newsModel = news;
     
-    //判断新闻是否已读
-    if ([_collection queryWithSid:dataModel.sid tableType:@"newsID"]) {
-        cell.newstitle.textColor = [UIColor grayColor];
-    } else {
-        if ([dataModel.comments intValue] >= 30) {
-            cell.newstitle.textColor = [UIColor redColor];
-        }else {
-            cell.newstitle.textColor = [UIColor blackColor];
-        }
+    if (!news.read && [news.comments intValue] >= 30) {
+        cell.newstitle.textColor = [UIColor redColor];
     }
     
     if ([cell respondsToSelector:@selector(setLayoutMargins:)]) {
@@ -326,7 +301,7 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    DataModel *currentNews = self.newsList[indexPath.row];
+    NewsModel *currentNews = self.newsList[indexPath.row];
     
     UIStoryboard *mainStoryboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
     contentViewController *contentvc = [mainStoryboard instantiateViewControllerWithIdentifier:@"contentViewController"];
@@ -335,7 +310,11 @@
     contentvc.author = currentNews.aid;
     contentvc.hidesBottomBarWhenPushed = YES;
     
-    [_collection addNewsID:currentNews.sid];
+    if (!currentNews.read) {
+        [currentNews setRead:@YES];
+        [[CBDataBase sharedDataBase] updateReadField:currentNews];
+    }
+    //[_collection addNewsID:currentNews.sid];
 
     [self.navigationController pushViewController:contentvc animated:YES];
     

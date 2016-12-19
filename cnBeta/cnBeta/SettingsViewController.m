@@ -12,14 +12,15 @@
 
 #import "SettingsViewController.h"
 #import "FileCache.h"
+#import "CBObjectCache.h"
 #import <MessageUI/MFMailComposeViewController.h>
 #import "NSString+iphoneType.h"
 #import "SettingCell.h"
 #import "SettingArrowItem.h"
 #import "SettingSwitchItem.h"
 #import "SettingGroup.h"
-#import "DYAppSettings.h"
-#import "DYAppearanceManager.h"
+#import "CBAppSettings.h"
+#import "CBAppearanceManager.h"
 #import "CBDataBase.h"
 
 @interface SettingsViewController ()<UITableViewDelegate, UITableViewDataSource, SwitchControlDelegate, MFMailComposeViewControllerDelegate>
@@ -30,7 +31,7 @@
 @property (nonatomic, strong)NSArray *dataSource;
 @property (nonatomic)float cacheSize;
 @property (nonatomic, strong)NSMutableArray *groupArray;
-@property (nonatomic, strong)DYAppSettings *settings;
+@property (nonatomic, strong)CBAppSettings *settings;
 @property (nonatomic, strong)NSDictionary *switchDic;
 @end
 
@@ -47,7 +48,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.navigationItem.title = @"设置";
-    _settings = [DYAppSettings sharedSettings];
+    _settings = [CBAppSettings sharedSettings];
     
     _settingsTableView = [[UITableView alloc]initWithFrame:CGRectMake(0, 20, [[UIScreen mainScreen]bounds].size.width, [[UIScreen mainScreen]bounds].size.height-100) style:UITableViewStyleGrouped];
     [self.view addSubview:_settingsTableView];
@@ -64,8 +65,8 @@
     }
     
     
-    _dataSource = @[@"手势操作", @"网络切换通知", @"自动收藏评论过的文章", @"使用细体文字", @"清除缓存", @"反馈建议", @"去App Store给我们好评", @"关于"];
-    _switchDic = @{@"手势操作": @(CBGesture), @"网络切换通知": @(CBNetworkNotification), @"自动收藏评论过的文章": @(CBAutoCollection), @"使用细体文字": @(CBFontChange)};
+    _dataSource = @[@"手势操作", @"网络切换通知", @"WiFi网络下开启预载", @"仅WiFi网络下加载图片", @"显示文章来源", @"自动收藏评论过的文章", @"使用细体文字", @"自动清理7天前缓存", @"清除缓存", @"反馈建议", @"去App Store给我们好评", @"关于"];
+    _switchDic = @{@"手势操作": @(CBGesture), @"网络切换通知": @(CBNetworkNotification), @"WiFi网络下开启预载": @(CBPrefetch), @"仅WiFi网络下加载图片": @(CBImageWiFiOnly), @"显示文章来源":@(CBSourceDisplay), @"自动收藏评论过的文章": @(CBAutoCollection), @"使用细体文字": @(CBFontChange), @"自动清理7天前缓存":@(CBAutoClear)};
     _index = 0;
 
     [self setupGroup0];
@@ -80,6 +81,9 @@
     [super viewWillAppear:animated];
     FileCache *cache = [FileCache sharedCache];
     _cacheSize = [cache folderSizeOfCache];
+    
+    CBObjectCache *objectCache = [CBObjectCache sharedCache];
+    _cacheSize += [objectCache cacheSize];
     
     SettingGroup * group = _groupArray[1];
     SettingItem *item = [group.items lastObject];
@@ -98,6 +102,15 @@
     
     //网络切换通知
     SettingItem *networkNotification = [SettingSwitchItem itemWithTitle:_dataSource[_index++]];
+    
+    //WiFi下预载文章
+    SettingItem *prefetch = [SettingSwitchItem itemWithTitle:_dataSource[_index++]];
+    
+    //仅WiFi下加载图片
+    SettingItem *imageWiFiOnly = [SettingSwitchItem itemWithTitle:_dataSource[_index++]];
+    
+    //显示文章来源
+    SettingItem *sourceDisplay = [SettingSwitchItem itemWithTitle:_dataSource[_index++]];
 
     //自动收藏
     SettingItem *autoCollection = [SettingSwitchItem itemWithTitle:_dataSource[_index++]];
@@ -108,7 +121,7 @@
     SettingGroup *group0 = [[SettingGroup alloc]init];
     
     if ([[UIDevice currentDevice] systemVersion].floatValue >= 8.0) {
-        group0.items = @[gesture, networkNotification, autoCollection, fontChange];
+        group0.items = @[gesture, networkNotification, prefetch, imageWiFiOnly, sourceDisplay, autoCollection, fontChange];
     } else {
         group0.items = @[gesture, networkNotification, autoCollection];
     }
@@ -117,13 +130,16 @@
 
 - (void)setupGroup1
 {
+    //自动清理
+    SettingItem *autoClear = [SettingSwitchItem itemWithTitle:_dataSource[_index++]];
+    
     //清除缓存
     SettingItem *clearCache = [SettingArrowItem itemWithTitle:_dataSource[_index++] subtitle:[NSString stringWithFormat:@"%.2fMB", _cacheSize]];
     clearCache.option = ^{
         [self showAlert];
     };
     SettingGroup *group1 = [[SettingGroup alloc] init];
-    group1.items = @[clearCache];
+    group1.items = @[autoClear, clearCache];
     [self.groupArray addObject:group1];
     
 }
@@ -147,7 +163,7 @@
     about.option = ^{
         NSDictionary *infoDictionary = [[NSBundle mainBundle]infoDictionary];
         NSString *version = [NSString stringWithFormat:@"Version: %@", [infoDictionary objectForKey:@"CFBundleShortVersionString"]];
-        [self alertView:@"西贝news For cnBeta"message:version cancel:@"OK"];
+        [self alertView:@"西贝news"message:version cancel:@"OK"];
     };
     
     SettingGroup *group1 = [[SettingGroup alloc]init];
@@ -207,12 +223,28 @@
             _settings.networkNotificationEnabled = isOn;
             break;
             
+        case CBPrefetch:
+            _settings.prefetchEnabled = isOn;
+            break;
+            
+        case CBImageWiFiOnly:
+            _settings.imageWiFiOnlyEnabled = isOn;
+            break;
+            
+        case CBSourceDisplay:
+            _settings.sourceDisplayEnabled = isOn;
+            break;
+            
         case CBAutoCollection:
             _settings.autoCollectionEnabled = isOn;
             break;
             
         case CBFontChange:
             _settings.thinFontEnabled = isOn;
+            break;
+            
+        case CBAutoClear:
+            _settings.autoClearEnabled = isOn;
             break;
             
         default:
@@ -226,11 +258,23 @@
     switch ([_switchDic[switchName] intValue]) {
         case CBGesture:
             status = _settings.gestureEnabled;
-            NSLog(@"gesture:%d", status? 1:0);
+            //NSLog(@"gesture:%d", status? 1:0);
             break;
             
         case CBNetworkNotification:
             status = _settings.networkNotificationEnabled;
+            break;
+            
+        case CBPrefetch:
+            status = _settings.prefetchEnabled;
+            break;
+            
+        case CBImageWiFiOnly:
+            status = _settings.imageWiFiOnlyEnabled;
+            break;
+            
+        case CBSourceDisplay:
+            status = _settings.sourceDisplayEnabled;
             break;
             
         case CBAutoCollection:
@@ -239,6 +283,10 @@
           
         case CBFontChange:
             status = _settings.thinFontEnabled;
+            break;
+            
+        case CBAutoClear:
+            status = _settings.autoClearEnabled;
             break;
             
         default:
@@ -250,7 +298,7 @@
 - (void)reloadTableView
 {
     if ([[UIDevice currentDevice] systemVersion].floatValue >= 8.0) {
-        [[DYAppearanceManager sharedManager] updateCBFont];
+        [[CBAppearanceManager sharedManager] updateCBFont];
         [self.settingsTableView reloadData];
     }
 }
@@ -297,6 +345,8 @@
     if (clear == YES) {
         FileCache *cache = [FileCache sharedCache];
         [cache clearCache];
+//        CBObjectCache *objectCache = [CBObjectCache sharedCache];
+//        [objectCache clearDiskCache];
         _cacheSize = 0;
         
         SettingGroup * group = _groupArray[1];

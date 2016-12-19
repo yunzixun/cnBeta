@@ -9,7 +9,7 @@
 #import "DYCommentActionView.h"
 #import "Constant.h"
 #import "commentModel.h"
-#import "DYAppearanceManager.h"
+#import "CBAppearanceManager.h"
 
 @implementation DYCommentActionView
 
@@ -48,7 +48,7 @@
     [_replyButton setTitle:@"回复" forState:UIControlStateNormal];
     [_replyButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
     [_replyButton setTitleColor:cb_redColor forState:UIControlStateHighlighted];
-    _replyButton.titleLabel.font = [[DYAppearanceManager sharedManager].CBFont fontWithSize:12];
+    _replyButton.titleLabel.font = [[CBAppearanceManager sharedManager].CBFont fontWithSize:12];
     [self addSubview:_replyButton];
     self.frame = CGRectMake(1, 1, 220, 25);
 }

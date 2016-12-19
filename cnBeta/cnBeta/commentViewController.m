@@ -27,7 +27,7 @@
 #import "CBHTTPRequester.h"
 #import "DataBase.h"
 #import "CBStarredCache.h"
-#import "DYAppSettings.h"
+#import "CBAppSettings.h"
 #import "DYKeyedHeightCache.h"
 #import "JDStatusBarNotification.h"
 #import "WKProgressHUD.h"
@@ -226,7 +226,7 @@
 
 - (void)autoStar
 {
-    if ([[DYAppSettings sharedSettings] autoCollectionEnabled]) {
+    if ([[CBAppSettings sharedSettings] autoCollectionEnabled]) {
         collectionModel *news = [[collectionModel alloc] init];
         news.sid = self.article.newsId;
         news.title = self.article.title;

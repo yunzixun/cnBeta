@@ -21,12 +21,8 @@
 
 
 //文件缓存
-- (void)cacheHTMLToFile:(NSString *)HTMLString forKey:(NSString *)key;
-- (NSString *)getHTMLFromFileForKey:(NSString *)key;
 - (void)cacheNewsListToFile:(NSArray *)newsList forKey:(NSString *)key;
 - (NSMutableArray *)getNewsListFromFileForKey:(NSString *)key;
-- (void)cacheObjectArrayToFile:(NSArray *)objects forKey:(NSString *)key;
-- (NSMutableArray *)getArrayFromFileForKey:(NSString *)key;
 
 - (float)fileSizeAtPath:(NSString *)path;
 - (float)folderSizeOfCache;

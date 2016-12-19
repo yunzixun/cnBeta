@@ -24,7 +24,9 @@
 #import "UIView+SDExtension.h"
 #import "TAPageControl.h"
 #import "NSData+SDDataCache.h"
-#import "DYAppearanceManager.h"
+#import "CBAppearanceManager.h"
+#import "CBAppSettings.h"
+
 
 
 
@@ -205,14 +207,7 @@ NSString * const ID = @"cycleCell";
 - (void)setImageURLStringsGroup:(NSArray *)imageURLStringsGroup
 {
     _imageURLStringsGroup = imageURLStringsGroup;
-    
-    NSMutableArray *images = [NSMutableArray arrayWithCapacity:imageURLStringsGroup.count];
-    for (int i = 0; i < imageURLStringsGroup.count; i++) {
-        UIImage *image = [[UIImage alloc] init];
-        [images addObject:image];
-    }
-    self.imagesGroup = images;
-    [self loadImageWithImageURLsGroup:imageURLStringsGroup];
+    self.imagesGroup = [NSMutableArray arrayWithArray:imageURLStringsGroup];
 }
 
 - (void)setLocalizationImagesGroup:(NSArray *)localizationImagesGroup
@@ -223,77 +218,32 @@ NSString * const ID = @"cycleCell";
 
 #pragma mark - actions
 
-- (void)loadImageWithImageURLsGroup:(NSArray *)imageURLsGroup
+- (void)startloading
 {
-    for (int i = 0; i < imageURLsGroup.count; i++) {
-        [self loadImageAtIndex:i];
-    }
-}
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self.mainView reloadData];
+        
+    });
 
-- (void)loadImageAtIndex:(NSInteger)index
-{
-    NSString *urlStr = self.imageURLStringsGroup[index];
-    NSURL *url = [NSURL URLWithString:urlStr];
-    // 如果有缓存，直接加载缓存
-    NSData *data = [NSData getDataCacheWithIdentifier:urlStr];
-    if (data) {
-        [self.imagesGroup setObject:[UIImage imageWithData:data] atIndexedSubscript:index];
-    } else {
-        
-        // 网络加载图片并缓存图片
-        
-        /*[NSURLConnection sendAsynchronousRequest:[NSURLRequest requestWithURL:url]
-                                           queue:[[NSOperationQueue alloc] init]
-                               completionHandler:^(NSURLResponse *response, NSData *data, NSError *connectionError){
-                                   if (!connectionError) {
-                                       UIImage *image = [UIImage imageWithData:data];
-                                       if (!image) return; // 防止错误数据导致崩溃
-                                       [self.imagesGroup setObject:image atIndexedSubscript:index];
-                                       dispatch_async(dispatch_get_main_queue(), ^{
-                                           if (index == 0) {
-                                               [self.mainView reloadData];
-                                           }
-                                       });
-                                       [data saveDataCacheWithIdentifier:url.absoluteString];
-                                   } else { // 加载数据失败
-                                       static int repeat = 0;
-                                       dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                                           if (repeat > 10) return;
-                                           [self loadImageAtIndex:index];
-                                           repeat++;
-                                       });
-                                       
-                                   }
-                               }
-         
-         ]; */
-        
-        NSURLSession *session = [NSURLSession sessionWithConfiguration:[NSURLSessionConfiguration ephemeralSessionConfiguration]];
-        NSURLSessionTask *task = [session dataTaskWithRequest:[NSURLRequest requestWithURL:url] completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
-            if (!error) {
-                UIImage *image = [UIImage imageWithData:data];
-                if (!image) return; // 防止错误数据导致崩溃
-                [self.imagesGroup setObject:image atIndexedSubscript:index];
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    if (index == 0) {
-                        [self.mainView reloadData];
-                    }
-                });
-                [data saveDataCacheWithIdentifier:url.absoluteString];
-            } else { // 加载数据失败
-                static int repeat = 0;
-                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                    if (repeat > 10) return;
-                    [self loadImageAtIndex:index];
-                    repeat++;
-                });
-                
-            }
-        }];
-        [task resume];
-    }
-    
 }
+//- (void)loadImageAtIndex:(NSInteger)index
+//{
+//    NSString *urlStr = self.imageURLStringsGroup[index];
+//    UIImageView *imageView = [[UIImageView alloc] init];
+//    if ([CBAppSettings sharedSettings].imageWiFiOnlyEnabled && ![[AFNetworkReachabilityManager sharedManager] isReachableViaWiFi]) {
+//        urlStr = [@"cnbeta://newsList.thumbnail?" stringByAppendingString:urlStr];
+//        [imageView sd_setImageWithURL:[NSURL URLWithString:urlStr] placeholderImage:[UIImage imageNamed:@"iPhone_FavTableViewCell_320x58_"]];
+//    } else {
+//        [imageView sd_setImageWithURL:[NSURL URLWithString:urlStr] placeholderImage:[UIImage imageNamed:@"iPhone_FavTableViewCell_320x58_"]];
+//    }
+//    [self.imagesGroup setObject:imageView.image atIndexedSubscript:index];
+//    dispatch_async(dispatch_get_main_queue(), ^{
+//        if (index == 0) {
+//            [self.mainView reloadData];
+//        }
+//    });
+//
+//}
 
 
 - (void)setupPageControl
@@ -424,12 +374,16 @@ NSString * const ID = @"cycleCell";
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
     SDCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:ID forIndexPath:indexPath];
-    long itemIndex = indexPath.item % self.imagesGroup.count;
-    UIImage *image = self.imagesGroup[itemIndex];
-    if (image.size.width == 0 && self.placeholderImage) {
-        image = self.placeholderImage;
+    long itemIndex = indexPath.item % self.imageURLStringsGroup.count;
+    NSString *urlStr = self.imageURLStringsGroup[itemIndex];
+    
+    if ([CBAppSettings sharedSettings].imageWiFiOnlyEnabled && ![[AFNetworkReachabilityManager sharedManager] isReachableViaWiFi]) {
+        urlStr = [@"cnbeta://newsList.thumbnail?" stringByAppendingString:urlStr];
+        [cell.imageView sd_setImageWithURL:[NSURL URLWithString:urlStr] placeholderImage:[UIImage imageNamed:@"iPhone_FavTableViewCell_320x58_"]];
+    } else {
+        [cell.imageView sd_setImageWithURL:[NSURL URLWithString:urlStr] placeholderImage:[UIImage imageNamed:@"iPhone_FavTableViewCell_320x58_"]];
     }
-    cell.imageView.image = image;
+
     if (_titlesGroup.count) {
         cell.title = _titlesGroup[itemIndex];
     }

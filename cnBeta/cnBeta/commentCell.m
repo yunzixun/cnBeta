@@ -10,7 +10,7 @@
 #import "commentModel.h"
 #import "LayoutCommentView.h"
 #import "DYCommentActionView.h"
-#import "DYAppearanceManager.h"
+#import "CBAppearanceManager.h"
 
 @interface commentCell ()
 

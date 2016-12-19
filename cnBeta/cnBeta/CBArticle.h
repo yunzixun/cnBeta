@@ -8,6 +8,12 @@
 
 #import <Foundation/Foundation.h>
 
+typedef NS_ENUM(NSUInteger, CBArticleCacheStatus) {
+    CBArticleCacheStatusNone,
+    CBArticleCacheStatusCached,
+    CBArticleCacheStatusFailed
+};
+
 @interface CBArticle : NSObject
 
 @property (nonatomic, copy) NSString *newsId;

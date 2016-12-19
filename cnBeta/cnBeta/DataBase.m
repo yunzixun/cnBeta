@@ -47,10 +47,6 @@
                 if (sqlite3_exec(database, createsql, NULL, NULL, &errmsg) != SQLITE_OK) {
                     NSLog(@"create table failed.");
                 }
-                const char *createsql2 = "CREATE TABLE IF NOT EXISTS newsID (sid INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT)";
-                if (sqlite3_exec(database, createsql2, NULL, NULL, &errmsg) != SQLITE_OK) {
-                    NSLog(@"create table failed.");
-                }
             }else
             {
                 // 打开数据库失败

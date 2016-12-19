@@ -112,4 +112,6 @@ typedef enum {
 
 - (void)refreshTitleFont;
 
+- (void)startloading;
+
 @end

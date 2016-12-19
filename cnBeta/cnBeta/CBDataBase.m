@@ -39,8 +39,9 @@
         BOOL success = [fileManager fileExistsAtPath:databasePath];
         if (success){
             [_dbQueue inDatabase:^(FMDatabase *db) {
-                BOOL result = [db executeUpdate:@"CREATE TABLE IF NOT EXISTS articleCache (newsId INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, title TEXT, source TEXT, summary TEXT, pubTime TEXT, content TEXT, sn TEXT);"];
-                if (!result) {
+                BOOL result1 = [db executeUpdate:@"CREATE TABLE IF NOT EXISTS articleCache (newsId INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, title TEXT, source TEXT, summary TEXT, pubTime TEXT, content TEXT, sn TEXT);"];
+                BOOL result2 = [db executeUpdate:@"CREATE TABLE IF NOT EXISTS newsListCache (newsId INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, title TEXT, pubTime TEXT, comments TEXT, thumb TEXT, author TEXT, read INTEGER);"];
+                if (!result1 || !result2) {
                     NSLog(@"%@", [db lastErrorMessage]);
                 }
             }];
@@ -80,6 +81,19 @@
     return article;
 }
 
+- (BOOL)isCached:(NSString *)sid
+{
+    __block NSInteger count = 0;
+    [self.dbQueue inDatabase:^(FMDatabase *db) {
+        count = [db intForQuery:@"SELECT COUNT (newsId) FROM articleCache WHERE newsId = ?", sid];
+    }];
+    if (count > 0) {
+        return YES;
+    } else {
+        return NO;
+    }
+}
+
 //缓存文章
 - (void)cacheArticle:(CBArticle *)article
 {
@@ -93,13 +107,91 @@
     }];
 }
 
+//查询已缓存列表新闻
+- (NewsModel *)newsWithSid:(NSString *)sid
+{
+    __block NewsModel *news = [[NewsModel alloc] init];
+    [self.dbQueue inDatabase:^(FMDatabase *db) {
+        FMResultSet *set = [db executeQuery:@"SELECT * FROM newsListCache WHERE newsId = ?", sid];
+        while ([set next]) {
+            news.sid = [NSString stringWithFormat:@"%@", [set objectForColumnName:@"newsId"]];
+            news.title = [set stringForColumn:@"title"];
+            news.inputtime = [set stringForColumn:@"pubTime"];
+            news.comments = [set stringForColumn:@"comments"];
+            news.thumb = [set stringForColumn:@"thumb"];
+            news.aid = [set stringForColumn:@"author"];
+            news.read = [set objectForColumnName:@"read"];
+            if ([news.read isKindOfClass:[NSNull class]]) {
+                news.read = nil;
+            }
+        }
+    }];
+    return news;
+}
+
+//缓存列表新闻
+- (void)cacheNews:(NewsModel *)news
+{
+    [self.dbQueue inDatabase:^(FMDatabase *db) {
+        NSInteger count = [db intForQuery:@"SELECT COUNT (newsId) FROM newsListCache WHERE newsId = ?", news.sid];
+        if (count==0) {
+            [CBFormatedSQLGenerator generateSQLForListNews:news completion:^(NSString *sql, NSArray *arguments) {
+                BOOL result = [db executeUpdate:sql withArgumentsInArray:arguments];
+                if (!result) {
+                    NSLog(@"%@", [db lastErrorMessage]);
+                }
+            }];
+        }
+    }];
+}
+
+- (void)updateReadField:(NewsModel *)news
+{
+    [self.dbQueue inDatabase:^(FMDatabase *db) {
+        [db executeUpdate:@"UPDATE newsListCache SET read = ? WHERE newsId = ?", news.read, news.sid];
+    }];
+}
+
+- (NSArray *)newsListWithLastNews:(NewsModel *)lastNews limit:(NSInteger)limit
+{
+    NSString *sql = nil;
+    if (lastNews) {
+        sql = [NSString stringWithFormat:@"SELECT newsId, title, pubTime, comments, thumb, author, read FROM newsListCache WHERE newsId < %@ AND (pubTime IS NOT NULL OR pubtime != '') ORDER BY newsId DESC LIMIT %@", lastNews.sid, [@(limit) stringValue]];
+
+    } else {
+        sql = [NSString stringWithFormat:@"SELECT newsId, title, pubTime, comments, thumb, author, read FROM newsListCache WHERE (pubTime IS NOT NULL OR pubtime != '') ORDER BY newsId DESC LIMIT %@", [@(limit) stringValue]];
+
+    }
+    NSMutableArray *newsList = [[NSMutableArray alloc] init];
+    [self.dbQueue inDatabase:^(FMDatabase *db) {
+        FMResultSet *set = [db executeQuery:sql];
+        while ([set next]) {
+            NewsModel *news = [[NewsModel alloc] init];
+            news.sid = [NSString stringWithFormat:@"%@", [set objectForColumnName:@"newsId"]];
+            news.title = [set stringForColumn:@"title"];
+            news.inputtime = [set stringForColumn:@"pubTime"];
+            news.comments = [set stringForColumn:@"comments"];
+            news.thumb = [set stringForColumn:@"thumb"];
+            news.aid = [set stringForColumn:@"author"];
+            news.read = [set objectForColumnName:@"read"];
+            if ([news.read isKindOfClass:[NSNull class]]) {
+                news.read = nil;
+            }
+
+            [newsList addObject:news];
+        }
+    }];
+    return newsList;
+}
+
 - (void)clearExpiredCache
 {
     [self.dbQueue inDatabase:^(FMDatabase *db) {
         NSDate *aWeekAgo = [NSDate dateWithTimeIntervalSinceNow:-(7*60*60*24)];
         NSTimeInterval interval = [aWeekAgo timeIntervalSince1970];
-        BOOL result = [db executeUpdate:@"DELETE FROM articleCache WHERE pubTime <= Datetime(?, 'unixepoch', 'localtime')", @(interval)];
-        if (!result) {
+        BOOL result1 = [db executeUpdate:@"DELETE FROM articleCache WHERE pubTime <= Datetime(?, 'unixepoch', 'localtime')", @(interval)];
+        BOOL result2 = [db executeUpdate:@"DELETE FROM newsListCache WHERE pubTime <= Datetime(?, 'unixepoch', 'localtime')", @(interval)];
+        if (!result1 || !result2) {
             NSLog(@"%@", [db lastErrorMessage]);
         }
     }];

@@ -8,6 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import "CBArticle.h"
+#import "NewsModel.h"
 
 
 @interface CBDataBase : NSObject
@@ -21,6 +22,18 @@
 
 //缓存文章
 - (void)cacheArticle:(CBArticle *)article;
+
+- (BOOL)isCached:(NSString *)sid;
+
+//查询已缓存列表新闻
+- (NewsModel *)newsWithSid:(NSString *)sid;
+
+//缓存列表新闻
+- (void)cacheNews:(NewsModel *)news;
+
+- (void)updateReadField:(NewsModel *)news;
+
+- (NSArray *)newsListWithLastNews:(NewsModel *)lastNews limit:(NSInteger)limit;
 
 - (void)clearExpiredCache;
 

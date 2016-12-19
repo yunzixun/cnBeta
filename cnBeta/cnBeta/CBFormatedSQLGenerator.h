@@ -8,9 +8,12 @@
 
 #import <Foundation/Foundation.h>
 #import "CBArticle.h"
+#import "NewsModel.h"
 
 @interface CBFormatedSQLGenerator : NSObject
 
 + (void)generateSQLForArticle:(CBArticle *)article completion: (void (^)(NSString * sql, NSArray *arguments))completionBlock;
+
++ (void)generateSQLForListNews:(NewsModel *)news completion: (void (^)(NSString * sql, NSArray *arguments))completionBlock;
 
 @end

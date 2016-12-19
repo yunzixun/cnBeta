@@ -10,8 +10,8 @@
 #import "SettingItem.h"
 #import "SettingSwitchItem.h"
 #import "SettingArrowItem.h"
-#import "DYAppSettings.h"
-#import "DYAppearanceManager.h"
+#import "CBAppSettings.h"
+#import "CBAppearanceManager.h"
 
 @interface SettingCell ()
 
@@ -81,7 +81,7 @@
     self.textLabel.text = _item.title;
     self.detailTextLabel.text = _item.subtitle;
     self.detailTextLabel.textColor = [UIColor lightGrayColor];
-    self.textLabel.font = [[DYAppearanceManager sharedManager].CBFont fontWithSize:15];
+    self.textLabel.font = [[CBAppearanceManager sharedManager].CBFont fontWithSize:15];
     
     //NSLog(@"%@", _item.subtitle);
     

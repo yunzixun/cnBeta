@@ -9,7 +9,7 @@
 #import "collectionTableViewCell.h"
 #import "Constant.h"
 #import "UIImageView+CircleCorner.h"
-#import "DYAppearanceManager.h"
+#import "CBAppearanceManager.h"
 
 @interface collectionTableViewCell ()
 @property (weak, nonatomic) IBOutlet UILabel *title;
@@ -26,8 +26,8 @@
     _newsInfo = newsInfo;
     self.title.text = newsInfo.title;
     self.date.text = [NSString stringWithFormat:@"收藏于%@", newsInfo.time];
-    self.title.font = [[DYAppearanceManager sharedManager].CBFont fontWithSize:14];
-    self.date.font = [[DYAppearanceManager sharedManager].CBFont fontWithSize:10];
+    self.title.font = [[CBAppearanceManager sharedManager].CBFont fontWithSize:14];
+    self.date.font = [[CBAppearanceManager sharedManager].CBFont fontWithSize:10];
     
     UIImageView *imageView = [[UIImageView alloc]init];
     [imageView sd_setImageWithURL:[NSURL URLWithString:newsInfo.thumb] placeholderImage:[UIImage imageNamed:@"placeholder"]];
