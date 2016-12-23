@@ -1,11 +1,8 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11542" systemVersion="16A323" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="baW-f9-7en">
-    <device id="retina4_7" orientation="portrait">
-        <adaptation id="fullscreen"/>
-    </device>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11201" systemVersion="15G31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="baW-f9-7en">
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11524"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11161"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -41,15 +38,12 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <webView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="PL5-wx-vFx">
-                                <rect key="frame" x="0.0" y="64" width="375" height="554"/>
                                 <color key="backgroundColor" red="0.28958413004875183" green="0.31462949514389038" blue="0.32950475811958313" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             </webView>
                             <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" animating="YES" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="btT-Db-oba">
-                                <rect key="frame" x="169" y="289" width="37" height="37"/>
                                 <color key="color" red="0.66666666666666663" green="0.66666666666666663" blue="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             </activityIndicatorView>
                             <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Mp8-67-p1l">
-                                <rect key="frame" x="0.0" y="618" width="375" height="49"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="49" id="mPv-bK-42Y"/>
                                 </constraints>
@@ -88,17 +82,14 @@
                                     </barButtonItem>
                                     <barButtonItem style="plain" systemItem="flexibleSpace" id="9yz-m1-CAp"/>
                                     <barButtonItem style="plain" id="1a9-cY-VwU">
-                                        <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="uv6-Kb-0Jq" userLabel="star">
+                                        <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="uv6-Kb-0Jq" userLabel="Refresh">
                                             <rect key="frame" x="290" y="0.0" width="49" height="49"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                            <fontDescription key="fontDescription" type="system" pointSize="18"/>
-                                            <state key="normal" image="ArticleUntarred">
+                                            <state key="normal" image="toolbar_refresh_normal_50x50_">
                                                 <color key="titleColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                             </state>
-                                            <state key="selected" image="ArticleStarred"/>
-                                            <state key="highlighted" image="ArticleStarred"/>
                                             <connections>
-                                                <action selector="collectNews:" destination="dTE-fz-fVY" eventType="touchUpInside" id="kQa-d9-qiY"/>
+                                                <action selector="refreshWebView:" destination="dTE-fz-fVY" eventType="touchUpInside" id="FS9-tE-0UI"/>
                                             </connections>
                                         </button>
                                     </barButtonItem>
@@ -125,15 +116,15 @@
                                 <exclude reference="Mp8-67-p1l"/>
                             </mask>
                             <mask key="constraints">
-                                <exclude reference="956-2K-lzi"/>
+                                <exclude reference="Gsf-mZ-MXD"/>
+                                <exclude reference="dcI-mT-nYJ"/>
                                 <exclude reference="Nf5-KL-7qo"/>
                                 <exclude reference="VND-7q-C8S"/>
                                 <exclude reference="kIR-Jm-BjI"/>
                                 <exclude reference="o1R-2Q-XQr"/>
                                 <exclude reference="syR-2l-TuL"/>
                                 <exclude reference="yKc-ja-qYh"/>
-                                <exclude reference="Gsf-mZ-MXD"/>
-                                <exclude reference="dcI-mT-nYJ"/>
+                                <exclude reference="956-2K-lzi"/>
                             </mask>
                         </variation>
                         <variation key="widthClass=compact">
@@ -143,23 +134,37 @@
                                 <include reference="Mp8-67-p1l"/>
                             </mask>
                             <mask key="constraints">
-                                <include reference="956-2K-lzi"/>
+                                <include reference="Gsf-mZ-MXD"/>
+                                <include reference="dcI-mT-nYJ"/>
                                 <include reference="Nf5-KL-7qo"/>
                                 <include reference="VND-7q-C8S"/>
                                 <include reference="kIR-Jm-BjI"/>
                                 <include reference="o1R-2Q-XQr"/>
                                 <include reference="syR-2l-TuL"/>
                                 <include reference="yKc-ja-qYh"/>
-                                <include reference="Gsf-mZ-MXD"/>
-                                <include reference="dcI-mT-nYJ"/>
+                                <include reference="956-2K-lzi"/>
                             </mask>
                         </variation>
                     </view>
+                    <navigationItem key="navigationItem" id="AsB-80-ZjL">
+                        <nil key="title"/>
+                        <barButtonItem key="rightBarButtonItem" style="done" id="foB-yC-EaK">
+                            <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="NYC-1P-nTI">
+                                <rect key="frame" x="313" y="7" width="46" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="13"/>
+                                <state key="normal" title="收藏"/>
+                                <connections>
+                                    <action selector="collectNews:" destination="dTE-fz-fVY" eventType="touchUpInside" id="FMv-cm-Vgj"/>
+                                </connections>
+                            </button>
+                        </barButtonItem>
+                    </navigationItem>
                     <connections>
+                        <outlet property="collect" destination="NYC-1P-nTI" id="Gjo-bM-dZO"/>
                         <outlet property="commentNum" destination="sfH-HW-gcS" id="5KQ-cC-vEN"/>
                         <outlet property="contentWebView" destination="PL5-wx-vFx" id="81w-3r-rYE"/>
                         <outlet property="spinner" destination="btT-Db-oba" id="PtM-pH-rfk"/>
-                        <outlet property="starButton" destination="uv6-Kb-0Jq" id="4qV-7o-MMQ"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="wOD-z9-s5Z" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -175,17 +180,16 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <prototypes>
-                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="cell" rowHeight="70" id="S2I-iy-xJC" customClass="collectionTableViewCell">
-                                <rect key="frame" x="0.0" y="28" width="375" height="70"/>
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="cell" rowHeight="60" id="S2I-iy-xJC" customClass="collectionTableViewCell">
+                                <rect key="frame" x="0.0" y="92" width="375" height="60"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="S2I-iy-xJC" id="xEE-JP-hUh">
-                                    <rect key="frame" x="0.0" y="0.0" width="375" height="69"/>
+                                    <frame key="frameInset" width="375" height="59"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
-                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0XT-np-WiO">
-                                            <rect key="frame" x="15" y="5" width="350" height="40"/>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0XT-np-WiO">
                                             <constraints>
-                                                <constraint firstAttribute="height" constant="40" id="rtI-Os-VWJ"/>
+                                                <constraint firstAttribute="height" constant="35" id="rtI-Os-VWJ"/>
                                             </constraints>
                                             <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                             <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -201,21 +205,16 @@
                                                 </mask>
                                             </variation>
                                         </label>
-                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="qfC-sy-kZh">
-                                            <rect key="frame" x="15" y="53" width="100" height="10"/>
-                                            <constraints>
-                                                <constraint firstAttribute="width" constant="100" id="5oc-xS-GbM"/>
-                                                <constraint firstAttribute="height" constant="10" id="gUC-hw-Eq4"/>
-                                            </constraints>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="qfC-sy-kZh">
+                                            <frame key="frameInset" minX="15" minY="45" width="154" height="11"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="10"/>
                                             <color key="textColor" red="0.66666666666666663" green="0.66666666666666663" blue="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                             <nil key="highlightedColor"/>
                                         </label>
                                     </subviews>
                                     <constraints>
-                                        <constraint firstItem="qfC-sy-kZh" firstAttribute="top" secondItem="0XT-np-WiO" secondAttribute="bottom" constant="8" id="AuE-N4-llV"/>
-                                        <constraint firstItem="0XT-np-WiO" firstAttribute="top" secondItem="xEE-JP-hUh" secondAttribute="top" constant="5" id="GQQ-cM-NVV"/>
-                                        <constraint firstItem="qfC-sy-kZh" firstAttribute="leading" secondItem="xEE-JP-hUh" secondAttribute="leading" constant="15" id="Hio-27-er3"/>
+                                        <constraint firstItem="0XT-np-WiO" firstAttribute="top" secondItem="xEE-JP-hUh" secondAttribute="top" constant="10" id="GQQ-cM-NVV"/>
                                         <constraint firstAttribute="trailing" secondItem="0XT-np-WiO" secondAttribute="trailing" constant="60" id="Jns-Bq-9wA">
                                             <variation key="widthClass=compact" constant="10"/>
                                         </constraint>
@@ -299,7 +298,7 @@
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="AyA-lq-wIZ" customClass="NewsNavigationViewController" colorLabel="IBBuiltInLabel-Blue" sceneMemberID="viewController">
                     <tabBarItem key="tabBarItem" title="资讯" image="tabbar_news" id="qvB-UM-Gfw"/>
                     <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="cKF-Gt-4Ia">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="cKF-Gt-4Ia">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -318,7 +317,7 @@
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="PnD-lu-xOM" sceneMemberID="viewController">
                     <tabBarItem key="tabBarItem" title="设置" image="user_main_setting" id="iuz-42-b1h"/>
                     <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="fIN-TN-yEJ">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="fIN-TN-yEJ">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -356,7 +355,7 @@
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="36S-5a-eCR" customClass="CollectionNavigationController" sceneMemberID="viewController">
                     <tabBarItem key="tabBarItem" title="收藏" image="star" id="BP6-68-Z6b"/>
                     <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="8FG-wF-D0u">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="8FG-wF-D0u">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -371,11 +370,10 @@
         </scene>
     </scenes>
     <resources>
-        <image name="ArticleStarred" width="25" height="25"/>
-        <image name="ArticleUntarred" width="25" height="25"/>
         <image name="star" width="22" height="22"/>
         <image name="tabbar_news" width="22" height="22"/>
         <image name="toolbar_back_normal_50x50_" width="50" height="50"/>
+        <image name="toolbar_refresh_normal_50x50_" width="50" height="50"/>
         <image name="toolbar_reply_normal_50x50_" width="50" height="50"/>
         <image name="toolbar_share_normal_50x50_" width="50" height="50"/>
         <image name="user_main_setting" width="21" height="21"/>

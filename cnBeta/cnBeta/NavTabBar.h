@@ -25,6 +25,4 @@
 
 - (void)setupWithItems;
 
-- (void)refreshTitleFont;
-
 @end

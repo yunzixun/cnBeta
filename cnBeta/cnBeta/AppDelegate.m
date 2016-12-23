@@ -8,13 +8,13 @@
 
 #import "AppDelegate.h"
 #import "AFNetworkActivityIndicatorManager.h"
-//#import "UMSocial.h"
-#import <UMSocialCore/UMSocialCore.h>
+#import "UMSocial.h"
 #import "UMSocialWechatHandler.h"
 #import "UMSocialQQHandler.h"
 #import "CRToast.h"
 #import "JPFPSStatus.h"
 #import <Bugrpt/NTESCrashReporter.h>
+<<<<<<< HEAD
 #import "CBAppearanceManager.h"
 #import "CBAppSettings.h"
 #import "DataBase.h"
@@ -24,6 +24,10 @@
 #import "CBHTTPURLProtocol.h"
 #import "CBURLCache.h"
 #import "UMMobClick/MobClick.h"
+=======
+#import "DYAppearanceManager.h"
+#import "DYAppSettings.h"
+>>>>>>> parent of c5a4779... v1.3.3
 
 #import "NewsNavigationViewController.h"
 
@@ -37,6 +41,7 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     
     [AFNetworkActivityIndicatorManager sharedManager].enabled = YES;
+<<<<<<< HEAD
     [[CBAppearanceManager sharedManager] setup];
     
     [[DataBase sharedDataBase] createDataBase];
@@ -49,6 +54,12 @@
 //#if defined(DEBUG)||defined(_DEBUG)
 //    [[JPFPSStatus sharedInstance] open];
 //#endif
+=======
+    [[DYAppearanceManager sharedManager] setup];
+#if defined(DEBUG)||defined(_DEBUG)
+    [[JPFPSStatus sharedInstance] open];
+#endif
+>>>>>>> parent of c5a4779... v1.3.3
     
     //监听网络状态
     [self listenNetWorkingPort];
@@ -63,30 +74,12 @@
     UITabBarController *tabBarController = (UITabBarController *)self.window.rootViewController;
     tabBarController.delegate = self;
     
-    
-    UMConfigInstance.appKey = @"579b1ed4e0f55ab08c000e90";
-    UMConfigInstance.channelId = @"App Store";
-    //UMConfigInstance.eSType = E_UM_GAME; //仅适用于游戏场景，应用统计不用设置
-    [MobClick startWithConfigure:UMConfigInstance];
-    
-//    //设置友盟社会化组件appkey
-//    [UMSocialData setAppKey:@"579b1ed4e0f55ab08c000e90"];
-//    //设置微信AppId、appSecret，分享url
-//    [UMSocialWechatHandler setWXAppId:@"wx9006182f5fb2bb8a" appSecret:@"84ac7593b76c84ff04abaaa543d792b7" url:@"http://www.umeng.com/social"];
-//    //设置手机QQ 的AppId，Appkey，和分享URL，需要#import "UMSocialQQHandler.h"
-//    [UMSocialQQHandler setQQWithAppId:@"1105528200" appKey:@"9Av2cIJcSmVtgxoJ" url:@"http://www.umeng.com/social"];
-    //打开调试日志
-    [[UMSocialManager defaultManager] openLog:YES];
-    
-    //设置友盟appkey
-    [[UMSocialManager defaultManager] setUmSocialAppkey:@"579b1ed4e0f55ab08c000e90"];
-    //设置微信的appKey和appSecret
-    [[UMSocialManager defaultManager] setPlaform:UMSocialPlatformType_WechatSession appKey:@"wx9006182f5fb2bb8a" appSecret:@"84ac7593b76c84ff04abaaa543d792b7" redirectURL:@"http://mobile.umeng.com/social"];
-    
-    
-    //设置分享到QQ互联的appKey和appSecret
-    [[UMSocialManager defaultManager] setPlaform:UMSocialPlatformType_QQ appKey:@"1105528200"  appSecret:@"9Av2cIJcSmVtgxoJ" redirectURL:@"http://mobile.umeng.com/social"];
-
+    //设置友盟社会化组件appkey
+    [UMSocialData setAppKey:@"579b1ed4e0f55ab08c000e90"];
+    //设置微信AppId、appSecret，分享url
+    [UMSocialWechatHandler setWXAppId:@"wx9006182f5fb2bb8a" appSecret:@"84ac7593b76c84ff04abaaa543d792b7" url:@"http://www.umeng.com/social"];
+    //设置手机QQ 的AppId，Appkey，和分享URL，需要#import "UMSocialQQHandler.h"
+    [UMSocialQQHandler setQQWithAppId:@"1105528200" appKey:@"9Av2cIJcSmVtgxoJ" url:@"http://www.umeng.com/social"];
     
     [[NTESCrashReporter sharedInstance] initWithAppId:@"I000174257"];
     return YES;
@@ -94,7 +87,7 @@
 
 - (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation
 {
-    BOOL result = [[UMSocialManager defaultManager] handleOpenURL:url];
+    BOOL result = [UMSocialSnsService handleOpenURL:url];
     if (result == FALSE) {
         //调用其他SDK，例如支付宝SDK等
     }
@@ -199,10 +192,15 @@
 }
 
 - (void)applicationDidEnterBackground:(UIApplication *)application {
+<<<<<<< HEAD
     [[CBDataBase sharedDataBase] clearExpiredCache];
     if ([CBAppSettings sharedSettings].autoClearEnabled) {
         [[CBObjectCache sharedCache] clearExpiredDiskCache];
     }
+=======
+    // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later.
+    // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
+>>>>>>> parent of c5a4779... v1.3.3
 }
 
 - (void)applicationWillEnterForeground:(UIApplication *)application {
@@ -214,10 +212,14 @@
 }
 
 - (void)applicationWillTerminate:(UIApplication *)application {
+<<<<<<< HEAD
     [[CBDataBase sharedDataBase] clearExpiredCache];
     if ([CBAppSettings sharedSettings].autoClearEnabled) {
         [[CBObjectCache sharedCache] clearExpiredDiskCache];
     }
+=======
+    // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
+>>>>>>> parent of c5a4779... v1.3.3
 }
 
 @end

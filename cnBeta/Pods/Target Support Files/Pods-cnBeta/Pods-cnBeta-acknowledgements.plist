@@ -79,6 +79,7 @@ THE SOFTWARE.
 		</dict>
 		<dict>
 			<key>FooterText</key>
+<<<<<<< HEAD
 			<string># License
 
 ## MIT License
@@ -172,6 +173,8 @@ THE SOFTWARE.</string>
 		</dict>
 		<dict>
 			<key>FooterText</key>
+=======
+>>>>>>> parent of c5a4779... v1.3.3
 			<string>Copyright &#169; 2013 Markus Emrich
 
 Permission is hereby granted, free of charge, to any person
@@ -365,24 +368,6 @@ SOFTWARE.
 </string>
 			<key>Title</key>
 			<string>UITableView+FDTemplateLayoutCell</string>
-			<key>Type</key>
-			<string>PSGroupSpecifier</string>
-		</dict>
-		<dict>
-			<key>FooterText</key>
-			<string>Copyright 2011 - 2015 UMeng.com. All rights reserved.
-</string>
-			<key>Title</key>
-			<string>UMengAnalytics-NO-IDFA</string>
-			<key>Type</key>
-			<string>PSGroupSpecifier</string>
-		</dict>
-		<dict>
-			<key>FooterText</key>
-			<string>Copyright 2011 - 2016 UMeng.com. All rights reserved.
-</string>
-			<key>Title</key>
-			<string>UMengUShare</string>
 			<key>Type</key>
 			<string>PSGroupSpecifier</string>
 		</dict>

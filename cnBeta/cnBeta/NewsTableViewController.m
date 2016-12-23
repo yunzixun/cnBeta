@@ -31,8 +31,6 @@
 @property (nonatomic, strong) NSMutableArray *newsList;
 @property (nonatomic, strong) NSArray *cycleNews;
 @property (nonatomic, strong) DataBase *collection;
-@property (nonatomic, copy)   NSString *type;
-@property (nonatomic, assign) int page;
 
 @property (nonatomic, strong) UIViewController *lastVC;
 @end
@@ -47,13 +45,11 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-//    UIBarButtonItem *backItem = [[UIBarButtonItem alloc] init];
-//    backItem.title = @"返回";
-//    self.navigationItem.backBarButtonItem = backItem;
+    UIBarButtonItem *backItem = [[UIBarButtonItem alloc] init];
+    backItem.title = @"返回";
+    self.navigationItem.backBarButtonItem = backItem;
     //self.navigationItem.title = @"cnBeta新闻";
     //self.tabBarItem.title = [NSString stringWithFormat:@"资讯"];
-    self.page = 1;
-    self.type = @"all";
     self.tableView.rowHeight = 80.0f;
     self.tableView.separatorColor = [UIColor grayColor];
     self.tableView.tableFooterView=[[UIView alloc]init];
@@ -77,7 +73,7 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(tabBarClick) name:@"TabRefresh" object:nil];
     
     [self setupRefreshView];
-    
+    [self setupDataBase];
     
     //[self tabBarClick];
     [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"firstLoad"];
@@ -87,7 +83,7 @@
 {
     [super viewWillAppear:animated];
     //self.navigationController.hidesBarsOnSwipe = YES;
-    [(SDCycleScrollView *)self.tableView.tableHeaderView refreshTitleFont];
+    
     [self.tableView reloadData];
 }
 
@@ -158,8 +154,11 @@
     self.tableView.mj_footer = [MJRefreshBackNormalFooter footerWithRefreshingTarget:self refreshingAction:@selector(footerRefresh)];
 }
 
+
+
 - (void)headerRefresh
 {
+<<<<<<< HEAD
     //self.page = 1;
     [self initCycleView];
     
@@ -170,6 +169,22 @@
         [self.tableView.mj_header endRefreshing];
         if (error && error.code == NSURLErrorTimedOut) {
             return;
+=======
+    [[CBHTTPRequester requester] requestWithURLType:@"updatedNews" completion:^(id data, NSError *error) {
+        if (!error) {
+            //NSLog(@"%@",dataDic[@"lists"]);
+            
+            NSArray *dataList = [DataModel mj_objectArrayWithKeyValuesArray:data[@"result"]];
+            [self.newsList removeAllObjects];
+            [self.newsList addObjectsFromArray:dataList];
+            self.RowCount = [self.newsList count];
+            [self.tableView reloadData];
+            [self.tableView.mj_header endRefreshing];
+            //FileCache *fileCache = [FileCache sharedCache];
+            [_fileCache cacheNewsListToFile:self.newsList forKey:@"newsList"];
+        }else {
+            [self.tableView.mj_header endRefreshing];
+>>>>>>> parent of c5a4779... v1.3.3
         }
         NSArray *newsArr = [[CBDataBase sharedDataBase] newsListWithLastNews:nil limit:40];
         [self.newsList removeAllObjects];
@@ -177,11 +192,13 @@
         self.RowCount = [self.newsList count];
         [self.tableView reloadData];
     }];
+    
 }
 
 
 - (void)footerRefresh
 {
+<<<<<<< HEAD
     NSString *url = [NSString stringWithFormat:@"http://www.cnbeta.com/more?type=%@&page=%d", self.type, self.page];
     NSMutableDictionary *headers = [[NSMutableDictionary alloc]init];
     [headers setObject:@"http://www.cnbeta.com/" forKey:@"Referer"];
@@ -196,57 +213,34 @@
             NSArray *newsArr = [[CBDataBase sharedDataBase] newsListWithLastNews:[self.newsList lastObject] limit:40];
             
             [self.newsList addObjectsFromArray:newsArr];
+=======
+    NSString *sid = [[_newsList lastObject]sid];
+    
+    [[CBHTTPRequester requester] requestWithURLType:@"moreNews" andId:sid completion:^(id data, NSError *error) {
+        if (!error) {
+            //NSLog(@"%@",dataDic);
+            NSArray *dataList = [DataModel mj_objectArrayWithKeyValuesArray:data[@"result"]];
+            [self.newsList addObjectsFromArray:dataList];
+>>>>>>> parent of c5a4779... v1.3.3
             self.RowCount = [self.newsList count];
             [self.tableView reloadData];
         }
+<<<<<<< HEAD
         [self.tableView.mj_footer endRefreshing];
+=======
+        
+>>>>>>> parent of c5a4779... v1.3.3
     }];
     
 }
 
+#pragma mark - DataBase
 
-//- (void)headerRefresh
-//{
-//    [[CBHTTPRequester requester] requestWithURLType:@"updatedNews" completion:^(id data, NSError *error) {
-//        if (!error) {
-//            //NSLog(@"%@",dataDic[@"lists"]);
-//            
-//            NSArray *dataList = [DataModel mj_objectArrayWithKeyValuesArray:data[@"result"]];
-//            [self.newsList removeAllObjects];
-//            [self.newsList addObjectsFromArray:dataList];
-//            self.RowCount = [self.newsList count];
-//            [self.tableView reloadData];
-//            [self.tableView.mj_header endRefreshing];
-//            //FileCache *fileCache = [FileCache sharedCache];
-//            [_fileCache cacheNewsListToFile:self.newsList forKey:@"newsList"];
-//        }else {
-//            [self.tableView.mj_header endRefreshing];
-//        }
-//    }];
-//    
-//}
-//
-//
-//- (void)footerRefresh
-//{
-//    NSString *sid = [[_newsList lastObject]sid];
-//    
-//    [[CBHTTPRequester requester] requestWithURLType:@"moreNews" andId:sid completion:^(id data, NSError *error) {
-//        if (!error) {
-//            //NSLog(@"%@",dataDic);
-//            NSArray *dataList = [DataModel mj_objectArrayWithKeyValuesArray:data[@"result"]];
-//            [self.newsList addObjectsFromArray:dataList];
-//            self.RowCount = [self.newsList count];
-//            [self.tableView reloadData];
-//            [self.tableView.mj_footer endRefreshing];
-//        }else {
-//            [self.tableView.mj_footer endRefreshing];
-//        }
-//        
-//    }];
-//    
-//}
-
+- (void)setupDataBase
+{
+    
+    [_collection createDataBase];
+}
 
 #pragma mark - Table view data source
 
@@ -306,8 +300,9 @@
     UIStoryboard *mainStoryboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
     contentViewController *contentvc = [mainStoryboard instantiateViewControllerWithIdentifier:@"contentViewController"];
     contentvc.newsId = currentNews.sid;
+    contentvc.newsTitle = currentNews.title;
     contentvc.thumb = currentNews.thumb;
-    contentvc.author = currentNews.aid;
+    
     contentvc.hidesBottomBarWhenPushed = YES;
     
     if (!currentNews.read) {
@@ -331,6 +326,7 @@
     contentViewController *contentVC = [mainStoryboard instantiateViewControllerWithIdentifier:@"contentViewController"];
     contentVC.hidesBottomBarWhenPushed = YES;
     contentVC.newsId = data.id;
+    contentVC.newsTitle = data.title;
     contentVC.thumb = data.images[0];
     [self.navigationController pushViewController:contentVC animated:YES];
 }

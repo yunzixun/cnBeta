@@ -15,7 +15,6 @@
 
 #import "commentList.h"
 #import "commentModel.h"
-#import "collectionModel.h"
 #import "flooredCommentModel.h"
 #import "commentCell.h"
 #import "LayoutCommentView.h"
@@ -25,18 +24,21 @@
 #import "UITableView+FDTemplateLayoutCell.h"
 #import "NSArray+transform.h"
 #import "CBHTTPRequester.h"
+<<<<<<< HEAD
 #import "DataBase.h"
 #import "CBStarredCache.h"
 #import "CBAppSettings.h"
+=======
+>>>>>>> parent of c5a4779... v1.3.3
 #import "DYKeyedHeightCache.h"
 #import "JDStatusBarNotification.h"
 #import "WKProgressHUD.h"
-#import "NSDate+gyh.h"
 
 @interface commentViewController ()<UITableViewDelegate,UITableViewDataSource,UIActionSheetDelegate,replyActionDelegate>
 @property (nonatomic, strong)UITableView *commentTableView;
 @property (nonatomic, weak) SDRefreshHeaderView *refreshHeader;
-@property (nonatomic, strong)CBArticle *article;
+@property (nonatomic, copy)NSString *sid;
+@property (nonatomic, copy)NSString *sn;
 
 @property (nonatomic, strong)NSMutableArray *flooredCommentArray;
 @property (nonatomic, strong)NSMutableArray *hotFlooredCommentArray;
@@ -51,7 +53,6 @@
 - (void)dealloc
 {
     [self.commentsRequester cancel];
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 - (NSMutableArray *)flooredCommentArray
@@ -78,10 +79,11 @@
     return _comments;
 }
 
-- (id)initWithArticle:(CBArticle *)article Type:(BOOL)isExpired
+- (id)initWithSid:(NSString *)sid andSN:(NSString *)sn Type:(BOOL)isExpired
 {
     if (self = [super init]) {
-        self.article = article;
+        _sid = sid;
+        _sn = sn;
         _isExpired = isExpired;
     }
     return self;
@@ -113,9 +115,6 @@
     
     
     [_commentTableView registerNib:[UINib nibWithNibName:@"commentCell" bundle:[NSBundle mainBundle]] forCellReuseIdentifier:@"newCell"];
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(autoStar) name:@"autoStar" object:nil];
-
     [self setupHeader];
     
     //[LSCommentTool loadCommentListWithSid:self.sid pageNum:[NSString stringWithFormat:@"%tu",self.pageNum] SN:self.sn success:^(NSArray *commentArray) {
@@ -136,7 +135,7 @@
     _refreshHeader = refreshHeader;
     __weak typeof(self) weakSelf = self;
     refreshHeader.beginRefreshingOperation = ^{
-        [weakSelf loadCommentListWithArticle:self.article success:^(NSArray *commentArray, NSArray *hotList) {
+        [weakSelf loadCommentListWithSid:_sid SN:_sn success:^(NSArray *commentArray, NSArray *hotList) {
             [weakSelf.comments removeAllObjects];
             [weakSelf.flooredCommentArray removeAllObjects];
             weakSelf.flooredCommentArray = [commentArray convertToFlooredCommentArray];
@@ -178,8 +177,8 @@
 
 
 
-     - (void)loadCommentListWithArticle:(CBArticle *)article success:(void (^)(NSArray *, NSArray *))success failure:(void(^)(NSError * error, NSString *type))failure{
-    NSString *url = [NSString stringWithFormat:@"http://www.cnbeta.com/cmt?op=1,%@,%@", article.newsId, article.sn];
+- (void)loadCommentListWithSid:(NSString *)sid SN:(NSString *)sn success:(void (^)(NSArray *, NSArray *))success failure:(void(^)(NSError * error, NSString *type))failure{
+    NSString *url = [NSString stringWithFormat:@"http://www.cnbeta.com/cmt?op=1,%@,%@", sid, sn];
     NSMutableDictionary *headers = [NSMutableDictionary dictionary];
     [headers setObject:@"XMLHttpRequest" forKey:@"X-Requested-With"];
     [headers setObject:@"http://www.cnbeta.com/" forKey:@"Referer"];
@@ -224,6 +223,7 @@
     
 }
 
+<<<<<<< HEAD
 - (void)autoStar
 {
     if ([[CBAppSettings sharedSettings] autoCollectionEnabled]) {
@@ -238,10 +238,12 @@
 }
      
 
+=======
+>>>>>>> parent of c5a4779... v1.3.3
 - (void)postComment
 {
     commentPostViewController *vc = [[commentPostViewController alloc]initWithNibName:@"commentPostViewController" bundle:nil];
-    vc.sid = self.article.newsId;
+    vc.sid = self.sid;
     [self.navigationController pushViewController:vc animated:YES];
 }
 
@@ -250,7 +252,7 @@
 - (void)reply:(DYCellButton *)button
 {
     commentPostViewController *vc = [[commentPostViewController alloc]initWithNibName:@"commentPostViewController" bundle:nil];
-    vc.sid = self.article.newsId;
+    vc.sid = self.sid;
     commentModel *comment = button.commentInfo;
     vc.tid = comment.tid;
     [self.navigationController pushViewController:vc animated:YES];
@@ -265,7 +267,7 @@
     comment.score = [@([comment.score intValue]+1) stringValue];
     comment.supported = YES;
     [self.commentTableView reloadRowsAtIndexPaths:@[button.indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
-    [[CBHTTPRequester requester] voteCommentWithSid:self.article.newsId andTid:comment.tid actionType:@"support" completion:^(id responseObject, NSError *error) {
+    [[CBHTTPRequester requester] voteCommentWithSid:self.sid andTid:comment.tid actionType:@"support" completion:^(id responseObject, NSError *error) {
         if (error) {
             [JDStatusBarNotification showWithStatus:@"操作失败" dismissAfter:2];
         } else {
@@ -291,7 +293,7 @@
     comment.reason = [@([comment.reason intValue]+1) stringValue];
     comment.opposed = YES;
     [self.commentTableView reloadRowsAtIndexPaths:@[button.indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
-    [[CBHTTPRequester requester] voteCommentWithSid:self.article.newsId andTid:comment.tid actionType:@"against" completion:^(id responseObject, NSError *error) {
+    [[CBHTTPRequester requester] voteCommentWithSid:self.sid andTid:comment.tid actionType:@"against" completion:^(id responseObject, NSError *error) {
         if (error) {
             [JDStatusBarNotification showWithStatus:@"操作失败" dismissAfter:2];
         } else {
@@ -345,11 +347,8 @@
     flooredCommentModel *flooredCommentItem = self.comments[indexPath.section][indexPath.row];
     
     
-    if ([self.comments[indexPath.section] count] == 100) {
-        LayoutCommentView *commentView = [[LayoutCommentView alloc]initWithModel:flooredCommentItem];
-        return commentView.frame.size.height + 80;
-    }
-    CGFloat height = [self.heightCache heightForCellWithModel:flooredCommentItem cachedByKey:[self.article.newsId stringByAppendingString:flooredCommentItem.tid] configuration:^CGFloat(id model) {
+    
+    CGFloat height = [self.heightCache heightForCellWithModel:flooredCommentItem cachedByKey:[self.sid stringByAppendingString:flooredCommentItem.tid] configuration:^CGFloat(id model) {
         LayoutCommentView *commentView = [[LayoutCommentView alloc]initWithModel:flooredCommentItem];
         return commentView.frame.size.height + 80;
     }];

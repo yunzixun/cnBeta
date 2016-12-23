@@ -16,5 +16,5 @@
 
 @property (nonatomic, copy) NSString *newsId;
 @property (nonatomic, copy) NSString *thumb;
-@property (nonatomic, copy) NSString *author;
+@property (nonatomic, copy) NSString *newsTitle;
 @end

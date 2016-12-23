@@ -31,10 +31,13 @@ typedef void (^CompletionBlock)(id responseObject, NSError *error);
 
 - (void)requestWithURL:(NSString *)url andHeaders:(NSDictionary *)headers completion:(CompletionBlock)completionBlock;
 
+<<<<<<< HEAD
 - (void)fetchNewsListWithURL:(NSString *)url andHeaders:(NSDictionary *)headers completion:(void (^)(NSError *))completionBlock;
 
 - (void)fetchArticleWithSid:(NSString *)sid completion:(CompletionBlock)block;
 
+=======
+>>>>>>> parent of c5a4779... v1.3.3
 - (void)cancel;
 
 @end

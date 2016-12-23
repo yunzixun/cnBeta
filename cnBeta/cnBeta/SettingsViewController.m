@@ -19,9 +19,13 @@
 #import "SettingArrowItem.h"
 #import "SettingSwitchItem.h"
 #import "SettingGroup.h"
+<<<<<<< HEAD
 #import "CBAppSettings.h"
 #import "CBAppearanceManager.h"
 #import "CBDataBase.h"
+=======
+#import "DYAppSettings.h"
+>>>>>>> parent of c5a4779... v1.3.3
 
 @interface SettingsViewController ()<UITableViewDelegate, UITableViewDataSource, SwitchControlDelegate, MFMailComposeViewControllerDelegate>
 {
@@ -65,13 +69,17 @@
     }
     
     
+<<<<<<< HEAD
     _dataSource = @[@"手势操作", @"网络切换通知", @"WiFi网络下开启预载", @"仅WiFi网络下加载图片", @"显示文章来源", @"自动收藏评论过的文章", @"使用细体文字", @"自动清理7天前缓存", @"清除缓存", @"反馈建议", @"去App Store给我们好评", @"关于"];
     _switchDic = @{@"手势操作": @(CBGesture), @"网络切换通知": @(CBNetworkNotification), @"WiFi网络下开启预载": @(CBPrefetch), @"仅WiFi网络下加载图片": @(CBImageWiFiOnly), @"显示文章来源":@(CBSourceDisplay), @"自动收藏评论过的文章": @(CBAutoCollection), @"使用细体文字": @(CBFontChange), @"自动清理7天前缓存":@(CBAutoClear)};
+=======
+    _dataSource = @[@"手势操作", @"网络切换通知", @"清除缓存", @"反馈建议", @"去App Store给我们好评", @"关于"];
+    _switchDic = @{@"手势操作": @(CBGesture), @"网络切换通知": @(CBNetworkNotification)};
+>>>>>>> parent of c5a4779... v1.3.3
     _index = 0;
 
     [self setupGroup0];
     [self setupGroup1];
-    [self setupGroup2];
     
     
 }
@@ -82,11 +90,16 @@
     FileCache *cache = [FileCache sharedCache];
     _cacheSize = [cache folderSizeOfCache];
     
+<<<<<<< HEAD
     CBObjectCache *objectCache = [CBObjectCache sharedCache];
     _cacheSize += [objectCache cacheSize];
     
     SettingGroup * group = _groupArray[1];
     SettingItem *item = [group.items lastObject];
+=======
+    SettingGroup * group = _groupArray[0];
+    SettingItem *item = group.items[2];
+>>>>>>> parent of c5a4779... v1.3.3
     item.subtitle = [NSString stringWithFormat:@"%.2fMB", _cacheSize];
     
     [_settingsTableView reloadData];
@@ -97,7 +110,7 @@
 
 - (void)setupGroup0
 {
-    //手势
+    //
     SettingItem *gesture = [SettingSwitchItem itemWithTitle:_dataSource[_index++]];
     
     //网络切换通知
@@ -112,6 +125,7 @@
     //显示文章来源
     SettingItem *sourceDisplay = [SettingSwitchItem itemWithTitle:_dataSource[_index++]];
 
+<<<<<<< HEAD
     //自动收藏
     SettingItem *autoCollection = [SettingSwitchItem itemWithTitle:_dataSource[_index++]];
     
@@ -133,18 +147,26 @@
     //自动清理
     SettingItem *autoClear = [SettingSwitchItem itemWithTitle:_dataSource[_index++]];
     
+=======
+>>>>>>> parent of c5a4779... v1.3.3
     //清除缓存
     SettingItem *clearCache = [SettingArrowItem itemWithTitle:_dataSource[_index++] subtitle:[NSString stringWithFormat:@"%.2fMB", _cacheSize]];
     clearCache.option = ^{
         [self showAlert];
     };
+<<<<<<< HEAD
     SettingGroup *group1 = [[SettingGroup alloc] init];
     group1.items = @[autoClear, clearCache];
     [self.groupArray addObject:group1];
+=======
+>>>>>>> parent of c5a4779... v1.3.3
     
+    SettingGroup *group0 = [[SettingGroup alloc]init];
+    group0.items = @[gesture, networkNotification, clearCache];
+    [self.groupArray addObject:group0];
 }
 
-- (void)setupGroup2
+- (void)setupGroup1
 {
     //反馈建议
     SettingItem *feedback = [SettingArrowItem itemWithTitle:_dataSource[_index++]];
@@ -184,7 +206,7 @@
 
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
 {
-    return 10;
+    return 20;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section
@@ -223,6 +245,7 @@
             _settings.networkNotificationEnabled = isOn;
             break;
             
+<<<<<<< HEAD
         case CBPrefetch:
             _settings.prefetchEnabled = isOn;
             break;
@@ -247,6 +270,8 @@
             _settings.autoClearEnabled = isOn;
             break;
             
+=======
+>>>>>>> parent of c5a4779... v1.3.3
         default:
             break;
     }
@@ -265,6 +290,7 @@
             status = _settings.networkNotificationEnabled;
             break;
             
+<<<<<<< HEAD
         case CBPrefetch:
             status = _settings.prefetchEnabled;
             break;
@@ -289,12 +315,15 @@
             status = _settings.autoClearEnabled;
             break;
             
+=======
+>>>>>>> parent of c5a4779... v1.3.3
         default:
             break;
     }
     return status;
 }
 
+<<<<<<< HEAD
 - (void)reloadTableView
 {
     if ([[UIDevice currentDevice] systemVersion].floatValue >= 8.0) {
@@ -303,6 +332,8 @@
     }
 }
 
+=======
+>>>>>>> parent of c5a4779... v1.3.3
 #pragma mark - Table view delegate
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
@@ -349,14 +380,12 @@
 //        [objectCache clearDiskCache];
         _cacheSize = 0;
         
-        SettingGroup * group = _groupArray[1];
-        
-        SettingItem *item = [group.items lastObject];
+        SettingGroup * group = _groupArray[0];
+        SettingItem *item = group.items[2];
         item.subtitle = [NSString stringWithFormat:@"%.2fMB", _cacheSize];
         
-        [self.settingsTableView reloadRowsAtIndexPaths:[NSArray arrayWithObjects:[NSIndexPath indexPathForRow:[group.items indexOfObject:item] inSection:1], nil] withRowAnimation:UITableViewRowAnimationNone];
+        [self.settingsTableView reloadRowsAtIndexPaths:[NSArray arrayWithObjects:[NSIndexPath indexPathForRow:2 inSection:0], nil] withRowAnimation:UITableViewRowAnimationNone];
         //[_settingsTableView reloadData];
-        [[CBDataBase sharedDataBase] clearExpiredCache];
     }
 }
 

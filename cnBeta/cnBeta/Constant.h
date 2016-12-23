@@ -19,6 +19,7 @@
 #define  LayoutBordWidth        .6
 #define  rectangleBordWidth     1.0
 
+<<<<<<< HEAD
 
 #define  NameFont     [[CBAppearanceManager sharedManager].CBFont fontWithSize:14]
 #define  HostFont     [[CBAppearanceManager sharedManager].CBFont fontWithSize:11]
@@ -32,5 +33,14 @@
 
 #define ScreenWidth   [UIScreen mainScreen].bounds.size.width
 #define ScreenHeight  [UIScreen mainScreen].bounds.size.height
+=======
+#define  NameFont     [UIFont systemFontOfSize:14]
+#define  HostFont  [UIFont systemFontOfSize:11]
+#define  FloorFont  [UIFont systemFontOfSize:10]
+#define  CommentFont  [UIFont systemFontOfSize:15]
+
+#define ScreenWidth [UIScreen mainScreen].bounds.size.width
+#define ScreenHeight [UIScreen mainScreen].bounds.size.height
+>>>>>>> parent of c5a4779... v1.3.3
 #define MaxOverlapNumber 6
 #define OverlapSpace 3

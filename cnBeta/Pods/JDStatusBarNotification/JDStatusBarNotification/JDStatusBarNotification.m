@@ -272,30 +272,21 @@
     BOOL animationsEnabled = (self.activeStyle.animationType != JDStatusBarAnimationTypeNone);
     animated &= animationsEnabled;
     
-    dispatch_block_t animation = ^{
+    // animate out
+    [UIView animateWithDuration:animated ? 0.4 : 0.0 animations:^{
         if (self.activeStyle.animationType == JDStatusBarAnimationTypeFade) {
             self.topBar.alpha = 0.0;
         } else {
             self.topBar.transform = CGAffineTransformMakeTranslation(0, -self.topBar.frame.size.height);
         }
-    };
-    
-    void(^complete)(BOOL) = ^(BOOL finished) {
+    } completion:^(BOOL finished) {
         [self.overlayWindow removeFromSuperview];
         [self.overlayWindow setHidden:YES];
         _overlayWindow.rootViewController = nil;
         _overlayWindow = nil;
         _progressView = nil;
         _topBar = nil;
-    };
-
-    if (animated) {
-        // animate out
-        [UIView animateWithDuration:0.4 animations:animation completion:complete];
-    } else {
-        animation();
-        complete(YES);
-    }
+    }];
 }
 
 #pragma mark Bounce Animation
@@ -369,8 +360,7 @@
     CGFloat height = MIN(frame.size.height,MAX(0.5, self.activeStyle.progressBarHeight));
     if (height == 20.0 && frame.size.height > height) height = frame.size.height;
     frame.size.height = height;
-    frame.size.width = round((frame.size.width - 2 * self.activeStyle.progressBarHorizontalInsets) * progress);
-    frame.origin.x = self.activeStyle.progressBarHorizontalInsets;
+    frame.size.width = round(frame.size.width * progress);
     
     // apply y-position from active style
     CGFloat barHeight = self.topBar.bounds.size.height;
@@ -393,9 +383,6 @@
     
     // apply color from active style
     self.progressView.backgroundColor = self.activeStyle.progressBarColor;
-    
-    // apply corner radius
-    self.progressView.layer.cornerRadius = self.activeStyle.progressBarCornerRadius;
     
     // update progressView frame
     BOOL animated = !CGRectEqualToRect(self.progressView.frame, CGRectZero);

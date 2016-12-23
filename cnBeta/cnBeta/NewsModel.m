@@ -13,7 +13,7 @@
 - (void)encodeWithCoder:(NSCoder *)aCoder
 {
     [aCoder encodeObject:self.title forKey:@"title"];
-    [aCoder encodeObject:self.inputtime forKey:@"pubtime"];
+    [aCoder encodeObject:self.pubtime forKey:@"pubtime"];
     [aCoder encodeObject:self.sid forKey:@"sid"];
     [aCoder encodeObject:self.counter forKey:@"counnter"];
     [aCoder encodeObject:self.comments forKey:@"comments"];
@@ -23,7 +23,7 @@
 - (id)initWithCoder:(NSCoder *)aDecoder
 {
     self.title = [aDecoder decodeObjectForKey:@"title"];
-    self.inputtime = [aDecoder decodeObjectForKey:@"pubtime"];
+    self.pubtime = [aDecoder decodeObjectForKey:@"pubtime"];
     self.sid = [aDecoder decodeObjectForKey:@"sid"];
     self.counter = [aDecoder decodeObjectForKey:@"counter"];
     self.comments = [aDecoder decodeObjectForKey:@"comments"];

@@ -9,16 +9,12 @@
 #import <Foundation/Foundation.h>
 #import "collectionModel.h"
 #import "sqlite3.h"
-#import "CBArticle.h"
 
 @interface DataBase : NSObject
 {
     sqlite3 *database;
     dispatch_queue_t ioQueue;
-    
 }
-//@property (nonatomic, strong) NSNumber *version;
-
 + (DataBase *)sharedDataBase;
 
 //创建或打开数据库
@@ -44,18 +40,6 @@
 
 //添加已读新闻ID
 - (void)addNewsID:(NSString *)sid;
-
-//查询文章是否已缓存
-- (CBArticle *)articleWithSid:(NSString *)sid;
-
-//缓存文章
-- (void)cacheArticle:(CBArticle *)article;
-
-/**
- load collection data from database to cache.
- */
-- (NSArray *)starredArticleIds;
-
 
 
 @end

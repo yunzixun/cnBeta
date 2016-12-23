@@ -58,7 +58,7 @@
         }
         lastView = nestedView;
     }
-    self.frame = CGRectMake(44, 0, ScreenWidth, lastHeight + 5);
+    self.frame = CGRectMake(44, 0, ScreenWidth, lastHeight + 2);
     
 
 }

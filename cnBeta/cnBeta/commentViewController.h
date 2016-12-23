@@ -7,12 +7,11 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "CBArticle.h"
 
 @interface commentViewController : UIViewController
 
 @property (nonatomic,assign)BOOL isExpired;
 
-- (id)initWithArticle:(CBArticle *)article Type:(BOOL)isExpired;
+- (id)initWithSid:(NSString *)sid andSN:(NSString *)sn Type:(BOOL)isExpired;
 
 @end

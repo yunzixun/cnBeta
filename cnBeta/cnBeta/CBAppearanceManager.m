@@ -10,6 +10,7 @@
 #import "DYSectionHeader.h"
 #import "CBAppSettings.h"
 
+<<<<<<< HEAD:cnBeta/cnBeta/CBAppearanceManager.m
 @interface CBAppearanceManager ()
 
 @property (nonatomic, strong)UIFont *CBFont;
@@ -17,6 +18,9 @@
 @end
 
 @implementation CBAppearanceManager
+=======
+@implementation DYAppearanceManager
+>>>>>>> parent of c5a4779... v1.3.3:cnBeta/cnBeta/DYAppearanceManager.m
 
 + (instancetype)sharedManager
 {
@@ -31,6 +35,7 @@
 
 - (void)setup
 {
+<<<<<<< HEAD:cnBeta/cnBeta/CBAppearanceManager.m
     CBAppSettings *settings = [CBAppSettings sharedSettings];
     [[DYSectionHeader appearance] setBackgroundColor:[UIColor colorWithWhite:0.95 alpha:0.95]];
     if ([[UIDevice currentDevice] systemVersion].floatValue >= 8.0) {
@@ -45,6 +50,10 @@
 {
     CBAppSettings *settings = [CBAppSettings sharedSettings];
     _CBFont = settings.thinFontEnabled ? [UIFont fontWithName:@".PingFang-SC-Light" size:15]:[UIFont systemFontOfSize:15];
+=======
+    [DYAppSettings sharedSettings];
+    [[DYSectionHeader appearance] setBackgroundColor:[UIColor colorWithWhite:0.95 alpha:0.95]];
+>>>>>>> parent of c5a4779... v1.3.3:cnBeta/cnBeta/DYAppearanceManager.m
 }
 
 - (void)updateAppearance

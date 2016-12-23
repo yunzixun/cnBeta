@@ -10,8 +10,12 @@
 #import "SettingItem.h"
 #import "SettingSwitchItem.h"
 #import "SettingArrowItem.h"
+<<<<<<< HEAD
 #import "CBAppSettings.h"
 #import "CBAppearanceManager.h"
+=======
+#import "DYAppSettings.h"
+>>>>>>> parent of c5a4779... v1.3.3
 
 @interface SettingCell ()
 
@@ -44,7 +48,6 @@
     if ([self.delegate respondsToSelector:@selector(setState:forSwitch:)]) {
         
         [self.delegate setState:self.switchview.isOn forSwitch:self.item.title];
-        [self.delegate reloadTableView];
         
     }
 }
@@ -80,9 +83,12 @@
 {
     self.textLabel.text = _item.title;
     self.detailTextLabel.text = _item.subtitle;
+<<<<<<< HEAD
     self.detailTextLabel.textColor = [UIColor lightGrayColor];
     self.textLabel.font = [[CBAppearanceManager sharedManager].CBFont fontWithSize:15];
     
+=======
+>>>>>>> parent of c5a4779... v1.3.3
     //NSLog(@"%@", _item.subtitle);
     
     if ([self.item isKindOfClass:[SettingSwitchItem class]]) {

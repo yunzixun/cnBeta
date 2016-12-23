@@ -10,12 +10,15 @@
 
 static NSString *const gestureSwitchKey = @"gestureSwitch";
 static NSString *const networkNotificationSwitchKey = @"networkNotoficationSwitch";
+<<<<<<< HEAD:cnBeta/cnBeta/CBAppSettings.m
 static NSString *const prefetchSwitchKey = @"prefetchSwitch";
 static NSString *const imageWiFiOnlySwitchKey = @"imageWiFiOnly";
 static NSString *const sourceDisplaySwitchKey = @"sourceDisplaySwitch";
 static NSString *const autoCollectionSwitchKey = @"autoCollectionSwitch";
 static NSString *const thinFontSwitchKey = @"thinFontSwitch";
 static NSString *const autoClearSwitchKey = @"autoClearSwitch";
+=======
+>>>>>>> parent of c5a4779... v1.3.3:cnBeta/cnBeta/DYAppSettings.m
 
 
 @interface CBAppSettings ()
@@ -28,12 +31,15 @@ static NSString *const autoClearSwitchKey = @"autoClearSwitch";
 
 @synthesize gestureEnabled = _gestureEnabled;
 @synthesize networkNotificationEnabled = _networkNotificationEnabled;
+<<<<<<< HEAD:cnBeta/cnBeta/CBAppSettings.m
 @synthesize prefetchEnabled = _prefetchEnabled;
 @synthesize imageWiFiOnlyEnabled = _imageWiFiOnlyEnabled;
 @synthesize autoCollectionEnabled = _autoCollectionEnabled;
 @synthesize thinFontEnabled  = _thinFontEnabled;
 @synthesize sourceDisplayEnabled = _sourceDisplayEnabled;
 @synthesize autoClearEnabled = _autoClearEnabled;
+=======
+>>>>>>> parent of c5a4779... v1.3.3:cnBeta/cnBeta/DYAppSettings.m
 
 + (instancetype)sharedSettings
 {
@@ -52,6 +58,7 @@ static NSString *const autoClearSwitchKey = @"autoClearSwitch";
         _userDefaults = [NSUserDefaults standardUserDefaults];
         
         [_userDefaults registerDefaults:@{gestureSwitchKey: @YES,
+<<<<<<< HEAD:cnBeta/cnBeta/CBAppSettings.m
                                           networkNotificationSwitchKey: @NO,
                                           prefetchSwitchKey: @NO,
                                           imageWiFiOnlySwitchKey: @NO,
@@ -59,15 +66,21 @@ static NSString *const autoClearSwitchKey = @"autoClearSwitch";
                                           autoCollectionSwitchKey:@YES,
                                           thinFontSwitchKey:@NO,
                                           autoClearSwitchKey:@NO
+=======
+                                          networkNotificationSwitchKey: @YES
+>>>>>>> parent of c5a4779... v1.3.3:cnBeta/cnBeta/DYAppSettings.m
                                           }];
-        _gestureEnabled= [_userDefaults boolForKey:gestureSwitchKey];
+         _gestureEnabled= [_userDefaults boolForKey:gestureSwitchKey];
         _networkNotificationEnabled = [_userDefaults boolForKey:networkNotificationSwitchKey];
+<<<<<<< HEAD:cnBeta/cnBeta/CBAppSettings.m
         _prefetchEnabled = [_userDefaults boolForKey:prefetchSwitchKey];
         _imageWiFiOnlyEnabled = [_userDefaults boolForKey:imageWiFiOnlySwitchKey];
         _sourceDisplayEnabled = [_userDefaults boolForKey:sourceDisplaySwitchKey];
         _autoCollectionEnabled = [_userDefaults boolForKey:autoCollectionSwitchKey];
         _thinFontEnabled = [_userDefaults boolForKey:thinFontSwitchKey];
         _autoClearEnabled = [_userDefaults boolForKey:autoClearSwitchKey];
+=======
+>>>>>>> parent of c5a4779... v1.3.3:cnBeta/cnBeta/DYAppSettings.m
     }
     return self;
 }
@@ -94,6 +107,7 @@ static NSString *const autoClearSwitchKey = @"autoClearSwitch";
     [_userDefaults setBool:networkNotificationEnabled forKey:networkNotificationSwitchKey];
 }
 
+<<<<<<< HEAD:cnBeta/cnBeta/CBAppSettings.m
 - (BOOL)prefetchEnabled
 {
     return _prefetchEnabled;
@@ -137,17 +151,9 @@ static NSString *const autoClearSwitchKey = @"autoClearSwitch";
     _autoCollectionEnabled = autoCollectionEnabled;
     [_userDefaults setBool:autoCollectionEnabled forKey:autoCollectionSwitchKey];
 }
+=======
+>>>>>>> parent of c5a4779... v1.3.3:cnBeta/cnBeta/DYAppSettings.m
 
--(BOOL)thinFontEnabled
-{
-    return _thinFontEnabled;
-}
-
-- (void)setThinFontEnabled:(BOOL)thinFontEnabled
-{
-    _thinFontEnabled = thinFontEnabled;
-    [_userDefaults setBool:thinFontEnabled forKey:thinFontSwitchKey];
-}
 
 - (BOOL)autoClearEnabled
 {

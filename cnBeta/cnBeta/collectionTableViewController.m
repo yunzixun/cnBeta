@@ -26,7 +26,7 @@
     backItem.title = @"返回";
     self.navigationItem.backBarButtonItem = backItem;
     self.title = @"收藏";
-    self.tableView.rowHeight = 70.0f;
+    self.tableView.rowHeight = 60.0f;
     self.tableView.separatorColor = [UIColor grayColor];
     self.tableView.tableFooterView=[[UIView alloc]init];
     if ([self.tableView respondsToSelector:@selector(setSeparatorInset:)]) {
@@ -124,8 +124,8 @@
         collectionModel *currentNews = _newsCollection[[_newsCollection count]-indexPath.row-1];
         contentvc.newsId = currentNews.sid;
         //contentvc.comments = currentNews.comments;
-
-    }
+        contentvc.newsTitle = currentNews.title;
+            }
 }
 
 

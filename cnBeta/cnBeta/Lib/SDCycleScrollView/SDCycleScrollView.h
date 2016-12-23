@@ -110,8 +110,11 @@ typedef enum {
 
 + (instancetype)cycleScrollViewWithFrame:(CGRect)frame imageURLStringsGroup:(NSArray *)imageURLStringsGroup;
 
+<<<<<<< HEAD
 - (void)refreshTitleFont;
 
 - (void)startloading;
 
+=======
+>>>>>>> parent of c5a4779... v1.3.3
 @end

@@ -11,9 +11,6 @@
 #import "MJExtension.h"
 #import "NSString+MD5.h"
 #import "TFHpple.h"
-#import "CBDataBase.h"
-#import "CBArticle.h"
-#import "CBArticleParser.h"
 
 @implementation CBHTTPRequester
 
@@ -49,13 +46,7 @@
         NSDictionary *dic = responseObject;
         NSString *url = dic[@"url"];
         if ([url length] != 0) {
-            [self fetchSecurityCodeImageWithURLString:[NSString stringWithFormat:@"http://www.cnbeta.com%@", url] sid:sid completion:^(id responseObject, NSError *error) {
-                if (!error) {
-                    block(responseObject,nil);
-                } else {
-                    block(nil,error);
-                }
-            }];
+            [self fetchSecurityCodeImageWithURLString:[NSString stringWithFormat:@"http://www.cnbeta.com%@", url] sid:sid completion:block];
         }
     } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
         block(nil, error);
@@ -169,10 +160,10 @@
     //下拉刷新列表
     if ([type isEqualToString:@"updatedNews"]) {
         //md5加密
-        NSString *md5String = [NSString stringWithFormat:@"app_key=10003&format=json&method=Article.Lists&timestamp=%llu&v=1.0&mpuffgvbvbttn3Rc", timestamp ];
+        NSString *md5String = [NSString stringWithFormat:@"app_key=10000&format=json&method=Article.Lists&timestamp=%llu&v=1.0&mpuffgvbvbttn3Rc", timestamp ];
         NSString *sign = [md5String MD5];
         
-        url = [NSString stringWithFormat:@"http://api.cnbeta.com/capi?app_key=10003&format=json&method=Article.Lists&timestamp=%llu&v=1.0&sign=%@", timestamp, sign];
+        url = [NSString stringWithFormat:@"http://api.cnbeta.com/capi?app_key=10000&format=json&method=Article.Lists&timestamp=%llu&v=1.0&sign=%@", timestamp, sign];
         //下拉加载更多
     } else if ([type isEqualToString:@"moreNews"]) {
         //md5加密
@@ -188,6 +179,11 @@
         
         url = [NSString stringWithFormat:@"http://api.cnbeta.com/capi?app_key=10000&format=json&method=Article.NewsContent&sid=%@&timestamp=%llu&v=1.0&mpuffgvbvbttn3Rc&sign=%@", sid, timestamp, sign];
         
+        //SN
+    }else if([type isEqualToString:@"SN"]){
+        url = [NSString stringWithFormat:@"http://www.cnbeta.com/articles/%@.htm",sid];
+        
+        //
     }else {
         //url = @"http://cnbeta.techoke.com/api/list?version=1.8.6&init=1";
         url = @"http://182.92.195.110/api/news?version=2.2.0&init=1";
@@ -226,6 +222,7 @@
     }];
 }
 
+<<<<<<< HEAD
 - (void)fetchNewsListWithURL:(NSString *)url andHeaders:(NSDictionary *)headers completion:(void (^)(NSError *))completionBlock
 {
     AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
@@ -279,6 +276,8 @@
 
 }
 
+=======
+>>>>>>> parent of c5a4779... v1.3.3
 - (void)cancel
 {
     [self.requestTask cancel];

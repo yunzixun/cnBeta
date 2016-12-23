@@ -23,6 +23,4 @@
 
 - (BOOL)stateForSwitch: (NSString *)switchName;
 
-- (void)reloadTableView;
-
 @end

@@ -47,10 +47,11 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-//    UIBarButtonItem *backItem = [[UIBarButtonItem alloc] init];
-//    backItem.title = @"返回";
-//    self.navigationItem.backBarButtonItem = backItem;
+    UIBarButtonItem *backItem = [[UIBarButtonItem alloc] init];
+    backItem.title = @"返回";
+    self.navigationItem.backBarButtonItem = backItem;
     
+    self.page = 1;
     [self initTableView];
     [self setupRefreshView];
     
@@ -101,7 +102,6 @@
 
 - (void)headerRefresh
 {
-    self.page = 1;
     NSString *url = [NSString stringWithFormat:@"http://www.cnbeta.com/more?type=%@&page=1", self.type];
     NSMutableDictionary *headers = [[NSMutableDictionary alloc]init];
     [headers setObject:@"http://www.cnbeta.com/" forKey:@"Referer"];
@@ -190,7 +190,9 @@
     UIStoryboard *mainStoryboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
     contentViewController *contentvc = [mainStoryboard instantiateViewControllerWithIdentifier:@"contentViewController"];
     contentvc.newsId = currentNews.sid;
+    contentvc.newsTitle = currentNews.title;
     contentvc.thumb = currentNews.thumb;
+<<<<<<< HEAD
     contentvc.author = currentNews.aid;
     
     if (!currentNews.read) {
@@ -198,6 +200,9 @@
         [[CBDataBase sharedDataBase] updateReadField:currentNews];
     }
 
+=======
+    
+>>>>>>> parent of c5a4779... v1.3.3
     contentvc.hidesBottomBarWhenPushed = YES;
     [self.navigationController pushViewController:contentvc animated:YES];
 }

@@ -1,5 +1,6 @@
 //
-//  NTESCrashReporter.h
+//  bugrpt.h
+//  bugrpt
 //
 //  Created by Monkey on 15/3/31.
 //  Copyright (c) 2015年 Netease. All rights reserved.
@@ -11,195 +12,122 @@
 @protocol NTESCrashReporterDelegate <NSObject>
 
 @optional
-
 /**
- *  异常回调接口，这个接口尽量避免使用复杂的代码
+ *    @brief 异常回调接口，这个接口尽量避免使用复杂的代码
  *
- *  @param exception 异常信息
- *
- *  @return 字串
+ *    @param exception 异常
  */
-- (NSString *)attachmentForException:(NSException *)exception;
+- (NSString *) attachmentForException:(NSException *)exception;
 
 @end
 
 @interface NTESCrashReporter : NSObject
 
-/**
- *  单例
- *
- *  @return 返回NTESCrashReporter对象
- */
 + (NTESCrashReporter *)sharedInstance;
 
-#pragma mark 参数设置
+#pragma mark 以下函数请在调用初始化接口前设置
 
 /**
- *  设置异常回调代理
+ *    @brief 设置异常回调代理
  *
- *  @param delegate 代理对象
+ *    @param delegate 代理
  */
 - (void)setBugrptDelegate:(id<NTESCrashReporterDelegate>) delegate;
 
 /**
- *  设置用户ID
+ *    @brief  设置渠道标识, 默认为空值
  *
- *  @param userid 用户id
- */
-- (void)setUserId:(NSString *)userid;
-
-/**
- *  设置用户的一些标记信息
+ *    如需修改设置, 请在初始化方法之前调用设置
  *
- *  @param tag 标记信息
- */
-- (void)setUserTag:(NSString *)tag;
-
-/**
- *  设置渠道标识, 默认为空值
- *
- *  @param channel 渠道名称
- *
- *  @说明 如需修改设置, 请在初始化方法之前调用设置
+ *    @param channel 渠道名称
  */
 - (void)setChannel:(NSString *)channel;
 
 /**
- *  是否开启sdk日志打印
+ *    @brief 是否开启sdk日志打印, 默认为No, 不打印
  *
- *  @param enabled YES:开启;NO:不开启
- *
- *  @说明 默认为NO,只打印workflow
+ *    @param enabled
  */
 - (void)enableLog:(BOOL)enabled;
 
-/**
- *  设置自定义参数
- *
- *  @param key   key
- *  @param value value
- */
-- (void)setUserParams:(NSString *)key value:(NSString *)value;
+#pragma mark sdk初始化
 
-#pragma mark SDK初始化
-
-/**
- *  iOS APP崩溃收集初始化接口
+/*
+ *    @brief   iOS崩溃收集初始化接口(建议使用该接口)
  *
- *  @param appId 云捕官网注册的App Id
- *
- *  @return 初始化是否成功
+ *    @pagram  appId  在Bugrpt的页面注册产品时生成的应用标识
  */
 - (BOOL)initWithAppId:(NSString*) appId;
 
 /**
- *  初始化SDK接口并启动崩溃捕获上报功能, 如果你的App包含Application Extension或App Watch 1扩展，采用此方法初始化
+ *    @brief  初始化SDK接口并启动崩溃捕获上报功能, 如果你的App包含Application Extension或App Watch扩展，采用此方法初始化
  *
- *  @param appId      云捕官网注册的App Id
- *  @param identifier AppGroup标识, 开启App-Groups功能时, 定义的Identifier
+ *    @param appId 在Bugrpt的页面注册产品时生成的应用标识
+ *    @param identifier AppGroup标识, 开启App-Groups功能时, 定义的Identifier
  *
- *  @return 初始化是否成功
+ *    @return
  */
 - (BOOL)initWithAppId:(NSString *)appId applicationGroupIdentifier:(NSString *)identifier;
 
-/**
- *  iOS APP崩溃收集初始化接口
+/*
+ *    @brief   iOS崩溃收集初始化接口
  *
- *  @param appId        云捕官网注册的App Id
- *  @param customParams 产品需要传递的自定义参数, 不传默认为空
+ *    @pagram  appId  在Bugrpt的页面注册产品时生成的应用标识
  *
- *  @return 初始化是否成功
+ *    @pagram  customParams, 产品需要传递的自定义参数, 不传默认为空
  */
-- (BOOL)iosCrashInitWithAppId:(NSString *)appId customParams:(NSString *)customParams;
+- (BOOL)iosCrashInitWithAppId:(NSString*) appId customParams:(NSString *)customParams;
 
-#pragma mark 其他功能接口
-
-/**
- *  主动上报用户自定义的异常，比如日志信息
+/*
+ *    @brief  主动上报用户自定义的异常，比如自定义日志
  *
- *  @param type    类别
- *  @param content 内容
+ *    @param type         类别
+ *    @param content      内容
  */
-- (void)uploadCustomizedException:(NSString* )type value:(NSString *)content;
+-(void)uploadCustomizedException:(NSString*)type value:(NSString*)content;
 
 /**
- *  上报用户自己捕获的异常，例如：@try ... @catch ... 到的NSException
+ *    @brief 自定义参数
  *
- *  @param exception 异常信息
- *  @说明 和 "- (void)reportException:(NSException *)exception"功能一样
+ *    @param key
+ *    @param value
  */
-- (void)uploadCaughtException:(NSException *)exception;
-
-/**
- *  上报用户自己获取的错误信息
- *
- *  @param error NSError错误信息
- *  @说明 和 "- (void)reportError:(NSError *)error"功能一样
- */
-- (void)uploadCaughtError:(NSError *)error;
-
-/**
- *  上报用户自己捕获的异常，例如：@try ... @catch ... 到的NSException
- *
- *  @param exception 异常信息
- */
-- (void)reportException:(NSException *)exception __attribute__((deprecated("please use uploadCaughtException: instead")));;
-
-/**
- *  上报用户自己获取的错误信息
- *
- *  @param error NSError错误信息
- */
-- (void)reportError:(NSError *)error __attribute__((deprecated("please use uploadCaughtError: instead")));
-
-/**
- *  开启卡顿接口
- *
- *  @param enable 为true表示开启，false关闭。默认是false
- *  @param count 限制卡顿捕捉次数，小于或等于0的值表示不限制，默认不限制
- *  @param monitorTimeout 卡顿间隔时间，单位为ms，默认3000ms
- *  @param monitorTimeoutCount 卡顿连续次数，默认1次
- */
-- (void)setBlockMonitorStatus:(BOOL)enable;
-- (void)setBlockMonitorStatus:(BOOL)enable limitCount:(int)count;
-- (void)setBlockMonitorStatus:(BOOL)enable limitCount:(int)count timeout:(NSTimeInterval)monitorTimeout;
-- (void)setBlockMonitorStatus:(BOOL)enable limitCount:(int)count timeout:(NSTimeInterval)monitorTimeout count:(NSInteger)monitorTimeoutCount;
-
-/**
- *  关闭崩溃收集接口
- *  
- *  @说明 初始化SDK后，调用这个接口会关闭崩溃信息收集
- */
-- (void)stop;
-
-/**
- *  清理云捕缓存接口
- *
- *  @说明 调用这个接口会删除保存在本地的所有历史崩溃数据
- */
-- (void)clearCaches;
+- (void) setUserParams:(NSString *)key value:(NSString *)value;
 
 #pragma mark 用于模拟异常测试
-
 /**
- *  触发一个Object-C的异常
+ *    @brief  触发一个OC的异常
  */
 - (void)triggerNSException;
 
 /**
- *  触发一个错误信号
+ *    @brief  触发一个错误信号
  */
 - (void)triggerSignalError;
 
 #pragma mark 内部调用
 
-/**
- *  是否使用测试服务器
- *
- *  @param useTestAddr 默认是NO,都使用正式服务器,用户不需要设置这个
- *  @说明 内部调用函数,正式产品不需要调用
+/*
+ *    @brief  使用测试服务器地址设为YES，默认使用正式服务器为NO(内部调用函数)
  */
-- (void)setUseTestAddr:(BOOL)useTestAddr;
+-(void)setUseTestAddr:(BOOL) useTestAddr;
+
+/*
+ *    @brief  发送Lua层的dump信息(内部调用函数)
+ */
++ (void)sendLuaReportsToServer:(NSDictionary*) args;
+
+/*
+ *    @brief  上报自定义异常(内部调用函数)
+ *    
+ *    @param category     类别
+ *    @param name         异常名
+ *    @param reason       异常原因
+ *    @param callStack    异常堆栈
+ *    @param infoDic      附加数据
+ *    @param terminate    是否终止app
+ */
+- (void)reportException:(NSUInteger) category name:(NSString *) name reason:(NSString *) reason callStack:(NSString *) callStack extraInfo:(NSDictionary *) infoDic terminateApp:(BOOL) terminate;
 
 @end
 

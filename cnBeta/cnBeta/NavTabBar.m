@@ -7,7 +7,11 @@
 //
 
 #import "NavTabBar.h"
+<<<<<<< HEAD
 #import "CBAppearanceManager.h"
+=======
+#import "Constant.h"
+>>>>>>> parent of c5a4779... v1.3.3
 
 @interface NavTabBar ()
 {
@@ -69,7 +73,7 @@
     for (NSInteger index = 0; index < itemsWidth.count; index++) {
         UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
         [button setTitle:_itemTitles[index] forState:UIControlStateNormal];
-        button.titleLabel.font = NavTabBarFont;
+        button.titleLabel.font = [UIFont systemFontOfSize:15];
         CGFloat buttonWidth = [itemsWidth[index] floatValue] + 15*2;
         button.frame = CGRectMake(lastWidth, 0, buttonWidth, 44);
         
@@ -133,13 +137,6 @@
         _underLine.frame = CGRectMake(button.frame.origin.x + 15, 42, [_itemWidths[currentItemIndex] floatValue], 2);
     }];
 
-}
-
-- (void)refreshTitleFont
-{
-    for (UIButton *button in _itemButtons) {
-        button.titleLabel.font = NavTabBarFont;
-    }
 }
 
 @end

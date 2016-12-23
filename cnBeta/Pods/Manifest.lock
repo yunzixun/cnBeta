@@ -14,8 +14,9 @@ PODS:
   - AFNetworking/Serialization (3.0.4)
   - AFNetworking/UIKit (3.0.4):
     - AFNetworking/NSURLSession
-  - Bugrpt (1.2.0.1)
+  - Bugrpt (1.1.4.2)
   - CRToast (0.0.9)
+<<<<<<< HEAD
   - DACircularProgress (2.3.1)
   - FMDB (2.6.2):
     - FMDB/standard (= 2.6.2)
@@ -26,37 +27,26 @@ PODS:
     - pop
     - SDWebImage
   - JDStatusBarNotification (1.5.4)
+=======
+  - hpple (0.2.0)
+  - JDStatusBarNotification (1.5.3)
+>>>>>>> parent of c5a4779... v1.3.3
   - JPFPSStatus (0.1)
   - JSBadgeView (1.4.1)
-  - MJExtension (3.0.13)
-  - MJRefresh (3.1.12)
+  - MJExtension (3.0.11)
+  - MJRefresh (3.1.10)
   - ObjectiveGumbo (0.1)
   - pop (1.0.9)
   - SDWebImage (3.7.6):
     - SDWebImage/Core (= 3.7.6)
   - SDWebImage/Core (3.7.6)
   - UITableView+FDTemplateLayoutCell (1.4)
-  - UMengAnalytics-NO-IDFA (4.1.5)
-  - UMengUShare/Core (6.0.3):
-    - UMengUShare/Network
-  - UMengUShare/Network (6.0.3)
-  - UMengUShare/Social/Email (6.0.3):
-    - UMengUShare/Core
-  - UMengUShare/Social/QQ (6.0.3):
-    - UMengUShare/Core
-  - UMengUShare/Social/SMS (6.0.3):
-    - UMengUShare/Core
-  - UMengUShare/Social/WeChat (6.0.3):
-    - UMengUShare/Core
-  - UMengUShare/UI (6.0.3):
-    - UMengUShare/Core
   - WKProgressHUD (1.2)
 
 DEPENDENCIES:
   - AFNetworking (~> 3.0.4)
   - Bugrpt
   - CRToast (~> 0.0.9)
-  - FMDB
   - hpple (~> 0.2.0)
   - IDMPhotoBrowser
   - JDStatusBarNotification (~> 1.5)
@@ -67,35 +57,36 @@ DEPENDENCIES:
   - ObjectiveGumbo (~> 0.1)
   - SDWebImage (~> 3.7.3)
   - UITableView+FDTemplateLayoutCell (~> 1.4)
-  - UMengAnalytics-NO-IDFA
-  - UMengUShare/Social/Email
-  - UMengUShare/Social/QQ
-  - UMengUShare/Social/SMS
-  - UMengUShare/Social/WeChat
-  - UMengUShare/UI
   - WKProgressHUD (~> 1.2)
 
 SPEC CHECKSUMS:
   AFNetworking: a0075feb321559dc78d9d85b55d11caa19eabb93
-  Bugrpt: 3d6bb313e4755fac3cc4e0cf02dd3511fe181b20
+  Bugrpt: 223dc086314dc0389d45711a81b7d31d4c7e7128
   CRToast: 5a78c22b921c5ed3487488af605bc403a9c92fed
+<<<<<<< HEAD
   DACircularProgress: 4dd437c0fc3da5161cb289e07ac449493d41db71
   FMDB: 854a0341b4726e53276f2a8996f06f1b80f9259a
   hpple: 3b765f96fc2cd56ad1a49aef6f7be5cb2aa64b57
   IDMPhotoBrowser: 35e8ba559a88f2a8be4ae04d7fd424665344ba06
   JDStatusBarNotification: d47dded0594a50a39c84a2cc5aa356fcf6750d0e
+=======
+  hpple: 3b765f96fc2cd56ad1a49aef6f7be5cb2aa64b57
+  JDStatusBarNotification: 29413865af11c862c17180610b0f46a21118b412
+>>>>>>> parent of c5a4779... v1.3.3
   JPFPSStatus: 4467a17488382e4c1700bd9d18c92ae581fd6305
   JSBadgeView: 3861ddee41094284d9468e6d0af5107f703aaac5
-  MJExtension: 5932755f451458eefa24239358817f8d291240c7
-  MJRefresh: b96cdb21c4aa75a7b07654311ab2f315c497e806
+  MJExtension: f9ae6ddc0f1c482c3c9af750280ccebd14381958
+  MJRefresh: bb72948c985914b0b5cecac573a2c69a8915fb02
   ObjectiveGumbo: 0704c4930688132abb3d5df2000334f30504856f
   pop: f667631a5108a2e60d9e8797c9b32ddaf2080bce
   SDWebImage: c325cf02c30337336b95beff20a13df489ec0ec9
   UITableView+FDTemplateLayoutCell: 234e1582bcc4e18461af91155123bb96538ed030
-  UMengAnalytics-NO-IDFA: f1b08b540eba6ebad044a574cae6d988cf40cfda
-  UMengUShare: f231fc086d789d4e560a5090dcc13a2db15c686d
   WKProgressHUD: 3eeb66423a702bb8c43707f0627f673f12da475e
 
+<<<<<<< HEAD
 PODFILE CHECKSUM: 633449e14fe7c3385ac0678b26d9fb7c5f442906
+=======
+PODFILE CHECKSUM: 4f66401513a57e4534d763d50eccbce07fc14599
+>>>>>>> parent of c5a4779... v1.3.3
 
 COCOAPODS: 1.0.0

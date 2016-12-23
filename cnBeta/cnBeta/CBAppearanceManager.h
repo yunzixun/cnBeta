@@ -10,12 +10,8 @@
 
 @interface CBAppearanceManager : NSObject
 
-@property (nonatomic, readonly)UIFont *CBFont;
-
 + (instancetype)sharedManager;
 
 - (void)setup;
-
-- (void)updateCBFont;
 
 @end

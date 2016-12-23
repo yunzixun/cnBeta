@@ -19,12 +19,17 @@
 #import "ObjectiveGumbo.h"
 #import "DataBase.h"
 #import "collectionModel.h"
+<<<<<<< HEAD
 #import "CBArticle.h"
 #import "CBStarredCache.h"
 #import "CBObjectCache.h"
 #import "CBCachedURLResponse.h"
 //#import "UMSocial.h"
 #import "UMSocialUIManager.h"
+=======
+#import "UMSocial.h"
+
+>>>>>>> parent of c5a4779... v1.3.3
 #import "NewsNavigationViewController.h"
 #import "JSBadgeView.h"
 #import "WKProgressHUD.h"
@@ -33,18 +38,20 @@
 //#import <ShareSDKUI/ShareSDK+SSUI.h>
 
 
-@interface contentViewController ()<UIWebViewDelegate>
+@interface contentViewController ()<UMSocialUIDelegate, UIWebViewDelegate>
 
 @property (nonatomic, copy)NSString *contentHTMLString;
 @property (nonatomic, copy)NSString *contentURL;
+@property (nonatomic, copy) NSString *sn;
 @property (nonatomic, strong)NewsContentModel *newsContent;
 @property (nonatomic, strong)DataBase *collection;
 @property (nonatomic, strong)collectionModel *news;
-@property (nonatomic, strong)CBArticle *article;
-@property (nonatomic, strong)CBHTTPRequester *articleRequester;
+@property (nonatomic, strong)CBHTTPRequester *contentRequester;
 @property (nonatomic, strong)CBHTTPRequester *commentNumberRequester;
 
-@property (weak, nonatomic) IBOutlet UIButton *starButton;
+@property (weak, nonatomic) IBOutlet UIButton *collect;
+
+@property (nonatomic, strong) UIPanGestureRecognizer *panLeft;
 
 @property (weak, nonatomic) IBOutlet UIButton *commentNum;
 
@@ -58,7 +65,7 @@
 
 - (void)dealloc
 {
-    [self.articleRequester cancel];
+    [self.contentRequester cancel];
     [self.commentNumberRequester cancel];
 }
 
@@ -69,7 +76,7 @@
     backItem.title = @"返回";
     self.navigationItem.backBarButtonItem = backItem;
     _collection = [DataBase sharedDataBase];
-    //[self.starButton setSelected: [self.article isStarred]];
+    
     _contentWebView.delegate = self;
     
     //评论数量badge
@@ -77,7 +84,7 @@
     self.badgeView = badgeView;
     self.badgeView.badgePositionAdjustment = CGPointMake(-14, 15);
     [self.badgeView setBadgeTextFont:[UIFont systemFontOfSize:10]];
-
+    
     _spinner.center = CGPointMake(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 );
     [_spinner startAnimating];
     [self setupWebView];
@@ -92,7 +99,7 @@
     if (!_news) {
         _news = [[collectionModel alloc]init];
         _news.sid = _newsId;
-        _news.title = _article.title;
+        _news.title = _newsTitle;
         _news.thumb = _thumb;
     }
     return _news;
@@ -100,83 +107,180 @@
 -(void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    [self.starButton setSelected: [self.article isStarred]];
-    [self.navigationController setNavigationBarHidden:YES animated:YES];
-    self.edgesForExtendedLayout = UIRectEdgeNone;
+    self.navigationController.navigationBarHidden = NO;
+    
     self.automaticallyAdjustsScrollViewInsets = NO;
+    
+    
+//    UIImage *image = [UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:@"http://b163.photo.store.qq.com/psb?/e3925ed3-f579-41df-9346-6d254b4a7092/sUuM7gDh7KqPPrSmcU.wy7YWz32.lk93CNE8Gish7KQ!/b/dIGfNWGUEwAA&bo=gAKAAgAAAAABByA!&rf=viewer_4"]]];
+//    NSData *data = UIImageJPEGRepresentation(image, 1.0);
+//    NSInteger length = data.length;
+//    if (length > 200000) {
+//        NSString *origin = [NSString stringWithFormat:@"<div style=\"text-align:center;\"><a href=\"http://www.cnbeta.com/articles/%@.htm\" target=\"_blank\">点击查看文章</a></div>", self.newsId];
+//        [_contentWebView loadHTMLString:origin baseURL:nil];
+//        [_spinner stopAnimating];
+//    } else {
+//        [self setupWebView];
+//    }
+    
+
+    
 }
 
 - (void)setupWebView
 {
-    CBHTTPRequester *requester = [CBHTTPRequester requester];
-    self.articleRequester = requester;
-    [requester fetchArticleWithSid:self.newsId completion:^(id responseObject, NSError *error) {
-        if (!error) {
-            self.article = (CBArticle *)responseObject;
-            [self.starButton setSelected: [self.article isStarred]];
-            NSRange range = [_thumb rangeOfString:@"-hm_"];
-            if (range.length > 0) {
-                self.article.thumb = [_thumb substringToIndex:range.location];
-            } else {
-                self.article.thumb = _thumb;
-            }
-            self.article.author = self.author;
-            NSString *html = [self.article toHTML];
-            NSURL* baseURL = [[NSBundle mainBundle] bundleURL];
-            [self.contentWebView loadHTMLString:html baseURL:baseURL];
-            //[self webViewDidFinishLoad:_contentWebView];
-            dispatch_async(dispatch_get_main_queue(), ^{
-                [_spinner stopAnimating];
-            });
-        }
+    if ([_collection queryWithSid:self.newsId tableType:@"collection"]) {
+        _collect.selected = YES;
+        [_collect setTitle:@"已收藏" forState:UIControlStateNormal];
+        [_collect setTitleColor:[UIColor redColor] forState:UIControlStateSelected];
+    }
+    
+    FileCache *fileCache = [FileCache sharedCache];
+    _contentHTMLString = [fileCache getHTMLFromFileForKey:self.newsId];
+    if (!_contentHTMLString) {
         
-    }];
-    
-    
-    //更新评论数目
-    CBHTTPRequester *commentNumberRequester = [CBHTTPRequester requester];
-    self.commentNumberRequester = commentNumberRequester;
-    [commentNumberRequester requestWithURLType:@"content" andId:self.newsId completion:^(id data, NSError *error) {
-        if (!error) {
-            
-            NSArray *dataDic = @[(NSDictionary *)data[@"result"]];
-            _newsContent = [NewsContentModel mj_objectArrayWithKeyValuesArray:dataDic][0];
-            
-            //新闻发布是否已超过24小时
-            NSDateFormatter *fmt = [[NSDateFormatter alloc]init];
-            fmt.dateFormat = @"yyyy-MM-dd HH:mm:ss";
-            NSDate *pubDate = [fmt dateFromString:_newsContent.time];
-            //NSLog(@"%@", pubDate);
-            NSDateComponents *timeDelta = [pubDate deltaWithNow];
-            //NSLog(@"%@", timeDelta);
-            if (timeDelta.hour > 72) {
-                self.isExpired = YES;
+        [self startDownloadContent:self.newsId];
+        
+    } else{
+        [_contentWebView loadHTMLString:_contentHTMLString baseURL:nil];
+        [self webViewDidFinishLoad:_contentWebView];
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [_spinner stopAnimating];
+            //[_spinner removeFromSuperview];
+            //_spinner.hidden = YES;
+        });
+        
+        //更新评论数目
+        CBHTTPRequester *commentNumberRequester = [CBHTTPRequester requester];
+        self.commentNumberRequester = commentNumberRequester;
+        [commentNumberRequester requestWithURLType:@"content" andId:self.newsId completion:^(id data, NSError *error) {
+            if (!error) {
+                
+                NSArray *dataDic = @[(NSDictionary *)data[@"result"]];
+                _newsContent = [NewsContentModel mj_objectArrayWithKeyValuesArray:dataDic][0];
+                
+                //新闻发布是否已超过24小时
+                NSDateFormatter *fmt = [[NSDateFormatter alloc]init];
+                fmt.dateFormat = @"yyyy-MM-dd HH:mm:ss";
+                NSDate *pubDate = [fmt dateFromString:_newsContent.time];
+                //NSLog(@"%@", pubDate);
+                NSDateComponents *timeDelta = [pubDate deltaWithNow];
+                //NSLog(@"%@", timeDelta);
+                if (timeDelta.hour > 72) {
+                    self.isExpired = YES;
+                }
+                //评论数目
+                self.badgeView.badgeText = [NSString stringWithFormat:@"%@", _newsContent.comments];
             }
-            //评论数目
-            self.badgeView.badgeText = [NSString stringWithFormat:@"%@", _newsContent.comments];
+        }];
+    }
+
+    [[CBHTTPRequester requester] requestWithURLType:@"SN" andId:_newsId completion:^(id data, NSError *error) {
+        if (!error) {
+            OGNode *node = [ObjectiveGumbo parseNodeWithData:data];
+            NSRange range = [node.text rangeOfString:@"\",SN:\""];
+            if (range.location != NSNotFound) {
+                _sn = [node.text substringWithRange:NSMakeRange(range.location + range.length, 5)];
+                //NSLog(@"%@", _sn);
+            }
         }
     }];
+<<<<<<< HEAD
 
 }
 
+=======
+    
+}
+
+- (void)startDownloadContent:(NSString *)sid
+{
+    if (sid) {
+        CBHTTPRequester *contentRequester = [CBHTTPRequester requester];
+        self.contentRequester = contentRequester;
+        [contentRequester requestWithURLType:@"content" andId:sid completion:^(id data, NSError *error) {
+            if (!error) {
+                
+                [self getHTMLByData:data[@"result"]];
+                //NSLog(@"%@",data[@"result"]);
+                //缓存到文件系统
+                FileCache *fileCache = [FileCache sharedCache];
+                [fileCache cacheHTMLToFile:_contentHTMLString forKey:_newsId];
+                
+            }
+            
+        }];
+    }
+}
+
+- (void)getHTMLByData:(id)data
+{
+    
+    NSArray *dataDic = @[(NSDictionary *)data];
+    
+    _newsContent = [NewsContentModel mj_objectArrayWithKeyValuesArray:dataDic][0];
+    //_newsContent.source = @"";
+    self.badgeView.badgeText = [NSString stringWithFormat:@"%@", _newsContent.comments];
+    
+    NSMutableString *cmt = [NSMutableString stringWithFormat:@"%@条评论", _newsContent.comments];
+    
+    //新闻发布是否已超过24小时
+    NSDateFormatter *fmt = [[NSDateFormatter alloc]init];
+    fmt.dateFormat = @"yyyy-MM-dd HH:mm:ss";
+    NSDate *pubDate = [fmt dateFromString:_newsContent.time];
+    //NSLog(@"%@", pubDate);
+    NSDateComponents *timeDelta = [pubDate deltaWithNow];
+    //NSLog(@"%@", timeDelta);
+    if (timeDelta.hour > 72) {
+        self.isExpired = YES;
+        [cmt appendString:@"(评论已关闭)"];
+    }
+    
+    NSMutableString *allTitleStr =[NSMutableString stringWithString:@"<style type='text/css'> p.thicker{font-weight: 500}p.light{font-weight: 0}p{font-size: 108%}h2 {font-size: 120%}h3 {font-size: 80%}</style> <h2 class = 'thicker'>title</h2><h3>hehe      lala      gaga</h3>"];
+    
+    [allTitleStr replaceOccurrencesOfString:@"title" withString:_newsContent.title options:NSCaseInsensitiveSearch range:[allTitleStr rangeOfString:@"title"]];
+    [allTitleStr replaceOccurrencesOfString:@"hehe" withString:_newsContent.source options:NSCaseInsensitiveSearch range:[allTitleStr rangeOfString:@"hehe"]];
+    [allTitleStr replaceOccurrencesOfString:@"lala" withString:_newsContent.time options:NSCaseInsensitiveSearch range:[allTitleStr rangeOfString:@"lala"]];
+    [allTitleStr replaceOccurrencesOfString:@"gaga" withString:cmt options:NSCaseInsensitiveSearch range:[allTitleStr rangeOfString:@"gaga"]];
+    
+    NSMutableString *head = (NSMutableString *)@"<head><style>img{width:360px !important;}</style></head>";
+    _contentHTMLString = [[[head stringByAppendingString:allTitleStr] stringByAppendingString:_newsContent.hometext] stringByAppendingString:_newsContent.bodytext];
+    
+    NSString *origin = [NSString stringWithFormat:@"<div style=\"text-align:center;\"><a href=\"http://www.cnbeta.com/articles/%@.htm\" target=\"_blank\">查看原文</a></div>", self.newsId];
+    _contentHTMLString = [_contentHTMLString stringByAppendingString:origin];
+    
+    [_contentWebView loadHTMLString:_contentHTMLString baseURL:nil];
+    [self webViewDidFinishLoad:_contentWebView];
+    
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [_spinner stopAnimating];
+        //[_spinner removeFromSuperview];
+        //_spinner.hidden = YES;
+        
+        if ([[NSUserDefaults standardUserDefaults] boolForKey:@"Refresh"]) {
+            [WKProgressHUD dismissInView:self.view animated:YES];
+            [WKProgressHUD popMessage:@"刷新成功" inView:self.view duration:1.5 animated:YES];
+            [[NSUserDefaults standardUserDefaults] setBool:NO forKey:@"Refresh"];
+>>>>>>> parent of c5a4779... v1.3.3
 
 
 //webview中图片自适应宽度
-//- (void)webViewDidFinishLoad:(UIWebView *)webView {
-//    NSString *js = @"function imgAutoFit() { \
-//    var imgs = document.getElementsByTagName('img'); \
-//    for (var i = 0; i < imgs.length; ++i) {\
-//    var img = imgs[i];  \
-//    img.style.maxWidth = %f;  \
-//    } \
-//    }";
-//    js = [NSString stringWithFormat:js, [UIScreen mainScreen].bounds.size.width - 20];
-//    
-//    [webView stringByEvaluatingJavaScriptFromString:js];
-//    [webView stringByEvaluatingJavaScriptFromString:@"imgAutoFit()"];
-//    
-//    
-//}
+- (void)webViewDidFinishLoad:(UIWebView *)webView {
+    NSString *js = @"function imgAutoFit() { \
+    var imgs = document.getElementsByTagName('img'); \
+    for (var i = 0; i < imgs.length; ++i) {\
+    var img = imgs[i];  \
+    img.style.maxWidth = %f;  \
+    } \
+    }";
+    js = [NSString stringWithFormat:js, [UIScreen mainScreen].bounds.size.width - 20];
+    
+    [webView stringByEvaluatingJavaScriptFromString:js];
+    [webView stringByEvaluatingJavaScriptFromString:@"imgAutoFit()"];
+    
+    
+}
 
 - (UIImage *)queryCachedImageForKey:(NSString *)key
 {
@@ -227,70 +331,115 @@
 
 - (IBAction)showComments:(id)sender
 {
-    [self.navigationController pushViewController:[[commentViewController alloc]initWithArticle:self.article Type:self.isExpired] animated:YES];
+    [self.navigationController pushViewController:[[commentViewController alloc]initWithSid:_newsId andSN:_sn Type:self.isExpired] animated:YES];
 }
 
 - (IBAction)collectNews:(id)sender
 {
-    _starButton.selected = !_starButton.selected;
+    _collect.selected = !_collect.selected;
     
-    if (self.starButton.selected) {
+    if (self.collect.selected) {
+        [_collect setTitle:@"已收藏" forState:UIControlStateNormal];
+        [_collect setTitleColor:[UIColor redColor] forState:UIControlStateSelected];
         self.news.time = [NSDate currentTime];
         [_collection addNews:_news];
-        [[CBStarredCache sharedCache]starArticleWithId:self.article.newsId];
     }else {
+        [_collect setTitle:@"收藏" forState:UIControlStateNormal];
+        [_collect setTitleColor:[UIColor blackColor] forState:UIControlStateSelected];
         [_collection deleteCellOfSid:_newsId];
-        [[CBStarredCache sharedCache]unstarArticleWithId:self.article.newsId];
     }
 }
 
-//- (IBAction)refreshWebView:(UIButton *)sender {
-//    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-//    [defaults setBool:YES forKey:@"Refresh"];
-//    //[defaults synchronize];
-//    [WKProgressHUD showInView:self.view withText:@"" animated:YES];
-//    [self startDownloadContent:self.newsId];
-//    
-//}
+- (IBAction)refreshWebView:(UIButton *)sender {
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    [defaults setBool:YES forKey:@"Refresh"];
+    //[defaults synchronize];
+    [WKProgressHUD showInView:self.view withText:@"" animated:YES];
+    [self startDownloadContent:self.newsId];
+    
+}
 
 - (IBAction)goBack:(UIButton *)sender {
     [self.navigationController popToViewController:[self.navigationController.viewControllers objectAtIndex:0] animated:YES];
 }
 
 - (IBAction)shareNews:(UIButton *)sender {
-    __weak typeof(self) weakSelf = self;
-    //显示分享面板
-    [UMSocialUIManager showShareMenuViewInWindowWithPlatformSelectionBlock:^(UMShareMenuSelectionView *shareSelectionView, UMSocialPlatformType platformType) {
-        // 根据platformType调用相关平台进行分享
-        [weakSelf shareTextToPlatformType:platformType];
-        
-    }];
- 
+    //[[UMSocialData defaultData].urlResource setResourceType:UMSocialUrlResourceTypeImage url:_thumb];
+    [UMSocialData defaultData].extConfig.title = _newsTitle;
+    [UMSocialData defaultData].extConfig.qqData.url = [NSString stringWithFormat:@"http://www.cnbeta.com/articles/%@.htm",_newsId];
+    [UMSocialData defaultData].extConfig.qzoneData.url = [NSString stringWithFormat:@"http://www.cnbeta.com/articles/%@.htm",_newsId];
+    [UMSocialData defaultData].extConfig.wechatSessionData.url = [NSString stringWithFormat:@"http://www.cnbeta.com/articles/%@.htm",_newsId];
+    //[UMSocialData defaultData].extConfig.wechatSessionData.title = _newsTitle;
+    [UMSocialData defaultData].extConfig.wechatTimelineData.url = [NSString stringWithFormat:@"http://www.cnbeta.com/articles/%@.htm",_newsId];
+    //[UMSocialData defaultData].extConfig.wechatTimelineData.title = _newsTitle;
+    [UMSocialSnsService presentSnsIconSheetView:self
+                                         appKey:@"579b1ed4e0f55ab08c000e90"
+                                      shareText:[NSString stringWithFormat:@"http://www.cnbeta.com/articles/%@.htm",_newsId]
+                                     shareImage:[UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:_thumb]]]
+                                shareToSnsNames:@[UMShareToWechatSession,UMShareToWechatTimeline,UMShareToQQ,UMShareToQzone]
+                                       delegate:self];
 }
 
-- (void)shareTextToPlatformType:(UMSocialPlatformType)platformType
+-(void)didFinishGetUMSocialDataInViewController:(UMSocialResponseEntity *)response
 {
-    //创建分享消息对象
-    UMSocialMessageObject *messageObject = [UMSocialMessageObject messageObject];
-    //创建网页内容对象
-    UMShareWebpageObject *shareObject = [UMShareWebpageObject shareObjectWithTitle:_article.title descr:_article.summary thumImage:[UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:_article.thumb]]]];
-    //设置网页地址
-    shareObject.webpageUrl =[NSString stringWithFormat:@"http://www.cnbeta.com/articles/%@.htm",_article.newsId];
-    
-    //分享消息对象设置分享内容对象
-    messageObject.shareObject = shareObject;
-    
-    //调用分享接口
-    [[UMSocialManager defaultManager] shareToPlatform:platformType messageObject:messageObject currentViewController:self completion:^(id data, NSError *error) {
-        if (error) {
-            NSLog(@"************Share fail with error %@*********",error);
-        }else{
-            NSLog(@"response data is %@",data);
-        }
-    }];
+    //根据`responseCode`得到发送结果,如果分享成功
+    if(response.responseCode == UMSResponseCodeSuccess)
+    {
+        //得到分享到的平台名
+        NSLog(@"share to sns name is %@",[[response.data allKeys] objectAtIndex:0]);
+    }
 }
+
+//- (IBAction)shareNews:(id)sender
+//{
+//    //1、创建分享参数
+//    NSArray* imageArray = @[[UIImage imageNamed:@"placeholder"]];
+//    //（注意：图片必须要在Xcode左边目录里面，名称必须要传正确，如果要分享网络图片，可以这样传iamge参数 images:@[@"http://mob.com/Assets/images/logo.png?v=20150320"]）
+//    if (imageArray) {
+//        
+//        NSMutableDictionary *shareParams = [NSMutableDictionary dictionary];
+//        [shareParams SSDKSetupShareParamsByText:nil
+//                                         images:imageArray
+//                                            url:[NSURL URLWithString:[NSString stringWithFormat:@"http://www.cnbeta.com/articles/%@.htm",_newsId]]
+//                                          title:_newsContent.title
+//                                           type:SSDKContentTypeAuto];
+//        //2、分享（可以弹出我们的分享菜单和编辑界面）
+//        [ShareSDK showShareActionSheet:nil //要显示菜单的视图, iPad版中此参数作为弹出菜单的参照视图，只有传这个才可以弹出我们的分享菜单，可以传分享的按钮对象或者自己创建小的view 对象，iPhone可以传nil不会影响
+//                                 items:nil
+//                           shareParams:shareParams
+//                   onShareStateChanged:^(SSDKResponseState state, SSDKPlatformType platformType, NSDictionary *userData, SSDKContentEntity *contentEntity, NSError *error, BOOL end) {
+//                       
+//                       switch (state) {
+//                           case SSDKResponseStateSuccess:
+//                           {
+//                               UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"分享成功"
+//                                                                                   message:nil
+//                                                                                  delegate:nil
+//                                                                         cancelButtonTitle:@"确定"
+//                                                                         otherButtonTitles:nil];
+//                               [alertView show];
+//                               break;
+//                           }
+//                           case SSDKResponseStateFail:
+//                           {
+//                               UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"分享失败"
+//                                                                               message:[NSString stringWithFormat:@"%@",error]
+//                                                                              delegate:nil
+//                                                                     cancelButtonTitle:@"OK"
+//                                                                     otherButtonTitles:nil, nil];
+//                               [alert show];
+//                               break;
+//                           }
+//                           default:
+//                               break;
+//                       }
+//                   }];
+//    }
+//}
+
+/*
 #pragma mark - Navigation
-/**
+
 // In a storyboard-based application, you will often want to do a little preparation before navigation
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     // Get the new view controller using [segue destinationViewController].

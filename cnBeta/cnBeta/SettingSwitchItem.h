@@ -10,6 +10,7 @@
 
 typedef NS_ENUM(NSInteger, SwitchName) {
     CBGesture,
+<<<<<<< HEAD
     CBNetworkNotification,
     CBPrefetch,
     CBImageWiFiOnly,
@@ -17,6 +18,9 @@ typedef NS_ENUM(NSInteger, SwitchName) {
     CBAutoCollection,
     CBFontChange,
     CBAutoClear
+=======
+    CBNetworkNotification
+>>>>>>> parent of c5a4779... v1.3.3
 };
 
 @interface SettingSwitchItem : SettingItem

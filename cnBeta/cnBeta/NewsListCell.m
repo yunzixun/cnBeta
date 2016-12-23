@@ -8,6 +8,7 @@
 
 
 #import "NewsListCell.h"
+<<<<<<< HEAD
 #import "CBAppearanceManager.h"
 #import "CBAppSettings.h"
 #import "Constant.h"
@@ -19,6 +20,8 @@
 #import "CBObjectCache.h"
 #import "CBHTTPURLProtocol.h"
 
+=======
+>>>>>>> parent of c5a4779... v1.3.3
 
 
 @interface NewsListCell () <NSURLSessionDelegate>
@@ -58,6 +61,7 @@
         //_newstitle.autoresizingMask = UIViewAutoresizingFlexibleWidth;
         _newstitle.numberOfLines = 0;
         //[_newstitle setText:newsModel.title];
+        _newstitle.font = [UIFont systemFontOfSize:15];
         _newstitle.textAlignment = NSTextAlignmentLeft;
         _newstitle.frame = CGRectMake(100, 10, ScreenWidth -10-100, 50);
         [self.contentView addSubview:_newstitle];
@@ -67,6 +71,7 @@
         _time = time;
         //_time.autoresizingMask = UIViewAutoresizingFlexibleWidth;
         //[_time setText:newsModel.pubtime];
+        _time.font = [UIFont systemFontOfSize:11];
         _time.textColor = [UIColor grayColor];
         _time.textAlignment = NSTextAlignmentLeft;
         _time.frame = CGRectMake(100, 60, 250, 10);
@@ -91,6 +96,7 @@
         
         UILabel *cmtNum = [[UILabel alloc]init];
         _cmtNum = cmtNum;
+        _cmtNum.font = [UIFont systemFontOfSize:10];
         _cmtNum.textColor = [UIColor grayColor];
         _cmtNum.textAlignment = NSTextAlignmentLeft;
         _cmtNum.frame = CGRectMake(ScreenWidth - 30, 60, 30, 10);
@@ -113,14 +119,19 @@
     _newsModel = newsModel;
     
     //新闻标题
+<<<<<<< HEAD
     [_newstitle setText:[self pureTitle:newsModel.title]];
     _newstitle.font = NewsTitleFont;
     _newstitle.textColor = [newsModel.read boolValue] ? [UIColor grayColor] : [UIColor blackColor];
 
+=======
+    [_newstitle setText:newsModel.title];
+    
+>>>>>>> parent of c5a4779... v1.3.3
     
     //时间
-    [_time setText:newsModel.inputtime];
-    _time.font = NewsTimeFont;
+    [_time setText:newsModel.pubtime];
+    
     
     //图片
     if ([[CBDataBase sharedDataBase] isCached:self.newsModel.sid]) {
@@ -138,14 +149,18 @@
     
     //评论数
     [_cmtNum setText:newsModel.comments];
+<<<<<<< HEAD
     _cmtNum.font = CmtNumFont;
     
     [self downloadArticle];
+=======
+>>>>>>> parent of c5a4779... v1.3.3
 
 }
 
 - (void)downloadArticle
 {
+<<<<<<< HEAD
     if ([self.newsModel.cacheStatus integerValue] == CBArticleCacheStatusCached) {
         return;
     }
@@ -231,6 +246,23 @@
         return title;
     }
 }
+=======
+    _hotNewsModel = hotNewsModel;
+
+    //新闻标题
+    [_newstitle setText:hotNewsModel.title];
+    
+    //时间
+    [_time setText:hotNewsModel.inputtime];
+    
+    //图片
+    [self.imageThumb sd_setImageWithURL:[NSURL URLWithString:hotNewsModel.thumb] placeholderImage:[UIImage imageNamed:@"placeholder"]];
+    
+    //评论数
+    [_cmtNum setText:hotNewsModel.comments];
+}
+
+>>>>>>> parent of c5a4779... v1.3.3
 - (void)awakeFromNib {
     [super awakeFromNib];
     // Initialization code
