@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="11762" systemVersion="16A323" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11757"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="commentViewController">
+            <connections>
+                <outlet property="commentTableView" destination="xAA-Be-Ifa" id="A2D-gw-PY6"/>
+                <outlet property="statusBarBackground" destination="zQn-PN-4UF" id="lXt-0x-3dM"/>
+                <outlet property="statusBarTopConstraint" destination="m3j-Oc-Ctv" id="0yw-Ub-PHX"/>
+                <outlet property="toolbar" destination="1id-Xp-6gR" id="J30-8E-T8v"/>
+                <outlet property="toolbarBottomConstraint" destination="b6b-yX-ocx" id="Ndq-gG-09e"/>
+                <outlet property="view" destination="iN0-l3-epB" id="EJf-PD-JLY"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="iN0-l3-epB">
+            <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="xAA-Be-Ifa">
+                    <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                </tableView>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="zQn-PN-4UF" userLabel="statusBarBackground">
+                    <rect key="frame" x="0.0" y="0.0" width="375" height="20"/>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="20" id="dCE-Ax-bnr"/>
+                    </constraints>
+                </view>
+                <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="1id-Xp-6gR" customClass="CBCommentToolbar">
+                    <rect key="frame" x="0.0" y="618" width="375" height="49"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="49" id="bAg-ox-73D"/>
+                    </constraints>
+                    <items>
+                        <barButtonItem title="Item" id="Bcz-Iv-81R"/>
+                    </items>
+                </toolbar>
+            </subviews>
+            <color key="backgroundColor" cocoaTouchSystemColor="tableCellGroupedBackgroundColor"/>
+            <constraints>
+                <constraint firstItem="1id-Xp-6gR" firstAttribute="leading" secondItem="zQn-PN-4UF" secondAttribute="leading" id="BeC-Nt-Jff"/>
+                <constraint firstAttribute="bottom" secondItem="xAA-Be-Ifa" secondAttribute="bottom" id="BwR-qe-Z93"/>
+                <constraint firstAttribute="trailing" secondItem="xAA-Be-Ifa" secondAttribute="trailing" id="Cne-SW-SzU"/>
+                <constraint firstItem="xAA-Be-Ifa" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="NsZ-nS-pb0"/>
+                <constraint firstItem="xAA-Be-Ifa" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="NxU-eE-gvn"/>
+                <constraint firstItem="zQn-PN-4UF" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="O3c-4v-HlZ"/>
+                <constraint firstAttribute="bottom" secondItem="1id-Xp-6gR" secondAttribute="bottom" id="b6b-yX-ocx" userLabel="ToolbarBottomConstraint"/>
+                <constraint firstItem="1id-Xp-6gR" firstAttribute="trailing" secondItem="zQn-PN-4UF" secondAttribute="trailing" id="e1V-8b-wvu"/>
+                <constraint firstItem="zQn-PN-4UF" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="m3j-Oc-Ctv" userLabel="StatusBarTopConstraint"/>
+                <constraint firstAttribute="trailing" secondItem="zQn-PN-4UF" secondAttribute="trailing" id="wcU-Wi-QN5"/>
+            </constraints>
+            <point key="canvasLocation" x="34.5" y="54.5"/>
+        </view>
+    </objects>
+</document>

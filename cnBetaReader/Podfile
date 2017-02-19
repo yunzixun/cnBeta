@@ -1,0 +1,39 @@
+target “cnBeta” do
+pod 'MJExtension', '~> 3.0.10'
+pod 'AFNetworking', '~>3.0.4'
+pod 'SDWebImage', '~>3.7.3'
+pod 'FMDB'
+pod 'ObjectiveGumbo', '~> 0.1'
+pod 'UITableView+FDTemplateLayoutCell', '~> 1.4'
+pod 'JDStatusBarNotification', '~> 1.5'
+pod 'hpple', '~> 0.2.0'
+pod 'CRToast', '~> 0.0.9'
+pod 'WKProgressHUD', '~> 1.2'
+pod 'MJRefresh', '~> 3.1.10'
+pod 'JSBadgeView', '~> 1.4.1'
+pod 'Bugrpt'
+pod 'JPFPSStatus', '~> 0.1'
+pod 'IDMPhotoBrowser', '~> 1.9.1'
+pod 'UMengAnalytics-NO-IDFA'
+pod 'CWStackController'
+pod 'SVProgressHUD', '~>2.0.4'
+pod 'MBProgressHUD', '~>1.0.0'
+## U-Share SDK UI模块（分享面板，建议添加）
+#pod ‘UMengUShare/UI’
+#
+## 集成新浪微博
+#pod ‘UMengUShare/Social/Sina'
+#
+## 集成微信
+#pod ‘UMengUShare/Social/WeChat'
+#
+## 集成QQ
+#pod ‘UMengUShare/Social/QQ'
+#
+## 集成邮件
+#pod ‘UMengUShare/Social/Email'
+#
+## 集成短信
+#pod ‘UMengUShare/Social/SMS'
+#
+end

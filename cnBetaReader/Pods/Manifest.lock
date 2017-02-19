@@ -1,0 +1,91 @@
+PODS:
+  - AFNetworking (3.0.4):
+    - AFNetworking/NSURLSession (= 3.0.4)
+    - AFNetworking/Reachability (= 3.0.4)
+    - AFNetworking/Security (= 3.0.4)
+    - AFNetworking/Serialization (= 3.0.4)
+    - AFNetworking/UIKit (= 3.0.4)
+  - AFNetworking/NSURLSession (3.0.4):
+    - AFNetworking/Reachability
+    - AFNetworking/Security
+    - AFNetworking/Serialization
+  - AFNetworking/Reachability (3.0.4)
+  - AFNetworking/Security (3.0.4)
+  - AFNetworking/Serialization (3.0.4)
+  - AFNetworking/UIKit (3.0.4):
+    - AFNetworking/NSURLSession
+  - Bugrpt (1.2.0.1)
+  - CRToast (0.0.9)
+  - CWStackController (0.0.3)
+  - DACircularProgress (2.3.1)
+  - FMDB (2.6.2):
+    - FMDB/standard (= 2.6.2)
+  - FMDB/standard (2.6.2)
+  - hpple (0.2.0)
+  - IDMPhotoBrowser (1.9.1):
+    - DACircularProgress
+    - pop
+    - SDWebImage
+  - JDStatusBarNotification (1.5.4)
+  - JPFPSStatus (0.1)
+  - JSBadgeView (1.4.1)
+  - MBProgressHUD (1.0.0)
+  - MJExtension (3.0.13)
+  - MJRefresh (3.1.12)
+  - ObjectiveGumbo (0.1)
+  - pop (1.0.9)
+  - SDWebImage (3.7.6):
+    - SDWebImage/Core (= 3.7.6)
+  - SDWebImage/Core (3.7.6)
+  - SVProgressHUD (2.0.4)
+  - UITableView+FDTemplateLayoutCell (1.4)
+  - UMengAnalytics-NO-IDFA (4.1.5)
+  - WKProgressHUD (1.2)
+
+DEPENDENCIES:
+  - AFNetworking (~> 3.0.4)
+  - Bugrpt
+  - CRToast (~> 0.0.9)
+  - CWStackController
+  - FMDB
+  - hpple (~> 0.2.0)
+  - IDMPhotoBrowser (~> 1.9.1)
+  - JDStatusBarNotification (~> 1.5)
+  - JPFPSStatus (~> 0.1)
+  - JSBadgeView (~> 1.4.1)
+  - MBProgressHUD (~> 1.0.0)
+  - MJExtension (~> 3.0.10)
+  - MJRefresh (~> 3.1.10)
+  - ObjectiveGumbo (~> 0.1)
+  - SDWebImage (~> 3.7.3)
+  - SVProgressHUD (~> 2.0.4)
+  - UITableView+FDTemplateLayoutCell (~> 1.4)
+  - UMengAnalytics-NO-IDFA
+  - WKProgressHUD (~> 1.2)
+
+SPEC CHECKSUMS:
+  AFNetworking: a0075feb321559dc78d9d85b55d11caa19eabb93
+  Bugrpt: 3d6bb313e4755fac3cc4e0cf02dd3511fe181b20
+  CRToast: 5a78c22b921c5ed3487488af605bc403a9c92fed
+  CWStackController: 3ca7386728b4132ca65a1862a5ccfa76f35fdb10
+  DACircularProgress: 4dd437c0fc3da5161cb289e07ac449493d41db71
+  FMDB: 854a0341b4726e53276f2a8996f06f1b80f9259a
+  hpple: 3b765f96fc2cd56ad1a49aef6f7be5cb2aa64b57
+  IDMPhotoBrowser: 35e8ba559a88f2a8be4ae04d7fd424665344ba06
+  JDStatusBarNotification: d47dded0594a50a39c84a2cc5aa356fcf6750d0e
+  JPFPSStatus: 4467a17488382e4c1700bd9d18c92ae581fd6305
+  JSBadgeView: 3861ddee41094284d9468e6d0af5107f703aaac5
+  MBProgressHUD: 4890f671c94e8a0f3cf959aa731e9de2f036d71a
+  MJExtension: 5932755f451458eefa24239358817f8d291240c7
+  MJRefresh: b96cdb21c4aa75a7b07654311ab2f315c497e806
+  ObjectiveGumbo: 0704c4930688132abb3d5df2000334f30504856f
+  pop: f667631a5108a2e60d9e8797c9b32ddaf2080bce
+  SDWebImage: c325cf02c30337336b95beff20a13df489ec0ec9
+  SVProgressHUD: bfde85ed6c573ea802b9cb37894ed9b629034f1b
+  UITableView+FDTemplateLayoutCell: 234e1582bcc4e18461af91155123bb96538ed030
+  UMengAnalytics-NO-IDFA: f1b08b540eba6ebad044a574cae6d988cf40cfda
+  WKProgressHUD: 3eeb66423a702bb8c43707f0627f673f12da475e
+
+PODFILE CHECKSUM: 674ffaee3f7108e2da8f7092a219c737e3169bd5
+
+COCOAPODS: 1.0.0
